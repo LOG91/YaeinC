@@ -1,6 +1,6 @@
 console.log('Hello Yaein');
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Root from './Root';
+import App from './components/App';
 
-ReactDOM.render(<Root />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));

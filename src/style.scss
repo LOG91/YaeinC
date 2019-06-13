@@ -16,14 +16,20 @@ ul {
 
 .tab {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   .index {
-    color: #9775fa;
-    padding: 1rem;
+    color: #5d5d5d;
     text-align: center;
+    a {
+      display: block;
+      padding: 1rem 3rem;
+      text-decoration: none;
+      color: #5d5d5d;
+    }
     &:hover {
-      background-color: #9775fa;;
-      color: #fff;
+      a {
+        color: #9775fa;
+      }
     }
   }
   
@@ -33,10 +39,10 @@ table {
   margin: 0 auto;
   border: 0;
   background-color: #fff;
+  width: 90%;
 }
 
 th, td {
-  // border: 0;
   border-left: 0;
   border-right: 0;
   border-top: 0;
