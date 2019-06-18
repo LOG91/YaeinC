@@ -13,7 +13,7 @@ const Tab = () => {
       <li className="index"><NavLink>아랍군</NavLink></li>
       <li className="index"><NavLink>연해주&터키군</NavLink></li>
       <li className="index"><NavLink>청년예베(남)</NavLink></li>
-      <li className="index"><NavLink>청년예베(여)</NavLink></li>
+      <li className="index"><NavLink to="/posts" activeStyle={activeStyle}>청년예베(여)</NavLink></li>
     </ul>
   )
 }

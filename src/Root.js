@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import './style.scss';
-import { Home, Extra } from './pages';
+import { Home, Extra, Posts } from './pages';
 import { Route } from 'react-router-dom';
 import Tab from './components/Tab';
 
@@ -13,6 +13,7 @@ const Root = () => {
         <Tab />
         <Route exact path="/" component={Home} />
         <Route path="/israel/1" component={Home} />
+        <Route path="/posts" component={Posts} />
       </div>
     </div>
   )

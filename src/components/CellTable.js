@@ -1,32 +1,68 @@
 import React, { Fragment } from 'react';
 import { member } from '../member';
+import './CellTable.scss';
 
 const member_list = list => {
   const reduced = list.map(member => {
     const MEMBER_CNT = member.members.length + 1;
     if(MEMBER_CNT===1) return (
       <Fragment>
-      <tr>
-        <td rowSpan={MEMBER_CNT}>{member.name}</td>
-        <td rowSpan={MEMBER_CNT}>5</td>
-        <td rowSpan={MEMBER_CNT}>2</td>
-        <td rowSpan={MEMBER_CNT}>2</td>
-        <td rowSpan={MEMBER_CNT}>2</td>
-        <td rowSpan={MEMBER_CNT}>2</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-        
+        <tr>
+          <td rowSpan={MEMBER_CNT}>{member.name}</td>
+          <td rowSpan={MEMBER_CNT}>
+          <select class="select_box_dawn">
+            <option value="zero">0</option>
+            <option value="one">1</option>
+            <option value="two">2</option>
+            <option value="three">3</option>
+            <option value="four">4</option>
+            <option value="five">5</option>
+          </select>
+          </td>
+          <td rowSpan={MEMBER_CNT}>
+            <select class="select_box_word">
+              <option value="zero">0</option>
+              <option value="one">1</option>
+              <option value="two">2</option>
+            </select>
+          </td>
+          <td rowSpan={MEMBER_CNT}>
+            <input type="checkbox" name="cell_worship" value="Bike" />
+          </td>
+          <td rowSpan={MEMBER_CNT}>
+            <input type="checkbox" name="worship" value="Bike" />
+          </td>
+          <td rowSpan={MEMBER_CNT}>
+            <input type="checkbox" name="youth_worship" value="Bike" />
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
       </Fragment>
     )
     return (
       <Fragment>
       <tr>
         <td rowSpan={MEMBER_CNT}>{member.name}</td>
-        <td rowSpan={MEMBER_CNT}>5</td>
-        <td rowSpan={MEMBER_CNT}>2</td>
+        <td rowSpan={MEMBER_CNT}>
+          <select class="select_box_dawn">
+            <option value="zero">0</option>
+            <option value="one">1</option>
+            <option value="two">2</option>
+            <option value="three">3</option>
+            <option value="four">4</option>
+            <option value="five">5</option>
+          </select>
+        </td>
+        <td rowSpan={MEMBER_CNT}>
+          <select class="select_box_word">
+            <option value="zero">0</option>
+            <option value="one">1</option>
+            <option value="two">2</option>
+          </select>
+        </td>
         <td rowSpan={MEMBER_CNT}>2</td>
         <td rowSpan={MEMBER_CNT}>2</td>
         <td rowSpan={MEMBER_CNT}>2</td>
