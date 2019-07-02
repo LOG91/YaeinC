@@ -4,7 +4,6 @@ import { Home, Extra, Posts } from './pages';
 import { Route } from 'react-router-dom';
 import Tab from './components/Tab';
 
-
 const Root = () => {
   return (
     <div>

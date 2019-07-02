@@ -27,13 +27,16 @@ const member_list = list => {
             </select>
           </td>
           <td rowSpan={MEMBER_CNT}>
-            <input type="checkbox" name="cell_worship" value="Bike" />
+            <input class="styled-checkbox" id="styled-checkbox-1" type="checkbox" value="value1" />
+            <label for="styled-checkbox-1"></label>
           </td>
           <td rowSpan={MEMBER_CNT}>
-            <input type="checkbox" name="worship" value="Bike" />
+            <input class="styled-checkbox" id="styled-checkbox-2" type="checkbox" value="value2" />
+            <label for="styled-checkbox-2"></label>
           </td>
           <td rowSpan={MEMBER_CNT}>
-            <input type="checkbox" name="youth_worship" value="Bike" />
+            <input class="styled-checkbox" id="styled-checkbox-3" type="checkbox" value="value3" />
+            <label for="styled-checkbox-3"></label>
           </td>
           <td></td>
           <td></td>
@@ -63,9 +66,18 @@ const member_list = list => {
             <option value="two">2</option>
           </select>
         </td>
-        <td rowSpan={MEMBER_CNT}>2</td>
-        <td rowSpan={MEMBER_CNT}>2</td>
-        <td rowSpan={MEMBER_CNT}>2</td>
+        <td rowSpan={MEMBER_CNT}>
+          <input class="styled-checkbox" id="styled-checkbox-1" type="checkbox" value="value1" />
+          <label for="styled-checkbox-1"></label>
+        </td>
+        <td rowSpan={MEMBER_CNT}>
+          <input class="styled-checkbox" id="styled-checkbox-1" type="checkbox" value="value1" />
+          <label for="styled-checkbox-1"></label>
+        </td>
+        <td rowSpan={MEMBER_CNT}>
+          <input class="styled-checkbox" id="styled-checkbox-1" type="checkbox" value="value1" />
+          <label for="styled-checkbox-1"></label>
+        </td>
       </tr>
       {member.members.length ? member.members.map((v, i) =>(
         <tr>
