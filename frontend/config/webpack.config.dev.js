@@ -13,10 +13,10 @@ module.exports = {
   devServer: {
     contentBase: path.resolve(__dirname, "../build"),
     index: "index.html",
-    port: 9000,
+    port: 1000,
     proxy: {
       '/api': {
-          target: 'http://localhost:5000',
+          target: 'http://localhost:2000',
           secure: false,
           changeOrigin: true
       }
