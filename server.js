@@ -81,7 +81,7 @@ app.post('/api/world', (req, res) => {
     `검색어: ${req.body.post}`,
   );
 });
-console.log(process.env.NODE_ENV, 111111);
+
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
   app.use(express.static(path.join(__dirname, 'front/build')));

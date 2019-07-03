@@ -10,9 +10,11 @@ class App extends Component {
   };
   
   componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
+    // this.callApi()
+    //   .then(res => this.setState({ response: res.express }))
+    //   .catch(err => console.log(err));
+
+      this.callListApi().then(res => this.setState({ response: res[4].todo_responsible }));
   }
   
   callApi = async () => {
@@ -22,6 +24,12 @@ class App extends Component {
     
     return body;
   };
+  callListApi = async () => {
+    const response = await fetch('/todos');
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    return body;
+  }
 
   handleSubmit = async e => {
     e.preventDefault();
@@ -33,8 +41,14 @@ class App extends Component {
       body: JSON.stringify({ post: this.state.post }),
     });
     const body = await response.text();
+    const todos = await fetch('/todos')
+                  .then(res => res.json())
+                  .then(res => {
+                    console.log(res);
+                    this.setState({ response: res[4].todo_responsible })
+                  });
     
-    this.setState({ response: body });
+    // this.setState({ response: body });
   };
 
   render() {

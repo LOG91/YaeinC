@@ -21,7 +21,12 @@ module.exports = {
           target: 'http://localhost:5000',
           secure: false,
           changeOrigin: true
-      }
+      },
+      '/todos': {
+        target: 'http://localhost:5000',
+        secure: false,
+        changeOrigin: true
+    }
   }
   },
   module: {
