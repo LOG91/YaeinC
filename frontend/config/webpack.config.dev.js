@@ -13,7 +13,9 @@ module.exports = {
   devServer: {
     contentBase: path.resolve(__dirname, "../build"),
     index: "index.html",
-    port: 8080,
+    disableHostCheck: true,
+    historyApiFallback: true,
+    port: 9000,
     proxy: {
       '/api': {
           target: 'http://localhost:5000',
