@@ -5,6 +5,7 @@
   "main": "server.js",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
+    "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "concurrently": "^4.1.1",
     "cors": "^2.8.5",
@@ -12,7 +13,9 @@
     "mongoose": "^5.6.2",
     "nodemon": "^1.19.1",
     "path": "^0.12.7",
-    "pm2": "^3.5.1"
+    "pm2": "^3.5.1",
+    "react-redux": "^7.1.0",
+    "redux": "^4.0.1"
   },
   "devDependencies": {},
   "scripts": {
