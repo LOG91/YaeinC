@@ -94,7 +94,7 @@ class CellTable extends Component{
                 <th rowSpan="2" className="leader_name_header">이스라엘군</th>
                 <th rowSpan="2" className="leader_name_header">리더</th>
                 <th colSpan="5" className="leader_check_header">리더 체크리스트</th>
-                <th rowSpan="2" className="cell_member_name_header">원</th>
+                <th rowSpan="2" className="cell_member_name_header">셀원</th>
                 <th colSpan="3" className="cell_member_check_header">셀원 체크리스트</th>
               </tr>
               <tr>

@@ -37,13 +37,13 @@ const members = {
   ],
   arab_1: [
     [
-      { name: 'David', age: 29, members: []},
-      { name: '유영석', age: 29, members: ['황재현', '김윤섭', '안민호']},
-      { name: '이한수', age: 26, members: ['류건', '정세종']},
-      { name: '이보람', age: 29, members: ['김정한', '박태준', '최성민']},
-      { name: '강태우', age: 29, members: ['류태준', '박시준', '최형욱', '최하영', '이형준']},
-      { name: '박규선', age: 29, members: ['유선재', '박명훈']},
-      { name: '박현선', age: 29, members: ['이찬우', '김기윤']}
+      { name: '탁현경', age: 32, members: ['이지연', '신민숙', '박희영', '김희주', '김정현'], clsName: 'i2', cellName: '시리아(가)'},
+      { name: '박수진', age: 29, members: []},
+      { name: '김민희', age: 29, members: ['오지언']},
+      { name: '피지연', age: 27, members: ['김은혜']},
+      { name: '조혜영', age: 31, members: ['김진선']},
+      { name: '차연진', age: 31, members: ['서미란']},
+      { name: '김효은', age: 31, members: ['전나영', '박소연']}
     ]
   ],
   turkey: [
