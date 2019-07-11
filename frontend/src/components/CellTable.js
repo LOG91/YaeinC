@@ -2,10 +2,10 @@ import React, { Fragment, Component } from 'react';
 import members from '../member';
 import './CellTable.scss';
 
-import { indexing } from '../store/modules/counter';
+import { indexing, check } from '../store/modules/counter';
 import { connect } from 'react-redux';
 
-const member_list = (list, ev) => {
+const member_list = (list, ev, index , onChange, currentCellName) => {
   const all_members = list.reduce((ac, cv) => {
     ac += cv.members.length;
     return ac;
@@ -13,7 +13,6 @@ const member_list = (list, ev) => {
   const cellName = list[0].cellName;
   const reduced = list.map((member, idx) => {
     const MEMBER_CNT = member.members.length + 1;
-    
     return (
       <Fragment key={idx}>
       {idx === 0 ? <td rowSpan={all_members + 1} className={ev ? "i2" : null}>{cellName}</td> : null}
@@ -37,16 +36,16 @@ const member_list = (list, ev) => {
           </select>
         </td>
         <td rowSpan={MEMBER_CNT}>
-          <input className="styled-checkbox" id="styled-checkbox-1" type="checkbox" value="value1" />
-          <label htmlFor="styled-checkbox-1"></label>
+          <input className="styled-checkbox" checked={member.cc} readOnly type="checkbox" />
+          <label onClick={() => onChange(index, idx, 'cc', currentCellName)} />
         </td>
         <td rowSpan={MEMBER_CNT}>
-          <input className="styled-checkbox" id="styled-checkbox-1" type="checkbox" value="value1" />
-          <label htmlFor="styled-checkbox-1"></label>
+          <input className="styled-checkbox" checked={member.mc} readOnly type="checkbox" />
+          <label onClick={() => onChange(index, idx, 'mc', currentCellName)} />
         </td>
         <td rowSpan={MEMBER_CNT}>
-          <input className="styled-checkbox" id="styled-checkbox-1" type="checkbox" value="value1" />
-          <label htmlFor="styled-checkbox-1"></label>
+          <input className="styled-checkbox" checked={member.yc} readOnly type="checkbox" />
+          <label onClick={() => onChange(index, idx, 'yc', currentCellName)} />
         </td>
       </tr>
       {MEMBER_CNT !== 1 ? member.members.map((v, i) =>(
@@ -73,20 +72,28 @@ const member_list = (list, ev) => {
   return reduced;
 }
 
-const mapNetworkTable = (list, member_list_fn) => {
+const mapNetworkTable = (list, member_list_fn, onChange, currentCellName) => {
   if (!list) return <div>아직 데이터가 없습니다😨</div>;
-  const mapped = list.map((v, idx) => {
+  const mapped = list.map((v, index) => {
     let ev = false;
-    if (idx % 2 === 0) ev = true;
-    return member_list_fn(v, ev)
+    if (index % 2 === 0) ev = true;
+    return member_list_fn(v, ev, index, onChange, currentCellName);
   });
   return mapped;
 }
 class CellTable extends Component{
+  handleChange = (high, low, checkType, currentCellName) => {
+    const { check } = this.props;
+    check(high, low, checkType, currentCellName);
+  };
+  componentDidMount() {
+    const response = fetch('/todos/api/leaders').then(res => res.json())
+    .then(res => this.setState({ members: res }));
+  }
   render(){
-    const current_idx = this.props.to.slice(1);
-    const current_members = members[current_idx];
-    console.log(current_members);
+    const currentCellName = this.props.to.slice(1);
+    const currentMembers = this.props.members[currentCellName];
+    // members[currentCellName];
     return (
       <table border="1" cellPadding="10">
             <tbody>
@@ -107,7 +114,7 @@ class CellTable extends Component{
                   <td>주일</td>
                   <td>청년</td>
               </tr>
-              {mapNetworkTable(current_members, member_list)}
+              {mapNetworkTable(currentMembers, member_list, this.handleChange, currentCellName)}
             </tbody>
           </table>
     )
@@ -116,11 +123,13 @@ class CellTable extends Component{
 
 
 const mapStateToProps = (state) => ({
-  indexing: state.indexing
+  indexing: state.indexing,
+  members: state.members
 });
 
 const mapDispatchToProps = dispatch => ({
-  indexing: idx => dispatch(indexing(idx))
+  indexing: idx => dispatch(indexing(idx)),
+  check: (high, low, checkType ,currentCellName) => dispatch(check(high, low, checkType, currentCellName))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CellTable);

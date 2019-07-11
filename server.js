@@ -7,6 +7,7 @@ const app = express();
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Todo = require('./todo.model');
+const Leader = require('./todo.model');
 
 const port = process.env.PORT || 5000;
 
@@ -16,6 +17,30 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const todoRoutes = express.Router();
 app.use('/todos', todoRoutes);
+
+let m1 = new Leader({
+  name: "오석기",
+  section: '이스라엘군',
+  nation: '이스라엘(나)',
+  age: 29,
+  cc: false,
+  mc: false,
+  yc: false,
+  members: [{ name: '손창우', section: '이스라엘군', nation: '이스라엘(나)', cc: false, mc: false, yc: false}]
+});
+m1.save(function(err, book){
+  if(err) return console.error(err);
+  console.dir(book);
+});
+
+todoRoutes.get('/api/leaders', function(req,res){
+  Leader.find(function(err, leaders){
+      if(err) return res.status(500).send({error: 'database failure'});
+      res.json(leaders);
+  })
+});
+
+
 
 todoRoutes.route('/').get(function(req, res) {
   Todo.find(function(err, todos) {

@@ -10,15 +10,17 @@ class App extends Component {
   };
   
   componentDidMount() {
-    // this.callApi()
-    //   .then(res => this.setState({ response: res.express }))
-    //   .catch(err => console.log(err));
+    this.callApi()
+      .then(res => {
+        return this.setState({ response: res[0].name })
+      })
+      .catch(err => console.log(err));
 
-      this.callListApi().then(res => this.setState({ response: res[4].todo_responsible }));
+      // this.callListApi().then(res => this.setState({ response: res }));
   }
   
   callApi = async () => {
-    const response = await fetch('/api/hello');
+    const response = await fetch('/todos/api/leaders');
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
     
@@ -44,7 +46,6 @@ class App extends Component {
     const todos = await fetch('/todos')
                   .then(res => res.json())
                   .then(res => {
-                    console.log(res);
                     this.setState({ response: res[4].todo_responsible })
                   });
     
@@ -67,7 +68,6 @@ class App extends Component {
           />
           <button type="submit">Submit</button>
         </form>
-        <p>{this.state.responseToPost}</p>
       </BrowserRouter>
     )
   }

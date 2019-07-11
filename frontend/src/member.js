@@ -1,27 +1,27 @@
 const members = {
   israel_1: [
     [
-      { name: '송준민', age: 29, members: [], clsName: 'i2', cellName: '이스라엘(가)'},
-      { name: '강찬송', age: 32, members: ['구본재', '박진오', '최지원']},
-      { name: '김영록', age: 29, members: ['백봉인', '이요한']},
-      { name: '김학준', age: 31, members: ['권오성', '최진성']},
-      { name: '박우림', age: 28, members: ['강의환', '이근민']}
+      { name: '송준민', age: 29, cc: false, mc: false, yc: true, members: [], clsName: 'i2', cellName: '이스라엘(가)'},
+      { name: '강찬송', age: 32, cc: false, mc: false, yc: false,members: ['구본재', '박진오', '최지원']},
+      { name: '김영록', age: 29, cc: false, mc: false, yc: false, members: ['백봉인', '이요한']},
+      { name: '김학준', age: 31, cc: false, mc: false, yc: false, members: ['권오성', '최진성']},
+      { name: '박우림', age: 28, cc: false, mc: false, yc: false, members: ['강의환', '이근민']}
     ],
-    [
-      { name: '오석기', age: 29, members: [], clsName: 'i2', cellName: '이스라엘(나)'},
-      { name: '우학제', age: 29, members: ['황재현', '김윤섭', '안민호']},
-      { name: '박종혁', age: 26, members: ['류건', '정세종']},
-      { name: '손정우', age: 29, members: ['김정한', '박태준', '최성민']},
-      { name: '박재영', age: 29, members: ['류태준', '박시준', '최형욱', '최하영', '이형준']},
-      { name: '손창우', age: 26, members: ['유선재', '박명훈']},
-      { name: '채희국', age: 29, members: ['이찬우', '김기윤']},
-      { name: '이장우', age: 28, members: ['조성현', '강의진', '이정현']},
-      { name: '김진영', age: 27, members: ['이창현', '진영태']},
-      { name: '이세형', age: 23, members: ['주재훈', '조영현']}
-    ],
-    [
-      { name: '신화식', age: 29, members: ['김경선', '강병찬', '임상범', '윤여명', '강용운', '정재필'], clsName: 'i2', cellName: '이스라엘(다)'}
-    ]
+    // [
+    //   { name: '오석기', age: 29, members: [], clsName: 'i2', cellName: '이스라엘(나)'},
+    //   { name: '우학제', age: 29, members: ['황재현', '김윤섭', '안민호']},
+    //   { name: '박종혁', age: 26, members: ['류건', '정세종']},
+    //   { name: '손정우', age: 29, members: ['김정한', '박태준', '최성민']},
+    //   { name: '박재영', age: 29, members: ['류태준', '박시준', '최형욱', '최하영', '이형준']},
+    //   { name: '손창우', age: 26, members: ['유선재', '박명훈']},
+    //   { name: '채희국', age: 29, members: ['이찬우', '김기윤']},
+    //   { name: '이장우', age: 28, members: ['조성현', '강의진', '이정현']},
+    //   { name: '김진영', age: 27, members: ['이창현', '진영태']},
+    //   { name: '이세형', age: 23, members: ['주재훈', '조영현']}
+    // ],
+    // [
+    //   { name: '신화식', age: 29, members: ['김경선', '강병찬', '임상범', '윤여명', '강용운', '정재필'], clsName: 'i2', cellName: '이스라엘(다)'}
+    // ]
   ],
   israel_2: [
     [
