@@ -87,8 +87,8 @@ class CellTable extends Component{
     check(high, low, checkType, currentCellName);
   };
   componentDidMount() {
-    const response = fetch('/todos/api/leaders').then(res => res.json())
-    .then(res => this.setState({ members: res }));
+    // const response = fetch('/todos/api/leaders').then(res => res.json())
+    // .then(res => this.setState({ members: res }));
   }
   render(){
     const currentCellName = this.props.to.slice(1);
@@ -123,7 +123,7 @@ class CellTable extends Component{
 
 
 const mapStateToProps = (state) => ({
-  indexing: state.indexing,
+  // indexing: state.indexing,
   members: state.members
 });
 

@@ -18,20 +18,36 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const todoRoutes = express.Router();
 app.use('/todos', todoRoutes);
 
-let m1 = new Leader({
-  name: "오석기",
-  section: '이스라엘군',
-  nation: '이스라엘(나)',
-  age: 29,
-  cc: false,
-  mc: false,
-  yc: false,
-  members: [{ name: '손창우', section: '이스라엘군', nation: '이스라엘(나)', cc: false, mc: false, yc: false}]
-});
-m1.save(function(err, book){
-  if(err) return console.error(err);
-  console.dir(book);
-});
+// let m1 = new Leader({
+//   name: "오석기",
+//   section: '이스라엘군',
+//   nation: '이스라엘(나)',
+//   age: 29,
+//   cc: false,
+//   mc: false,
+//   yc: false,
+//   members: [{ name: '손창우', section: '이스라엘군', nation: '이스라엘(나)', cc: false, mc: false, yc: false}]
+// });
+
+const addMember = ({ name, section, cellName, age, cc = false, mc = false, yc = false, members }) => {
+  return (
+  {
+    name,
+    section,
+    cellName,
+    age,
+    cc,
+    mc,
+    yc,
+    members: members.map(member => ({ name: member, section, cellName, cc, mc, yc})),
+    // members: [{ name: '손창우', section: '이스라엘군', nation: '이스라엘(나)', cc: false, mc: false, yc: false}]
+  }
+)}
+
+// m1.save(function(err, book){
+//   if(err) return console.error(err);
+//   console.dir(book);
+// });
 
 todoRoutes.get('/api/leaders', function(req,res){
   Leader.find(function(err, leaders){
@@ -40,9 +56,36 @@ todoRoutes.get('/api/leaders', function(req,res){
   })
 });
 
+todoRoutes.route('/admin').get((req, res) => {
+  console.log('admin!!!')
+  res.send({ a: 123 });
+})
 
+app.get('/api/section/:section', (req, res) => {
+  const section = req.params.section;
+  Leader.find({ section: section }, (err, leader) => {
+    if (err) {
+      console.log(err);
+  } else {
+      console.log(leader);
+      res.json(leader);
+  }
+  })
+})
+
+app.post('/api/add', (req, res, next) => {
+  console.log(req.body);
+  const { name, age, cellName, section, members } = req.body;
+  console.log('hello api/add');
+  const mem = new Leader(addMember({ name, age, cellName, section, members }));
+  mem.save((err, book) => {
+    if(err) return console.error(err);
+  })
+  res.send({ a: 1, b: 2, c:3, d:4 });
+})
 
 todoRoutes.route('/').get(function(req, res) {
+  console.log('todos!!!')
   Todo.find(function(err, todos) {
       if (err) {
           console.log(err);
@@ -59,7 +102,6 @@ todoRoutes.route('/:id').get(function(req, res) {
 });
 todoRoutes.route('/add').post(function(req, res) {
   let todo = new Todo(req.body);
-  console.log(todo);
   todo.save()
       .then(todo => {
           res.status(200).json({'todo': 'todo added successfully'});

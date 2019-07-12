@@ -3,17 +3,22 @@ import members from '../../member';
 const INCREMENT = 'counter/INCREMENT';
 const INDEXING = 'counter/INDEXING';
 const CHECK = 'counter/CHECK';
+const INSERT_MEMBER = 'counter/INSERT_MEMBER';
+const INSERT_CELL_MEMBER = 'counter/INSERT_CELL_MEMBER';
 
 export const increment = () => ({ type: INCREMENT});
 export const indexing = idx => ({ type: INDEXING, idx });
 export const check = (high, low, checkType, currentCellName) => ({ type: CHECK, high, low, checkType, currentCellName });
+export const insertMember = (left, value) => ({ type: INSERT_MEMBER, left, value });
+export const insertCellMember = (member, idx) => ({ type: INSERT_CELL_MEMBER, member, idx });
 
 const initialState = {
   number: 0,
   idx: 0,
-  members
+  members,
+  insertedMember: { members: [""] },
 }
-// { name: '송준민', age: 29, cc: false, mc: false, yc: true, members: [], clsName: 'i2', cellName: '이스라엘(가)'}
+
 export default function counter(state = initialState, action) {
   let checkType = '';
   let currentCell = '';
@@ -47,6 +52,25 @@ export default function counter(state = initialState, action) {
           ...cName.slice(action.high + 1, cName.length)
         ]
       }
+      }
+    case INSERT_MEMBER:
+      return {
+        ...state,
+        insertedMember: {
+          ...state.insertedMember,
+          [action.left]: action.value
+        }
+      }
+    case INSERT_CELL_MEMBER:
+      return {
+        ...state,
+        insertedMember: {
+          ...state.insertedMember,
+          members :
+            [...state.insertedMember.members.slice(0, action.idx),
+            action.member,
+            ...state.insertedMember.members.slice(action.idx + 1, state.insertedMember.members.length)]
+        }
       }
       default:
         return state;
