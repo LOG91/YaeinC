@@ -43,7 +43,10 @@ let Leader = new Schema({
     section: {
         type: String
     },
-    nation: {
+    cellName: {
+        type: String
+    },
+    cellNameKr: {
         type: String
     },
     age: {

@@ -18,36 +18,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const todoRoutes = express.Router();
 app.use('/todos', todoRoutes);
 
-// let m1 = new Leader({
-//   name: "오석기",
-//   section: '이스라엘군',
-//   nation: '이스라엘(나)',
-//   age: 29,
-//   cc: false,
-//   mc: false,
-//   yc: false,
-//   members: [{ name: '손창우', section: '이스라엘군', nation: '이스라엘(나)', cc: false, mc: false, yc: false}]
-// });
 
-const addMember = ({ name, section, cellName, age, cc = false, mc = false, yc = false, members }) => {
+const addMember = ({ name, section, cellName, cellNameKr, age, cc = false, mc = false, yc = false, members }) => {
   return (
   {
     name,
     section,
     cellName,
+    cellNameKr,
     age,
     cc,
     mc,
     yc,
     members: members.map(member => ({ name: member, section, cellName, cc, mc, yc})),
-    // members: [{ name: '손창우', section: '이스라엘군', nation: '이스라엘(나)', cc: false, mc: false, yc: false}]
   }
 )}
-
-// m1.save(function(err, book){
-//   if(err) return console.error(err);
-//   console.dir(book);
-// });
 
 todoRoutes.get('/api/leaders', function(req,res){
   Leader.find(function(err, leaders){
@@ -62,8 +47,9 @@ todoRoutes.route('/admin').get((req, res) => {
 })
 
 app.get('/api/section/:section', (req, res) => {
-  const section = req.params.section;
-  Leader.find({ section: section }, (err, leader) => {
+  const cellName = req.params.section;
+  console.log(cellName,898989896757);
+  Leader.find({ cellName: cellName }, (err, leader) => {
     if (err) {
       console.log(err);
   } else {
@@ -75,9 +61,8 @@ app.get('/api/section/:section', (req, res) => {
 
 app.post('/api/add', (req, res, next) => {
   console.log(req.body);
-  const { name, age, cellName, section, members } = req.body;
-  console.log('hello api/add');
-  const mem = new Leader(addMember({ name, age, cellName, section, members }));
+  const { name, age, cellName, cellNameKr, section, members } = req.body;
+  const mem = new Leader(addMember({ name, age, cellName, cellNameKr, section, members }));
   mem.save((err, book) => {
     if(err) return console.error(err);
   })

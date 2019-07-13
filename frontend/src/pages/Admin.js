@@ -17,36 +17,27 @@ class AdminPage extends Component {
       body: JSON.stringify(this.props.insertedMember),
     }).then(res => res.json());
   }
+
   handleChange = ({ target }) => {
     this.props.insertMember(target.name, target.value);
   }
+
   renderMembersList(list) {
-    console.log(this.props.insertedMember);
-    console.log(list, 999);
-    // if (!list.length) list = [""];
-    // return (
-    //   <div>
-    //     <div>셀원 1</div>
-    //     <input
-    //       className="cellMember"
-    //       name="members"
-    //       placeholder="셀원을 입력하세요"
-    //       onChange={evt => this.handleChangeMember(evt, 0)}
-    //     />
-    //   </div>
-    // )
     return list.map((member, i) => {
       return <div key={i}><div>셀원 {i + 1}</div><input className="cellMember" name="members" onChange={evt => this.handleChangeMember(evt, i)}></input></div>
     })
   }
+
   handleChangeMember = (evt, idx) => {
     console.log(evt.target.value, idx, 111);
     this.props.insertCellMember(evt.target.value, idx);
   }
+
   handleAddMember = () => {
     console.log(this.props.insertedMember.members.length);
     this.props.insertCellMember("", this.props.insertedMember.members.length);
   }
+  
   render(){
     return (
       <div>
@@ -54,8 +45,8 @@ class AdminPage extends Component {
           <div>이름</div><input name="name" onChange={this.handleChange}></input>
           <div>나이</div><input name="age" onChange={this.handleChange}></input>
           <div>지역군</div><input name="section" onChange={this.handleChange}></input>
-          <div>셀이름</div><input name="cellName" onChange={this.handleChange}></input>
-          {/* <div>셀원</div><input></input><button className="add_member_btn" onClick={() => addMember()}>추가</button> */}
+          <div>셀이름(en)</div><input name="cellName" onChange={this.handleChange}></input>
+          <div>셀이름(kr)</div><input name="cellNameKr" onChange={this.handleChange}></input>
           {this.renderMembersList(this.props.insertedMember.members)}
           <button onClick={() => this.handleAddMember()}>추가</button>
         </div>

@@ -15,8 +15,6 @@ class App extends Component {
         return this.setState({ response: res[0].name })
       })
       .catch(err => console.log(err));
-
-      // this.callListApi().then(res => this.setState({ response: res }));
   }
   
   callApi = async () => {
@@ -49,25 +47,12 @@ class App extends Component {
                     this.setState({ response: res[4].todo_responsible })
                   });
     
-    // this.setState({ response: body });
   };
 
   render() {
     return (
       <BrowserRouter>
         <Root />
-        <p>{this.state.response}</p>
-        <form onSubmit={this.handleSubmit}>
-          <p>
-            <strong>Post to Server:</strong>
-          </p>
-          <input
-            type="text"
-            value={this.state.post}
-            onChange={e => this.setState({ post: e.target.value })}
-          />
-          <button type="submit">Submit</button>
-        </form>
       </BrowserRouter>
     )
   }
