@@ -10,26 +10,8 @@ class App extends Component {
   };
   
   componentDidMount() {
-    this.callApi()
-      .then(res => {
-        return this.setState({ response: res[0].name })
-      })
-      .catch(err => console.log(err));
   }
   
-  callApi = async () => {
-    const response = await fetch('/todos/api/leaders');
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    
-    return body;
-  };
-  callListApi = async () => {
-    const response = await fetch('/todos');
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    return body;
-  }
 
   handleSubmit = async e => {
     e.preventDefault();
