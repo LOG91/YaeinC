@@ -71,13 +71,14 @@ app.post('/api/add', (req, res, next) => {
 
 todoRoutes.route('/').get(function(req, res) {
   console.log('todos!!!')
-  Todo.find(function(err, todos) {
-      if (err) {
-          console.log(err);
-      } else {
-          res.json(todos);
-      }
-  });
+  res.send('<div>hello</div>');
+  // Todo.find(function(err, todos) {
+  //     if (err) {
+  //         console.log(err);
+  //     } else {
+  //         res.json(todos);
+  //     }
+  // });
 });
 todoRoutes.route('/:id').get(function(req, res) {
   let id = req.params.id;
