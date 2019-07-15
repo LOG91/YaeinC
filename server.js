@@ -15,8 +15,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const todoRoutes = express.Router();
-app.use('/todos', todoRoutes);
+// const todoRoutes = express.Router();
+// app.use('/todos', todoRoutes);
 
 
 const addMember = ({ name, section, cellName, cellNameKr, age, cc = false, mc = false, yc = false, members }) => {
@@ -34,29 +34,29 @@ const addMember = ({ name, section, cellName, cellNameKr, age, cc = false, mc = 
   }
 )}
 
-todoRoutes.get('/api/leaders', function(req,res){
-  Leader.find(function(err, leaders){
-      if(err) return res.status(500).send({error: 'database failure'});
-      res.json(leaders);
-  })
-});
+// todoRoutes.get('/api/leaders', function(req,res){
+//   Leader.find(function(err, leaders){
+//       if(err) return res.status(500).send({error: 'database failure'});
+//       res.json(leaders);
+//   })
+// });
 
-todoRoutes.route('/admin').get((req, res) => {
-  console.log('admin!!!')
-  res.send({ a: 123 });
-})
+// todoRoutes.route('/admin').get((req, res) => {
+//   console.log('admin!!!')
+//   res.send({ a: 123 });
+// })
 
 app.get('/api/section/:section', (req, res) => {
   const cellName = req.params.section;
   console.log(cellName,898989896757);
-  Leader.find({ cellName: cellName }, (err, leader) => {
-    if (err) {
-      console.log(err);
-  } else {
-      console.log(leader);
-      res.json(leader);
-  }
-  })
+  // Leader.find({ cellName: cellName }, (err, leader) => {
+  //   if (err) {
+  //     console.log(err);
+  // } else {
+  //     console.log(leader);
+  //     res.json(leader);
+  // }
+  // })
 })
 
 app.post('/api/add', (req, res, next) => {
@@ -69,51 +69,51 @@ app.post('/api/add', (req, res, next) => {
   res.send({ a: 1, b: 2, c:3, d:4 });
 })
 
-todoRoutes.route('/').get(function(req, res) {
-  console.log('todos!!!')
-  res.send('<div>hello</div>');
-  // Todo.find(function(err, todos) {
-  //     if (err) {
-  //         console.log(err);
-  //     } else {
-  //         res.json(todos);
-  //     }
-  // });
-});
-todoRoutes.route('/:id').get(function(req, res) {
-  let id = req.params.id;
-  Todo.findById(id, function(err, todo) {
-      res.json(todo);
-  });
-});
-todoRoutes.route('/add').post(function(req, res) {
-  let todo = new Todo(req.body);
-  todo.save()
-      .then(todo => {
-          res.status(200).json({'todo': 'todo added successfully'});
-      })
-      .catch(err => {
-          res.status(400).send('adding new todo failed');
-      });
-});
-todoRoutes.route('/update/:id').post(function(req, res) {
-  Todo.findById(req.params.id, function(err, todo) {
-      if (!todo)
-          res.status(404).send("data is not found");
-      else
-          todo.todo_description = req.body.todo_description;
-          todo.todo_responsible = req.body.todo_responsible;
-          todo.todo_priority = req.body.todo_priority;
-          todo.todo_completed = req.body.todo_completed;
+// todoRoutes.route('/').get(function(req, res) {
+//   console.log('todos!!!')
+//   res.send('<div>hello</div>');
+//   // Todo.find(function(err, todos) {
+//   //     if (err) {
+//   //         console.log(err);
+//   //     } else {
+//   //         res.json(todos);
+//   //     }
+//   // });
+// });
+// todoRoutes.route('/:id').get(function(req, res) {
+//   let id = req.params.id;
+//   Todo.findById(id, function(err, todo) {
+//       res.json(todo);
+//   });
+// });
+// todoRoutes.route('/add').post(function(req, res) {
+//   let todo = new Todo(req.body);
+//   todo.save()
+//       .then(todo => {
+//           res.status(200).json({'todo': 'todo added successfully'});
+//       })
+//       .catch(err => {
+//           res.status(400).send('adding new todo failed');
+//       });
+// });
+// todoRoutes.route('/update/:id').post(function(req, res) {
+//   Todo.findById(req.params.id, function(err, todo) {
+//       if (!todo)
+//           res.status(404).send("data is not found");
+//       else
+//           todo.todo_description = req.body.todo_description;
+//           todo.todo_responsible = req.body.todo_responsible;
+//           todo.todo_priority = req.body.todo_priority;
+//           todo.todo_completed = req.body.todo_completed;
 
-          todo.save().then(todo => {
-              res.json('Todo updated!');
-          })
-          .catch(err => {
-              res.status(400).send("Update not possible");
-          });
-  });
-});
+//           todo.save().then(todo => {
+//               res.json('Todo updated!');
+//           })
+//           .catch(err => {
+//               res.status(400).send("Update not possible");
+//           });
+//   });
+// });
 
 mongoose.connect('mongodb://127.0.0.1:27017/todos', { useNewUrlParser: true });
 const connection = mongoose.connection;
