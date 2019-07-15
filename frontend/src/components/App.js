@@ -22,12 +22,6 @@ class App extends Component {
       },
       body: JSON.stringify({ post: this.state.post }),
     });
-    const body = await response.text();
-    const todos = await fetch('/todos')
-                  .then(res => res.json())
-                  .then(res => {
-                    this.setState({ response: res[4].todo_responsible })
-                  });
     
   };
 

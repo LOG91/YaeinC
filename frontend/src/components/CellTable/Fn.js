@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react';
 
-const renderLeaderList = (list, idx, networkName) => {
+const renderLeaderList = (list, idx, networkName, handleCheck) => {
+  console.log(list, 'list data');
   const all_members = list.reduce((ac, cv) => {
+    console.log(cv.members);
     ac += cv.members.length;
     return ac;
   },0) + list.length;
@@ -34,15 +36,15 @@ const renderLeaderList = (list, idx, networkName) => {
         </td>
         <td rowSpan={MEMBER_CNT}>
           <input className="styled-checkbox" checked={member.cc} readOnly type="checkbox" />
-          <label />
+          <label onClick={() => handleCheck(member.name, 'cc', idx)} />
         </td>
         <td rowSpan={MEMBER_CNT}>
           <input className="styled-checkbox" checked={member.mc} readOnly type="checkbox" />
-          <label />
+          <label onClick={() => handleCheck(member.name, 'mc', idx)} />
         </td>
         <td rowSpan={MEMBER_CNT}>
           <input className="styled-checkbox" checked={member.yc} readOnly type="checkbox" />
-          <label />
+          <label onClick={() => handleCheck(member.name, 'yc', idx)} />
         </td>
       </tr>
       {MEMBER_CNT !== 1 ? member.members.map((v, i) =>(
@@ -77,12 +79,12 @@ const re = async (section) => {
   return res;
 }
 
-export const mapNetworkTable = (list) => {
+export const mapNetworkTable = (list, handleCheck) => {
   if (!list) return <div>아직 데이터가 없습니다😨</div>;
     
     // return renderLeaderList(list);
     return list.map((network, idx) => {
       const networkName = network.length ? network[0].cellNameKr : '';
-      return renderLeaderList(network, idx, networkName);
+      return renderLeaderList(network, idx, networkName, handleCheck);
     });
 }

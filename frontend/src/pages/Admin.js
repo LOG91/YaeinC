@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { insertMember, insertCellMember } from '../store/modules/counter'
+import { insertMember, insertCellMember, removeCellMember } from '../store/modules/counter'
 import ReactDOM from 'react-dom';
 
 
@@ -8,7 +8,10 @@ class AdminPage extends Component {
   componentDidMount() {
     // console.log(this.props.insertedMember);
   }
-  async addMember() {
+  async addLeader () {
+    const insertedMember = this.props.insertedMember;
+    insertedMember
+    
     const f = await fetch('/api/add', {
       method: 'POST',
       headers: {
@@ -24,8 +27,22 @@ class AdminPage extends Component {
 
   renderMembersList(list) {
     return list.map((member, i) => {
-      return <div key={i}><div>셀원 {i + 1}</div><input className="cellMember" name="members" onChange={evt => this.handleChangeMember(evt, i)}></input></div>
+      return (
+      <div key={i}>
+        <div>셀원 {i + 1}</div>
+        <input
+          className="cellMember"
+          name="members"
+          onChange={evt => this.handleChangeMember(evt, i)} />
+        <button onClick={evt => this.handleRemoveMember(evt, i)}>삭제</button>
+      </div>
+      )
     })
+  }
+
+  handleRemoveMember = (evt, idx) => {
+    console.log(idx);
+    this.props.removeCellMember(idx)
   }
 
   handleChangeMember = (evt, idx) => {
@@ -48,9 +65,9 @@ class AdminPage extends Component {
           <div>셀이름(en)</div><input name="cellName" onChange={this.handleChange}></input>
           <div>셀이름(kr)</div><input name="cellNameKr" onChange={this.handleChange}></input>
           {this.renderMembersList(this.props.insertedMember.members)}
-          <button onClick={() => this.handleAddMember()}>추가</button>
+          <button onClick={() => this.handleAddMember()}>셀원 추가</button>
         </div>
-        <button className="add_member_btn" onClick={() => this.addMember()}>등록</button>
+        <button className="add_member_btn" onClick={() => this.addLeader()}>등록</button>
       </div>
     )
   }
@@ -64,6 +81,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   insertMember: (left, value) => dispatch(insertMember(left, value)),
   insertCellMember: (member, idx) => dispatch(insertCellMember(member, idx)),
+  removeCellMember: (idx) => dispatch(removeCellMember(idx))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminPage);

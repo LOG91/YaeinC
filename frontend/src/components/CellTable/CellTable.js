@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './CellTable.scss';
-import { indexing, check } from '../../store/modules/counter';
+import { indexing, checkWorship } from '../../store/modules/counter';
 import { connect } from 'react-redux';
 
 import { mapNetworkTable } from './Fn'
@@ -26,15 +26,29 @@ class CellTable extends Component{
     console.log(list,1111111);
     return list.map(v => <div>{v.name}</div>);
   }
-  handleChange = (high, low, checkType, currentCellName) => {
-    const { check } = this.props;
-    check(high, low, checkType, currentCellName);
-  };
+  // handleChange = (high, low, checkType, currentCellName) => {
+  //   const { check } = this.props;
+  //   check(high, low, checkType, currentCellName);
+  // };
+  handleCheck = async (leaderName, kind, sectionIdx, memberName = false) => {
+    console.log(leaderName, kind, sectionIdx);
+    const ff = await fetch(`/api/check/${memberName}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ leaderName, kind, memberName})
+    });
+    if(ff.status === 200) {
+      this.props.checkWorship(sectionIdx, leaderName, kind);
+    }
+  }
   
   render(){
     const { ct2 } = this.state;
     const currentCellName = this.props.to.slice(1);
     const currentMembers = this.props.members[currentCellName];
+    // const checkWorship =
 
     return (
       <table border="1" cellPadding="10">
@@ -56,7 +70,7 @@ class CellTable extends Component{
                   <td>주일</td>
                   <td>청년</td>
               </tr>
-              {mapNetworkTable(this.props.currentSection)}
+              {mapNetworkTable(this.props.currentSection, this.handleCheck)}
             </tbody>
           </table>
     )
@@ -72,7 +86,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
   indexing: idx => dispatch(indexing(idx)),
-  check: (high, low, checkType ,currentCellName) => dispatch(check(high, low, checkType, currentCellName))
+  checkWorship: (sectionIdx, name, left) => dispatch(checkWorship(sectionIdx, name, left))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CellTable);

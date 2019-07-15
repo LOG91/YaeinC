@@ -52,6 +52,25 @@ app.post('/api/add', (req, res, next) => {
     if(err) return console.error(err);
   })
   res.send({ a: 1, b: 2, c:3, d:4 });
+});
+
+app.put('/api/check/:memberName', (req, res) => {
+  console.log(req.body);
+  const { leaderName, kind, memberName } = req.body;
+  console.log(req.params.memberName);
+  console.log(leaderName, leaderName);
+  Leader.findOne({ name: leaderName }, (err, leader) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(leader[kind], !leader[kind], kind, 'target')
+      Leader.update({ name: leaderName}, {$set: { [kind]: !leader[kind] }},() =>{
+        res.json({consol: 'log'})
+      })
+    }
+  });
+  
+  // const { leaderName, memberName } 
 })
 
 // todoRoutes.route('/').get(function(req, res) {

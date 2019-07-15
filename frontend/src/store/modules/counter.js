@@ -5,20 +5,24 @@ const INDEXING = 'counter/INDEXING';
 const CHECK = 'counter/CHECK';
 const INSERT_MEMBER = 'counter/INSERT_MEMBER';
 const INSERT_CELL_MEMBER = 'counter/INSERT_CELL_MEMBER';
+const REMOVE_CELL_MEMBER = 'counter/REMOVE_CELL_MEMBER';
 const CHANGE_CURRENT_SECTION = 'counter/CHANGE_CURRENT_SECTION';
+const CHECK_WORSHIP = 'counter/CHECK_WORSHIP';
 
 export const increment = () => ({ type: INCREMENT});
 export const indexing = idx => ({ type: INDEXING, idx });
 export const check = (high, low, checkType, currentCellName) => ({ type: CHECK, high, low, checkType, currentCellName });
 export const insertMember = (left, value) => ({ type: INSERT_MEMBER, left, value });
 export const insertCellMember = (member, idx) => ({ type: INSERT_CELL_MEMBER, member, idx });
+export const removeCellMember = (idx) => ({ type: REMOVE_CELL_MEMBER, idx});
 export const chageCurrentSection = (section) => ({ type: CHANGE_CURRENT_SECTION, section });
+export const checkWorship = (sectionIdx, name, left) => ({ type: CHECK_WORSHIP, sectionIdx, name, left });
 
 const initialState = {
   number: 0,
   idx: '',
   members,
-  insertedMember: { members: [""] },
+  insertedMember: { name: '', age: '', section: '', cellName: '', cellNameKr: '', members: [] },
   currentSection: []
 }
 
@@ -75,11 +79,39 @@ export default function counter(state = initialState, action) {
             ...state.insertedMember.members.slice(action.idx + 1, state.insertedMember.members.length)]
         }
       }
-      case CHANGE_CURRENT_SECTION:
+    case REMOVE_CELL_MEMBER:
         return {
           ...state,
-          currentSection: action.section
+          insertedMember: {
+            ...state.insertedMember,
+            members: state.insertedMember.members.filter((v, idx) => idx !== action.idx)
+          }
         }
+    case CHANGE_CURRENT_SECTION:
+      return {
+        ...state,
+        currentSection: action.section
+      }
+    case CHECK_WORSHIP:
+      return {
+        ...state,
+        currentSection: [
+          ...state.currentSection.slice(0, action.sectionIdx),
+          state.currentSection[action.sectionIdx].map(member => {
+            if(member.name === action.name) {
+              return { ...member, [action.left]: !member[action.left]}
+            }
+            return member;
+          })
+          // [...state.currentSection[action.sectionIdx],
+          //   { ...state.currentSection[action.sectionIdx]
+          //     .filter(member => member.name === action.name), [action.left]: true}
+          // ]
+          ,
+          ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
+        ]
+      }
+
       default:
         return state;
   }
