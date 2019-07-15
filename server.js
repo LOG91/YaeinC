@@ -6,17 +6,13 @@ const cors = require('cors');
 const app = express();
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Todo = require('./todo.model');
-const Leader = require('./todo.model');
+const Leader = require('./members.model');
 
 const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// const todoRoutes = express.Router();
-// app.use('/todos', todoRoutes);
 
 
 const addMember = ({ name, section, cellName, cellNameKr, age, cc = false, mc = false, yc = false, members }) => {
@@ -34,33 +30,22 @@ const addMember = ({ name, section, cellName, cellNameKr, age, cc = false, mc = 
   }
 )}
 
-// todoRoutes.get('/api/leaders', function(req,res){
-//   Leader.find(function(err, leaders){
-//       if(err) return res.status(500).send({error: 'database failure'});
-//       res.json(leaders);
-//   })
-// });
-
-// todoRoutes.route('/admin').get((req, res) => {
-//   console.log('admin!!!')
-//   res.send({ a: 123 });
-// })
-
 app.get('/api/section/:section', (req, res) => {
   const cellName = req.params.section;
   console.log(cellName,898989896757);
-  // Leader.find({ cellName: cellName }, (err, leader) => {
-  //   if (err) {
-  //     console.log(err);
-  // } else {
-  //     console.log(leader);
-  //     res.json(leader);
-  // }
-  // })
+  Leader.find({ cellName: cellName }, (err, leader) => {
+    if (err) {
+      console.log(err);
+  } else {
+      console.log(leader);
+      res.json(leader);
+  }
+  });
 })
 
 app.post('/api/add', (req, res, next) => {
   console.log(req.body);
+  console.log('worked!');
   const { name, age, cellName, cellNameKr, section, members } = req.body;
   const mem = new Leader(addMember({ name, age, cellName, cellNameKr, section, members }));
   mem.save((err, book) => {
@@ -115,7 +100,7 @@ app.post('/api/add', (req, res, next) => {
 //   });
 // });
 
-mongoose.connect('mongodb://127.0.0.1:27017/todos', { useNewUrlParser: true });
+mongoose.connect('mongodb://127.0.0.1:27017/members', { useNewUrlParser: true });
 const connection = mongoose.connection;
 
 connection.once('open', function() {
