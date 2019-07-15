@@ -29,7 +29,7 @@ class Tab extends Component {
     console.log('inserted cells: ', cells);
     const info = await Promise.all(cells.map(item => fetch(`/api/section/${item}`).then(res=>res.json())));
     chageCurrentSection(info);
-    console.log(info)
+    console.log(info, 'infooo')
   }
   render() {
     const activeStyle = {
