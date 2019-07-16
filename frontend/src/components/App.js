@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import Root from '../Root';
+import { chageCurrentSection, indexing } from '../store/modules/counter';
+import { connect } from 'react-redux';
+
+import { cellData } from '../data/cellData';
 
 class App extends Component {
   state = {
@@ -9,7 +13,15 @@ class App extends Component {
     responseToPost: '',
   };
   
-  componentDidMount() {
+  async componentDidMount() {
+    const { chageCurrentSection, indexing } = this.props;
+    const initIdx = Math.floor(Math.random() * cellData.length - 2);
+    const initNetwork = cellData[initIdx];
+    const initCells = initNetwork.cells;
+    console.log(initCells);
+    indexing(initNetwork.en_name);
+    const info = await Promise.all(initCells.map(item => fetch(`/api/section/${item}`).then(res=>res.json())));
+    chageCurrentSection(info);
   }
   
 
@@ -34,4 +46,13 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  insertedMember: state.insertedMember
+})
+
+const mapDispatchToProps = dispatch => ({
+  indexing: idx => dispatch(indexing(idx)),
+  chageCurrentSection: section => dispatch(chageCurrentSection(section))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
