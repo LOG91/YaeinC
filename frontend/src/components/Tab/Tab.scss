@@ -1,0 +1,24 @@
+.tab {
+  display: flex;
+  justify-content: center;
+  .index {
+    color: #5d5d5d;
+    text-align: center;
+    a {
+      display: block;
+      padding: 1rem 2rem;
+      text-decoration: none;
+      color: #5d5d5d;
+    }
+    &:hover {
+      a {
+        color: #9775fa;
+      }
+    }
+    &.active {
+      border-bottom: '1px solid #9775fa';
+      color: '#9775fa';
+    }
+  }
+  
+}

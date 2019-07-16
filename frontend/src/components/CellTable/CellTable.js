@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './CellTable.scss';
-import { indexing, checkWorship } from '../../store/modules/counter';
+import { indexing, checkWorship, chageCurrentSection } from '../../store/modules/counter';
 import { connect } from 'react-redux';
 
 import { mapNetworkTable } from './Fn'
@@ -12,10 +12,11 @@ class CellTable extends Component{
     ct2: []
   }
   
-  componentDidMount() {
-    // this.re('russia')
-    console.log('hhhh');
-    console.log(this.props.currentSection);
+  async componentDidMount() {
+    const { chageCurrentSection } = this.props;
+    const initCells = ['israel_ga', 'israel_na', 'israel_da'];
+    const info = await Promise.all(initCells.map(item => fetch(`/api/section/${item}`).then(res=>res.json())));
+    chageCurrentSection(info);
   }
   re = async (section) => {
     const f = await fetch(`/api/section/${section}`).then(res => res.json()).catch(error => console.error(error));
@@ -49,7 +50,7 @@ class CellTable extends Component{
     const currentCellName = this.props.to.slice(1);
     const currentMembers = this.props.members[currentCellName];
     // const checkWorship =
-
+    console.log('here');
     return (
       <table border="1" cellPadding="10">
             <tbody>
@@ -86,7 +87,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
   indexing: idx => dispatch(indexing(idx)),
-  checkWorship: (sectionIdx, name, left) => dispatch(checkWorship(sectionIdx, name, left))
+  checkWorship: (sectionIdx, name, left) => dispatch(checkWorship(sectionIdx, name, left)),
+  chageCurrentSection: section => dispatch(chageCurrentSection(section))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CellTable);

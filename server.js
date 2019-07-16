@@ -43,6 +43,18 @@ app.get('/api/section/:section', (req, res) => {
   });
 })
 
+app.get('/api/jjp', (req, res) => {
+  console.log('hello World!!');
+  res.send(`
+    <div>
+      <h2 style="text-align:center">정재필 홈페이지</h2>
+      <img 
+        style="display: block; margin: 0 auto;"
+        src="https://post-phinf.pstatic.net/MjAxODAxMzBfMjI1/MDAxNTE3MjY5MzA3NTgz.V6faZ0lf5APcXPXCLchR5XUHOdzz5MQRNOA5Y7dL-iog.COU5qG5ACVgPJNgV3PpXr-oVVmpCxqbrYSzaRDtbnoYg.JPEG/2.jpg?type=w1200"></img>
+    </div>
+  `);
+})
+
 app.post('/api/add', (req, res, next) => {
   console.log(req.body);
   console.log('worked!');

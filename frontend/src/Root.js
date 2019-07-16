@@ -11,7 +11,8 @@ const Root = () => {
       <div className="container">
         <Tab />
         <Route exact path="/" component={Home} />
-        <Route path="/admin" component={Admin} /> 
+        <Route path="/admin" component={Admin} />
+        <Route path="/jjp" component={Extra} />
       </div>
     </div>
   )

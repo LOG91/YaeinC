@@ -14,26 +14,26 @@ ul {
   background-color: #eaeaea;
 }
 
-.tab {
-  display: flex;
-  justify-content: center;
-  .index {
-    color: #5d5d5d;
-    text-align: center;
-    a {
-      display: block;
-      padding: 1rem 2rem;
-      text-decoration: none;
-      color: #5d5d5d;
-    }
-    &:hover {
-      a {
-        color: #9775fa;
-      }
-    }
-  }
+// .tab {
+//   display: flex;
+//   justify-content: center;
+//   .index {
+//     color: #5d5d5d;
+//     text-align: center;
+//     a {
+//       display: block;
+//       padding: 1rem 2rem;
+//       text-decoration: none;
+//       color: #5d5d5d;
+//     }
+//     &:hover {
+//       a {
+//         color: #9775fa;
+//       }
+//     }
+//   }
   
-}
+// }
 
 table {
   margin: 0 auto;

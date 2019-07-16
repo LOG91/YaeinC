@@ -15,7 +15,7 @@ export const check = (high, low, checkType, currentCellName) => ({ type: CHECK, 
 export const insertMember = (left, value) => ({ type: INSERT_MEMBER, left, value });
 export const insertCellMember = (member, idx) => ({ type: INSERT_CELL_MEMBER, member, idx });
 export const removeCellMember = (idx) => ({ type: REMOVE_CELL_MEMBER, idx});
-export const chageCurrentSection = (section) => ({ type: CHANGE_CURRENT_SECTION, section });
+export const chageCurrentSection = (section, enName) => ({ type: CHANGE_CURRENT_SECTION, section, enName });
 export const checkWorship = (sectionIdx, name, left) => ({ type: CHECK_WORSHIP, sectionIdx, name, left });
 
 const initialState = {
@@ -102,16 +102,10 @@ export default function counter(state = initialState, action) {
               return { ...member, [action.left]: !member[action.left]}
             }
             return member;
-          })
-          // [...state.currentSection[action.sectionIdx],
-          //   { ...state.currentSection[action.sectionIdx]
-          //     .filter(member => member.name === action.name), [action.left]: true}
-          // ]
-          ,
+          }),
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
-        ]
+        ],
       }
-
       default:
         return state;
   }
