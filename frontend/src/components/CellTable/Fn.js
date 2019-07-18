@@ -1,15 +1,12 @@
 import React, { Fragment } from 'react';
 
-const renderLeaderList = (list, idx, networkName, handleCheck) => {
-  console.log(list, 'list data');
+const renderLeaderList = (list, idx, networkName, handleCheck, handleCount) => {
   const all_members = list.reduce((ac, cv) => {
-    console.log(cv.members);
     ac += cv.members.length;
     return ac;
   },0) + list.length;
   
   const evenClsName = (idx % 2 === 0) ? 'i2' : '';
-  console.log(evenClsName);
   const reduced = list.map((member, idxForKey) => {
     const MEMBER_CNT = member.members.length + 1;
     return (
@@ -18,33 +15,41 @@ const renderLeaderList = (list, idx, networkName, handleCheck) => {
       <tr className={evenClsName}>
         <td rowSpan={MEMBER_CNT}>{member.name}</td>
         <td rowSpan={MEMBER_CNT}>
-          <select className="select_box_dawn">
-            <option value="zero">0</option>
-            <option value="one">1</option>
-            <option value="two">2</option>
-            <option value="three">3</option>
-            <option value="four">4</option>
-            <option value="five">5</option>
+          <select
+            className="select_box_dawn"
+            onChange={({ target }) => handleCount(member.name, idx, 'dawn', target.value)}
+            value={member.dawn}
+          >
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
           </select>
         </td>
         <td rowSpan={MEMBER_CNT}>
-          <select className="select_box_word">
-            <option value="zero">0</option>
-            <option value="one">1</option>
-            <option value="two">2</option>
+          <select
+            className="select_box_word"
+            onChange={({ target }) => handleCount(member.name, idx, 'word', target.value)}
+            value={member.word}
+          >
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
           </select>
         </td>
         <td rowSpan={MEMBER_CNT}>
           <input className="styled-checkbox" checked={member.cc} readOnly type="checkbox" />
-          <label onClick={() => handleCheck(member.name, 'cc', idx)} />
+          <label onClick={() => handleCheck(member.name, idx, 'cc')} />
         </td>
         <td rowSpan={MEMBER_CNT}>
           <input className="styled-checkbox" checked={member.mc} readOnly type="checkbox" />
-          <label onClick={() => handleCheck(member.name, 'mc', idx)} />
+          <label onClick={() => handleCheck(member.name, idx, 'mc')} />
         </td>
         <td rowSpan={MEMBER_CNT}>
           <input className="styled-checkbox" checked={member.yc} readOnly type="checkbox" />
-          <label onClick={() => handleCheck(member.name, 'yc', idx)} />
+          <label onClick={() => handleCheck(member.name, idx, 'yc')} />
         </td>
       </tr>
       {MEMBER_CNT !== 1 ? member.members.map((v, i) =>(
@@ -72,19 +77,11 @@ const renderLeaderList = (list, idx, networkName, handleCheck) => {
   return reduced;
 }
 
-const re = async (section) => {
-  const f = await fetch(`/api/section/${section}`);
-  const res = await f.json();
-  console.log(res);
-  return res;
-}
-
-export const mapNetworkTable = (list, handleCheck) => {
+export const mapNetworkTable = (list, handleCheck, handleCount) => {
   if (!list) return <div>아직 데이터가 없습니다😨</div>;
     
-    // return renderLeaderList(list);
     return list.map((network, idx) => {
       const networkName = network.length ? network[0].cellNameKr : '';
-      return renderLeaderList(network, idx, networkName, handleCheck);
+      return renderLeaderList(network, idx, networkName, handleCheck, handleCount);
     });
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './CellTable.scss';
-import { indexing, checkWorship, chageCurrentSection } from '../../store/modules/counter';
+import { indexing, checkWorship, countContent ,chageCurrentSection } from '../../store/modules/counter';
 import { connect } from 'react-redux';
 
 import { mapNetworkTable } from './Fn'
@@ -8,23 +8,28 @@ import { mapNetworkTable } from './Fn'
 
 class CellTable extends Component{
 
-  mapped = (list) => {
-    console.log(list,1111111);
-    return list.map(v => <div>{v.name}</div>);
-  }
-  
-
-  handleCheck = async (leaderName, kind, sectionIdx, memberName = false) => {
-    console.log(leaderName, kind, sectionIdx);
-    const ff = await fetch(`/api/check/${memberName}`, {
+  handleCheck = async (leaderName, sectionIdx, kind, memberName = false) => {
+    const responsedData = await fetch(`/api/check/${memberName}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ leaderName, kind, memberName})
     });
-    if(ff.status === 200) {
-      this.props.checkWorship(sectionIdx, leaderName, kind);
+    if(responsedData.status === 200) {
+      this.props.checkWorship(leaderName, sectionIdx, kind);
+    }
+  }
+  handleCount = async (leaderName, sectionIdx, kind, count) => {
+    const responsedData = await fetch(`/api/count/${leaderName}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ leaderName, kind, count: Number(count) })
+    });
+    if(responsedData.status === 200) {
+      this.props.countContent(leaderName, sectionIdx, kind, Number(count));
     }
   }
   
@@ -49,7 +54,7 @@ class CellTable extends Component{
                   <td>주일</td>
                   <td>청년</td>
               </tr>
-              {mapNetworkTable(this.props.currentSection, this.handleCheck)}
+              {mapNetworkTable(this.props.currentSection, this.handleCheck, this.handleCount)}
             </tbody>
           </table>
     )
@@ -65,7 +70,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
   indexing: idx => dispatch(indexing(idx)),
-  checkWorship: (sectionIdx, name, left) => dispatch(checkWorship(sectionIdx, name, left)),
+  checkWorship: (name, sectionIdx, left) => dispatch(checkWorship(name, sectionIdx, left)),
+  countContent: (name, sectionIdx, left, count) => dispatch(countContent(name, sectionIdx, left, count)),
   chageCurrentSection: section => dispatch(chageCurrentSection(section))
 });
 

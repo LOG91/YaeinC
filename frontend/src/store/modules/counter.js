@@ -8,6 +8,7 @@ const INSERT_CELL_MEMBER = 'counter/INSERT_CELL_MEMBER';
 const REMOVE_CELL_MEMBER = 'counter/REMOVE_CELL_MEMBER';
 const CHANGE_CURRENT_SECTION = 'counter/CHANGE_CURRENT_SECTION';
 const CHECK_WORSHIP = 'counter/CHECK_WORSHIP';
+const COUNT_CONTENT = 'counter/COUNT_CONTENT';
 
 export const increment = () => ({ type: INCREMENT});
 export const indexing = idx => ({ type: INDEXING, idx });
@@ -16,7 +17,8 @@ export const insertMember = (left, value) => ({ type: INSERT_MEMBER, left, value
 export const insertCellMember = (member, idx) => ({ type: INSERT_CELL_MEMBER, member, idx });
 export const removeCellMember = (idx) => ({ type: REMOVE_CELL_MEMBER, idx});
 export const chageCurrentSection = (section, enName) => ({ type: CHANGE_CURRENT_SECTION, section, enName });
-export const checkWorship = (sectionIdx, name, left) => ({ type: CHECK_WORSHIP, sectionIdx, name, left });
+export const checkWorship = (name, sectionIdx, left) => ({ type: CHECK_WORSHIP, name, sectionIdx, left });
+export const countContent = (name, sectionIdx, left, count) => ({ type: COUNT_CONTENT, name, sectionIdx, left, count });
 
 const initialState = {
   number: 0,
@@ -30,6 +32,7 @@ export default function counter(state = initialState, action) {
   let checkType = '';
   let currentCell = '';
   let cName = '';
+  console.log(action);
   if(action.type === CHECK){
     checkType = action.checkType;
     currentCell = action.currentCellName;
@@ -100,6 +103,20 @@ export default function counter(state = initialState, action) {
           state.currentSection[action.sectionIdx].map(member => {
             if(member.name === action.name) {
               return { ...member, [action.left]: !member[action.left]}
+            }
+            return member;
+          }),
+          ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
+        ],
+      }
+      case COUNT_CONTENT:
+      return {
+        ...state,
+        currentSection: [
+          ...state.currentSection.slice(0, action.sectionIdx),
+          state.currentSection[action.sectionIdx].map(member => {
+            if(member.name === action.name) {
+              return { ...member, [action.left]: action.count}
             }
             return member;
           }),

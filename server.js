@@ -1,12 +1,11 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-
 const cors = require('cors');
 const app = express();
+
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const Leader = require('./members.model');
+const {Leader, Member} = require('./members.model');
 
 const port = process.env.PORT || 5000;
 
@@ -15,38 +14,60 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-const addMember = ({ name, section, cellName, cellNameKr, age, cc = false, mc = false, yc = false, members }) => {
+const addLeader = ({ name, section, cellName, cellNameKr, age, dawn = 0, word = 0, cc = false, mc = false, yc = false }) => {
   return (
-  {
-    name,
-    section,
-    cellName,
-    cellNameKr,
-    age,
-    cc,
-    mc,
-    yc,
-    members: members.map(member => ({ name: member, section, cellName, cc, mc, yc})),
-  }
-)}
+    {
+      name,
+      section,
+      cellName,
+      cellNameKr,
+      age,
+      dawn,
+      word,
+      cc,
+      mc,
+      yc,
+    }
+  )
+}
+
+const addMember = ({ leaderId, sec, name, section, cellName, cellNameKr, cc = false, mc = false, yc = false }) => {
+  return (
+    {
+      leaderId,
+      sec,
+      name,
+      section,
+      cellName,
+      cellNameKr,
+      cc,
+      mc,
+      yc,
+    }
+  )
+}
 
 app.get('/api/section/:section', (req, res) => {
   const cellName = req.params.section;
-  console.log(cellName,898989896757);
-  Leader.find({ cellName: cellName }, (err, leader) => {
-    if (err) {
-      console.log(err);
-  } else {
-      console.log(leader);
-      res.json(leader);
-  }
-  });
+  console.log(cellName, 898989896757);
+  // ser.findById(req.userId)
+  //    .populate('subscribing')
+  //    .exec(function(err, user){
+  //         console.log(user.subscribing);
+  //    })
+  Leader.find({ cellName: cellName })
+        .populate('members')
+        .exec((err, user) =>{
+          // Member.populate(user.members, '_id', function (err, doc) {
+          // })
+    res.send(user);
+  })
 })
 
 
 // just kidding
 app.get('/api/jjp', (req, res) => {
-  console.log('hello World!!');
+  console.log('This is JJP page');
   res.send(`
     <div>
       <h2 style="text-align:center">정재필 홈페이지</h2>
@@ -55,88 +76,66 @@ app.get('/api/jjp', (req, res) => {
         src="https://post-phinf.pstatic.net/MjAxODAxMzBfMjI1/MDAxNTE3MjY5MzA3NTgz.V6faZ0lf5APcXPXCLchR5XUHOdzz5MQRNOA5Y7dL-iog.COU5qG5ACVgPJNgV3PpXr-oVVmpCxqbrYSzaRDtbnoYg.JPEG/2.jpg?type=w1200"></img>
     </div>
   `);
+});
+
+app.post('/api/member', (req, res) => {
+  const { _id: leaderId, cellName, cellNameKr, section, members } = req.body;
+  members.forEach((memberName, idx) => {
+    const memb = new Member(addMember({ name: memberName, sec: idx, cellName, cellNameKr, section, leaderId }));
+    memb.save((err, member) => {
+      if (err) return console.error(err);
+    })
+  })
+  res.send({1:2});
 })
 
-app.post('/api/add', (req, res, next) => {
-  console.log(req.body);
-  console.log('worked!');
+app.post('/api/leader', (req, res, next) => {
   const { name, age, cellName, cellNameKr, section, members } = req.body;
-  const mem = new Leader(addMember({ name, age, cellName, cellNameKr, section, members }));
-  mem.save((err, book) => {
-    if(err) return console.error(err);
+  const lead = new Leader(addLeader({ name, age, cellName, cellNameKr, section, members }));
+  members.forEach((memberName, idx) => {
+    const memb = new Member(addMember({ name: memberName, sec: idx, cellName, cellNameKr, section, leaderId: lead._id }));
+    memb.save((err, member) => {
+      lead.members.push(memb._id);
+      if(idx === members.length - 1){lead.save((err, book) => {
+        if (err) return console.error(err);
+        
+    })}
+    })
   })
-  res.send({ a: 1, b: 2, c:3, d:4 });
+  res.send({ a: 1, b: 2, c: 3, d: 4 });
 });
 
 app.put('/api/check/:memberName', (req, res) => {
-  console.log(req.body);
   const { leaderName, kind, memberName } = req.body;
-  console.log(req.params.memberName);
-  console.log(leaderName, leaderName);
   Leader.findOne({ name: leaderName }, (err, leader) => {
     if (err) {
       console.log(err);
     } else {
       console.log(leader[kind], !leader[kind], kind, 'target')
-      Leader.update({ name: leaderName}, {$set: { [kind]: !leader[kind] }},() =>{
-        res.json({consol: 'log'})
+      Leader.update({ name: leaderName }, { $set: { [kind]: !leader[kind] } }, () => {
+        res.json({ consol: 'log' })
       })
     }
   });
-  
-  // const { leaderName, memberName } 
+});
+app.put('/api/count/:memberName', (req, res) => {
+  const { leaderName, kind, count } = req.body;
+  Leader.findOne({ name: leaderName }, (err, leader) => {
+    if (err) {
+      console.log(err);
+    } else {
+      Leader.update({ name: leaderName }, { $set: { [kind]: count } }, () => {
+        res.json({ consol: 'log' })
+      })
+    }
+  });
 })
 
-// todoRoutes.route('/').get(function(req, res) {
-//   console.log('todos!!!')
-//   res.send('<div>hello</div>');
-//   // Todo.find(function(err, todos) {
-//   //     if (err) {
-//   //         console.log(err);
-//   //     } else {
-//   //         res.json(todos);
-//   //     }
-//   // });
-// });
-// todoRoutes.route('/:id').get(function(req, res) {
-//   let id = req.params.id;
-//   Todo.findById(id, function(err, todo) {
-//       res.json(todo);
-//   });
-// });
-// todoRoutes.route('/add').post(function(req, res) {
-//   let todo = new Todo(req.body);
-//   todo.save()
-//       .then(todo => {
-//           res.status(200).json({'todo': 'todo added successfully'});
-//       })
-//       .catch(err => {
-//           res.status(400).send('adding new todo failed');
-//       });
-// });
-// todoRoutes.route('/update/:id').post(function(req, res) {
-//   Todo.findById(req.params.id, function(err, todo) {
-//       if (!todo)
-//           res.status(404).send("data is not found");
-//       else
-//           todo.todo_description = req.body.todo_description;
-//           todo.todo_responsible = req.body.todo_responsible;
-//           todo.todo_priority = req.body.todo_priority;
-//           todo.todo_completed = req.body.todo_completed;
-
-//           todo.save().then(todo => {
-//               res.json('Todo updated!');
-//           })
-//           .catch(err => {
-//               res.status(400).send("Update not possible");
-//           });
-//   });
-// });
 
 mongoose.connect('mongodb://127.0.0.1:27017/members', { useNewUrlParser: true });
 const connection = mongoose.connection;
 
-connection.once('open', function() {
+connection.once('open', function () {
   console.log("MongoDB database connection established successfully");
 })
 
@@ -158,7 +157,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'front/build')));
 
   // Handle React routing, return all requests to React app
-  app.get('*', function(req, res) {
+  app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, 'front/build', 'index.html'));
   });
 }

@@ -5,20 +5,27 @@ import ReactDOM from 'react-dom';
 
 
 class AdminPage extends Component {
-  componentDidMount() {
-    // console.log(this.props.insertedMember);
-  }
+  
   async addLeader () {
-    const insertedMember = this.props.insertedMember;
-    insertedMember
-    
-    const f = await fetch('/api/add', {
+    const { insertedMember } = this.props;
+    const instertedLeaderData = await fetch('/api/leader', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(this.props.insertedMember),
+      body: JSON.stringify(insertedMember),
     }).then(res => res.json());
+    console.log(instertedLeaderData);
+    const leader_id = instertedLeaderData._id;
+      // await fetch('/api/member', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ ...instertedLeaderData, members: insertedMember.members }),
+      // }).then(res => res.json());
+    
+    // console.log(book, 'bookData');
   }
 
   handleChange = ({ target }) => {
@@ -41,17 +48,14 @@ class AdminPage extends Component {
   }
 
   handleRemoveMember = (evt, idx) => {
-    console.log(idx);
     this.props.removeCellMember(idx)
   }
 
   handleChangeMember = (evt, idx) => {
-    console.log(evt.target.value, idx, 111);
     this.props.insertCellMember(evt.target.value, idx);
   }
 
   handleAddMember = () => {
-    console.log(this.props.insertedMember.members.length);
     this.props.insertCellMember("", this.props.insertedMember.members.length);
   }
   
