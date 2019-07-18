@@ -49,17 +49,9 @@ const addMember = ({ leaderId, sec, name, section, cellName, cellNameKr, cc = fa
 
 app.get('/api/section/:section', (req, res) => {
   const cellName = req.params.section;
-  console.log(cellName, 898989896757);
-  // ser.findById(req.userId)
-  //    .populate('subscribing')
-  //    .exec(function(err, user){
-  //         console.log(user.subscribing);
-  //    })
   Leader.find({ cellName: cellName })
         .populate('members')
         .exec((err, user) =>{
-          // Member.populate(user.members, '_id', function (err, doc) {
-          // })
     res.send(user);
   })
 })
@@ -92,39 +84,47 @@ app.post('/api/member', (req, res) => {
 app.post('/api/leader', (req, res, next) => {
   const { name, age, cellName, cellNameKr, section, members } = req.body;
   const lead = new Leader(addLeader({ name, age, cellName, cellNameKr, section, members }));
+  if (!members.length) {
+    lead.save((err, book) => {
+      if (err) return console.error(err);
+    });
+    // res.send({ a: 1, b: 2, c: 3, d: 4 });
+  }
   members.forEach((memberName, idx) => {
     const memb = new Member(addMember({ name: memberName, sec: idx, cellName, cellNameKr, section, leaderId: lead._id }));
+    console.log(`i'm out${idx}`)
     memb.save((err, member) => {
-      lead.members.push(memb._id);
-      if(idx === members.length - 1){lead.save((err, book) => {
-        if (err) return console.error(err);
-        
-    })}
     })
-  })
+    lead.members.push(memb._id);
+      if (idx === members.length - 1) {
+        console.log('saved');
+        lead.save((err, book) => {
+        if (err) return console.error(err);
+      }
+    )}
+  });
   res.send({ a: 1, b: 2, c: 3, d: 4 });
 });
 
-app.put('/api/check/:memberName', (req, res) => {
-  const { leaderName, kind, memberName } = req.body;
-  Leader.findOne({ name: leaderName }, (err, leader) => {
+app.put('/api/check/:id', (req, res) => {
+  const { id, kind, memberName } = req.body;
+  Leader.findOne({ _id: id }, (err, leader) => {
     if (err) {
       console.log(err);
     } else {
-      console.log(leader[kind], !leader[kind], kind, 'target')
-      Leader.update({ name: leaderName }, { $set: { [kind]: !leader[kind] } }, () => {
+      Leader.update({ _id: id }, { $set: { [kind]: !leader[kind] } }, () => {
         res.json({ consol: 'log' })
       })
     }
   });
 });
-app.put('/api/count/:memberName', (req, res) => {
-  const { leaderName, kind, count } = req.body;
-  Leader.findOne({ name: leaderName }, (err, leader) => {
+app.put('/api/count/:id', (req, res) => {
+  const { id, kind, count } = req.body;
+  Leader.findOne({ _id: id }, (err, leader) => {
     if (err) {
       console.log(err);
     } else {
-      Leader.update({ name: leaderName }, { $set: { [kind]: count } }, () => {
+      Leader.update({ _id: id }, { $set: { [kind]: count } }, () => {
         res.json({ consol: 'log' })
       })
     }

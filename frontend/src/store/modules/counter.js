@@ -17,8 +17,8 @@ export const insertMember = (left, value) => ({ type: INSERT_MEMBER, left, value
 export const insertCellMember = (member, idx) => ({ type: INSERT_CELL_MEMBER, member, idx });
 export const removeCellMember = (idx) => ({ type: REMOVE_CELL_MEMBER, idx});
 export const chageCurrentSection = (section, enName) => ({ type: CHANGE_CURRENT_SECTION, section, enName });
-export const checkWorship = (name, sectionIdx, left) => ({ type: CHECK_WORSHIP, name, sectionIdx, left });
-export const countContent = (name, sectionIdx, left, count) => ({ type: COUNT_CONTENT, name, sectionIdx, left, count });
+export const checkWorship = (id, sectionIdx, left) => ({ type: CHECK_WORSHIP, id, sectionIdx, left });
+export const countContent = (id, sectionIdx, left, count) => ({ type: COUNT_CONTENT, id, sectionIdx, left, count });
 
 const initialState = {
   number: 0,
@@ -101,7 +101,7 @@ export default function counter(state = initialState, action) {
         currentSection: [
           ...state.currentSection.slice(0, action.sectionIdx),
           state.currentSection[action.sectionIdx].map(member => {
-            if(member.name === action.name) {
+            if(member._id === action.id) {
               return { ...member, [action.left]: !member[action.left]}
             }
             return member;
@@ -115,7 +115,7 @@ export default function counter(state = initialState, action) {
         currentSection: [
           ...state.currentSection.slice(0, action.sectionIdx),
           state.currentSection[action.sectionIdx].map(member => {
-            if(member.name === action.name) {
+            if(member._id === action.id) {
               return { ...member, [action.left]: action.count}
             }
             return member;

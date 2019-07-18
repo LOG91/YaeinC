@@ -11,13 +11,13 @@ const renderLeaderList = (list, idx, networkName, handleCheck, handleCount) => {
     const MEMBER_CNT = member.members.length + 1;
     return (
       <Fragment key={idxForKey}>
-      {idxForKey === 0 ? <td rowSpan={all_members + 1} className={evenClsName}>{networkName}</td> : null}
+      {idxForKey === 0 ? <tr><td rowSpan={all_members + 1} className={evenClsName}>{networkName}</td></tr> : null}
       <tr className={evenClsName}>
         <td rowSpan={MEMBER_CNT}>{member.name}</td>
         <td rowSpan={MEMBER_CNT}>
           <select
             className="select_box_dawn"
-            onChange={({ target }) => handleCount(member.name, idx, 'dawn', target.value)}
+            onChange={({ target }) => handleCount(member._id, idx, 'dawn', target.value)}
             value={member.dawn}
           >
             <option value="0">0</option>
@@ -31,7 +31,7 @@ const renderLeaderList = (list, idx, networkName, handleCheck, handleCount) => {
         <td rowSpan={MEMBER_CNT}>
           <select
             className="select_box_word"
-            onChange={({ target }) => handleCount(member.name, idx, 'word', target.value)}
+            onChange={({ target }) => handleCount(member._id, idx, 'word', target.value)}
             value={member.word}
           >
             <option value="0">0</option>
@@ -41,15 +41,15 @@ const renderLeaderList = (list, idx, networkName, handleCheck, handleCount) => {
         </td>
         <td rowSpan={MEMBER_CNT}>
           <input className="styled-checkbox" checked={member.cc} readOnly type="checkbox" />
-          <label onClick={() => handleCheck(member.name, idx, 'cc')} />
+          <label onClick={() => handleCheck(member._id, idx, 'cc')} />
         </td>
         <td rowSpan={MEMBER_CNT}>
           <input className="styled-checkbox" checked={member.mc} readOnly type="checkbox" />
-          <label onClick={() => handleCheck(member.name, idx, 'mc')} />
+          <label onClick={() => handleCheck(member._id, idx, 'mc')} />
         </td>
         <td rowSpan={MEMBER_CNT}>
           <input className="styled-checkbox" checked={member.yc} readOnly type="checkbox" />
-          <label onClick={() => handleCheck(member.name, idx, 'yc')} />
+          <label onClick={() => handleCheck(member._id, idx, 'yc')} />
         </td>
       </tr>
       {MEMBER_CNT !== 1 ? member.members.map((v, i) =>(

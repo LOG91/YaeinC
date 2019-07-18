@@ -8,28 +8,29 @@ import { mapNetworkTable } from './Fn'
 
 class CellTable extends Component{
 
-  handleCheck = async (leaderName, sectionIdx, kind, memberName = false) => {
-    const responsedData = await fetch(`/api/check/${memberName}`, {
+  handleCheck = async (id, sectionIdx, kind, memberName = false) => {
+    console.log(id, '아이디');
+    const responsedData = await fetch(`/api/check/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ leaderName, kind, memberName})
+      body: JSON.stringify({ id, kind, memberName})
     });
     if(responsedData.status === 200) {
-      this.props.checkWorship(leaderName, sectionIdx, kind);
+      this.props.checkWorship(id, sectionIdx, kind);
     }
   }
-  handleCount = async (leaderName, sectionIdx, kind, count) => {
-    const responsedData = await fetch(`/api/count/${leaderName}`, {
+  handleCount = async (id, sectionIdx, kind, count) => {
+    const responsedData = await fetch(`/api/count/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ leaderName, kind, count: Number(count) })
+      body: JSON.stringify({ id, kind, count: Number(count) })
     });
     if(responsedData.status === 200) {
-      this.props.countContent(leaderName, sectionIdx, kind, Number(count));
+      this.props.countContent(id, sectionIdx, kind, Number(count));
     }
   }
   
