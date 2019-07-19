@@ -70,16 +70,16 @@ app.get('/api/jjp', (req, res) => {
   `);
 });
 
-app.post('/api/member', (req, res) => {
-  const { _id: leaderId, cellName, cellNameKr, section, members } = req.body;
-  members.forEach((memberName, idx) => {
-    const memb = new Member(addMember({ name: memberName, sec: idx, cellName, cellNameKr, section, leaderId }));
-    memb.save((err, member) => {
-      if (err) return console.error(err);
-    })
-  })
-  res.send({1:2});
-})
+// app.post('/api/member', (req, res) => {
+//   const { _id: leaderId, cellName, cellNameKr, section, members } = req.body;
+//   members.forEach((memberName, idx) => {
+//     const memb = new Member(addMember({ name: memberName, sec: idx, cellName, cellNameKr, section, leaderId }));
+//     memb.save((err, member) => {
+//       if (err) return console.error(err);
+//     })
+//   })
+//   res.send({1:2});
+// })
 
 app.post('/api/leader', (req, res, next) => {
   const { name, age, cellName, cellNameKr, section, members } = req.body;
@@ -106,7 +106,7 @@ app.post('/api/leader', (req, res, next) => {
   res.send({ a: 1, b: 2, c: 3, d: 4 });
 });
 
-app.put('/api/check/:id', (req, res) => {
+app.put('/api/check/leader/:id', (req, res) => {
   const { id, kind, memberName } = req.body;
   Leader.findOne({ _id: id }, (err, leader) => {
     if (err) {
@@ -118,6 +118,20 @@ app.put('/api/check/:id', (req, res) => {
     }
   });
 });
+
+app.put('/api/check/member/:id', (req, res) => {
+  const { id, kind } = req.body;
+  Member.findOne({ _id: id }, (err, member) => {
+    if (err) {
+      console.log(err);
+    } else {
+      Member.update({ _id: id }, { $set: { [kind]: !member[kind] } }, () => {
+        res.json({ consol: 'log' })
+      })
+    }
+  });
+});
+
 app.put('/api/count/:id', (req, res) => {
   const { id, kind, count } = req.body;
   Leader.findOne({ _id: id }, (err, leader) => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './CellTable.scss';
-import { indexing, checkWorship, countContent ,chageCurrentSection } from '../../store/modules/counter';
+import { indexing, checkWorship, checkMemberWorship ,countContent ,chageCurrentSection } from '../../store/modules/counter';
 import { connect } from 'react-redux';
 
 import { mapNetworkTable } from './Fn'
@@ -10,17 +10,33 @@ class CellTable extends Component{
 
   handleCheck = async (id, sectionIdx, kind, memberName = false) => {
     console.log(id, '아이디');
-    const responsedData = await fetch(`/api/check/${id}`, {
+    const responsedData = await fetch(`/api/check/leader/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ id, kind, memberName})
     });
+
     if(responsedData.status === 200) {
       this.props.checkWorship(id, sectionIdx, kind);
     }
   }
+  handleCheckMember = async (leaderId, id, sec, sectionIdx, kind) => {
+    const responsedData = await fetch(`/api/check/member/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, kind })
+    });
+
+    if(responsedData.status === 200) {
+      console.log(leaderId, id, sec, sectionIdx, kind);
+      this.props.checkMemberWorship(leaderId, id, sec, sectionIdx, kind);
+    }
+  }
+
   handleCount = async (id, sectionIdx, kind, count) => {
     const responsedData = await fetch(`/api/count/${id}`, {
       method: 'PUT',
@@ -55,7 +71,7 @@ class CellTable extends Component{
                   <td>주일</td>
                   <td>청년</td>
               </tr>
-              {mapNetworkTable(this.props.currentSection, this.handleCheck, this.handleCount)}
+              {mapNetworkTable(this.props.currentSection, this.handleCheck, this.handleCount, this.handleCheckMember)}
             </tbody>
           </table>
     )
@@ -72,8 +88,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = dispatch => ({
   indexing: idx => dispatch(indexing(idx)),
   checkWorship: (name, sectionIdx, left) => dispatch(checkWorship(name, sectionIdx, left)),
+  checkMemberWorship: (leaderId, id, sec, sectionIdx, left) => dispatch(checkMemberWorship(leaderId, id, sec, sectionIdx, left)),
   countContent: (name, sectionIdx, left, count) => dispatch(countContent(name, sectionIdx, left, count)),
   chageCurrentSection: section => dispatch(chageCurrentSection(section))
 });
-
+// leaderId, id, sec, sectionIdx, kind
 export default connect(mapStateToProps, mapDispatchToProps)(CellTable);

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-const renderLeaderList = (list, idx, networkName, handleCheck, handleCount) => {
+const renderLeaderList = (list, idx, networkName, handleCheck, handleCount, handleCheckMember) => {
   const all_members = list.reduce((ac, cv) => {
     ac += cv.members.length;
     return ac;
@@ -57,15 +57,15 @@ const renderLeaderList = (list, idx, networkName, handleCheck, handleCount) => {
           <td rowSpan="1" key={i} className={evenClsName}>{v.name}</td>
           <td rowSpan="1" className={evenClsName}>
             <input className="styled-checkbox" checked={v.cc} readOnly type="checkbox" />
-            <label />
+            <label onClick={() => handleCheckMember(member._id, v._id, v.sec, idx, 'cc')} />
           </td>
           <td rowSpan="1" className={evenClsName}>
             <input className="styled-checkbox" checked={v.mc} readOnly type="checkbox" />
-            <label />
+            <label onClick={() => handleCheckMember(member._id, v._id, v.sec, idx, 'mc')} />
           </td>
           <td rowSpan="1" className={evenClsName}>
             <input className="styled-checkbox" checked={v.yc} readOnly type="checkbox" />
-            <label />
+            <label onClick={() => handleCheckMember(member._id, v._id, v.sec, idx, 'yc')} />
           </td>
         </tr>
       )): (
@@ -77,11 +77,11 @@ const renderLeaderList = (list, idx, networkName, handleCheck, handleCount) => {
   return reduced;
 }
 
-export const mapNetworkTable = (list, handleCheck, handleCount) => {
+export const mapNetworkTable = (list, handleCheck, handleCount, handleCheckMember) => {
   if (!list) return <div>아직 데이터가 없습니다😨</div>;
     
     return list.map((network, idx) => {
       const networkName = network.length ? network[0].cellNameKr : '';
-      return renderLeaderList(network, idx, networkName, handleCheck, handleCount);
+      return renderLeaderList(network, idx, networkName, handleCheck, handleCount, handleCheckMember);
     });
 }
