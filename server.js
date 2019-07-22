@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 
 const mongoose = require('mongoose');
-const {Leader, Member} = require('./members.model');
+const { Leader, Member, YouthAtt } = require('./members.model');
 
 const port = process.env.PORT || 5000;
 
@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-const addLeader = ({ name, section, cellName, cellNameKr, age, dawn = 0, word = 0, cc = false, mc = false, yc = false }) => {
+const addLeader = ({ name, section, cellName, cellNameKr, age, dawn = 0, word = 0, cc = false, mc = false, yc = false, youth }) => {
   return (
     {
       name,
@@ -27,6 +27,7 @@ const addLeader = ({ name, section, cellName, cellNameKr, age, dawn = 0, word = 
       cc,
       mc,
       yc,
+      youth
     }
   )
 }
@@ -47,12 +48,17 @@ const addMember = ({ leaderId, sec, name, section, cellName, cellNameKr, cc = fa
   )
 }
 
+const addYouthAtt = () => ({ att: {} });
+
 app.get('/api/section/:section', (req, res) => {
   const cellName = req.params.section;
   Leader.find({ cellName: cellName })
         .populate('members')
         .exec((err, user) =>{
     res.send(user);
+  })
+  YouthAtt.find({}).exec((err, docs) => {
+    console.log(docs);
   })
 })
 
@@ -70,22 +76,15 @@ app.get('/api/jjp', (req, res) => {
   `);
 });
 
-// app.post('/api/member', (req, res) => {
-//   const { _id: leaderId, cellName, cellNameKr, section, members } = req.body;
-//   members.forEach((memberName, idx) => {
-//     const memb = new Member(addMember({ name: memberName, sec: idx, cellName, cellNameKr, section, leaderId }));
-//     memb.save((err, member) => {
-//       if (err) return console.error(err);
-//     })
-//   })
-//   res.send({1:2});
-// })
-
 app.post('/api/leader', (req, res, next) => {
   const { name, age, cellName, cellNameKr, section, members } = req.body;
-  const lead = new Leader(addLeader({ name, age, cellName, cellNameKr, section, members }));
+  const youth = new YouthAtt(addYouthAtt({}));
+  youth.save((err, y) => {
+    if (err) return console.error(err);
+  })
+  const lead = new Leader(addLeader({ name, age, cellName, cellNameKr, section, members, youth: youth._id }));
   if (!members.length) {
-    lead.save((err, book) => {
+    lead.save((err, leader) => {
       if (err) return console.error(err);
     });
     // res.send({ a: 1, b: 2, c: 3, d: 4 });
@@ -103,6 +102,7 @@ app.post('/api/leader', (req, res, next) => {
       }
     )}
   });
+  
   res.send({ a: 1, b: 2, c: 3, d: 4 });
 });
 

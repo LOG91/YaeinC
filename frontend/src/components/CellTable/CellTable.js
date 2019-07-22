@@ -92,5 +92,5 @@ const mapDispatchToProps = dispatch => ({
   countContent: (name, sectionIdx, left, count) => dispatch(countContent(name, sectionIdx, left, count)),
   chageCurrentSection: section => dispatch(chageCurrentSection(section))
 });
-// leaderId, id, sec, sectionIdx, kind
+
 export default connect(mapStateToProps, mapDispatchToProps)(CellTable);

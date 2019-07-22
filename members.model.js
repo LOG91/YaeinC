@@ -9,10 +9,6 @@ let Member = new Schema({
     sec: {
         type: Number
     },
-    // leaderId: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Leader'
-    // },
     section: {
         type: String
     },
@@ -31,7 +27,6 @@ let Member = new Schema({
     yc: {
         type: Boolean
     },
-    // memberForLeader: [{ type: Schema.Types.ObjectId, ref: 'Leader' }]
 })
 
 let Leader = new Schema({
@@ -65,15 +60,25 @@ let Leader = new Schema({
     yc: {
         type: Boolean
     },
-    members: [{type: Schema.Types.ObjectId, ref: 'Member' }]
+    members: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Member' 
+    }],
+    youth: {
+        type: Schema.Types.ObjectId,
+        ref: 'YouthAtt'
+    }
+});
 
-    
-
+const YouthAtt = new Schema({
+    att: {
+        type: Object
+    }
 })
 
 
 module.exports = {
     Member: mongoose.model('Member', Member),
-    Leader: mongoose.model('Leader', Leader)
+    Leader: mongoose.model('Leader', Leader),
+    YouthAtt: mongoose.model('YouthAtt', YouthAtt)
 }
-// module.exports = mongoose.model('Leader', Leader);

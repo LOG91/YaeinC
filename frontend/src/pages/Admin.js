@@ -8,24 +8,13 @@ class AdminPage extends Component {
   
   async addLeader () {
     const { insertedMember } = this.props;
-    const instertedLeaderData = await fetch('/api/leader', {
+    await fetch('/api/leader', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(insertedMember),
     }).then(res => res.json());
-    console.log(instertedLeaderData);
-    const leader_id = instertedLeaderData._id;
-      // await fetch('/api/member', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({ ...instertedLeaderData, members: insertedMember.members }),
-      // }).then(res => res.json());
-    
-    // console.log(book, 'bookData');
   }
 
   handleChange = ({ target }) => {
