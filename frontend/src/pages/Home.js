@@ -1,11 +1,11 @@
 import React from 'react';
 import CellTable from '../components/CellTable/CellTable';
-// import Tab from '../components/Tab';
 
 const Home = ({ match }) => {
+  console.log(match);
   return (
     <div>
-        <CellTable to={match.path} />
+        <CellTable current={match.path} />
     </div>
   )
 }

@@ -32,7 +32,7 @@ const addLeader = ({ name, section, cellName, cellNameKr, age, dawn = 0, word = 
   )
 }
 
-const addMember = ({ leaderId, sec, name, section, cellName, cellNameKr, cc = false, mc = false, yc = false }) => {
+const addMember = ({ leaderId, sec, name, section, cellName, cellNameKr, cc = false, mc = false, yc = false, youth }) => {
   return (
     {
       leaderId,
@@ -44,6 +44,7 @@ const addMember = ({ leaderId, sec, name, section, cellName, cellNameKr, cc = fa
       cc,
       mc,
       yc,
+      youth
     }
   )
 }
@@ -90,13 +91,23 @@ app.post('/api/leader', (req, res, next) => {
     // res.send({ a: 1, b: 2, c: 3, d: 4 });
   }
   members.forEach((memberName, idx) => {
-    const memb = new Member(addMember({ name: memberName, sec: idx, cellName, cellNameKr, section, leaderId: lead._id }));
-    console.log(`i'm out${idx}`)
+    const youth = new YouthAtt(addYouthAtt({}));
+    youth.save((err, y) => {
+      if (err) return console.error(err);
+    })
+    const memb =
+      new Member(addMember({
+        name: memberName,
+        sec: idx,
+        cellName,
+        cellNameKr,
+        section,
+        leaderId: lead._id,
+        youth: youth._id }));
     memb.save((err, member) => {
     })
     lead.members.push(memb._id);
       if (idx === members.length - 1) {
-        console.log('saved');
         lead.save((err, book) => {
         if (err) return console.error(err);
       }

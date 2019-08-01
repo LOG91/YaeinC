@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { increment, indexing, chageCurrentSection } from '../../store/modules/counter';
 import { connect } from 'react-redux';
-
+import { BrowserRouter, Link } from 'react-router-dom';
 import { cellData } from '../../data/cellData';
 import './Tab.scss';
 
@@ -16,13 +16,15 @@ class Tab extends Component {
   }
   render() {
     return (
-      <ul className="tab">
-        {cellData.map((v, idx) =>{
-          console.log(v.en_name, 897)
-          return <li key={idx} className={v.clsName} onClick={e => this.handleClick(e, v.cells, v.en_name)}>
-            <a href="#" className={this.props.idx === v.en_name ? "active" : ""}>{v.name}</a>
-        </li>})}
-      </ul>
+      <BrowserRouter>
+        <ul className="tab">
+          {cellData.map((v, idx) =>{
+            console.log(v.en_name, 897)
+            return <li key={idx} className={v.clsName} onClick={e => this.handleClick(e, v.cells, v.en_name)}>
+              <Link to={`/${v.en_name}`} className={this.props.idx === v.en_name ? "active" : ""}>{v.name}</Link>
+          </li>})}
+        </ul>
+      </BrowserRouter>
     )
   }
 }

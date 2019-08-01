@@ -27,6 +27,10 @@ let Member = new Schema({
     yc: {
         type: Boolean
     },
+    youth: {
+        type: Schema.Types.ObjectId,
+        ref: 'YouthAtt'
+    }
 })
 
 let Leader = new Schema({
