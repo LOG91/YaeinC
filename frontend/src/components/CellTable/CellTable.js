@@ -8,15 +8,15 @@ import { cellData } from '../../data/cellData';
 
 
 class CellTable extends Component{
-
+  
   async componentDidMount() {
-    // const { chageCurrentSection, indexing } = this.props;
-    // const initIdx = Math.floor(Math.random() * (cellData.length - 2));
-    // const initNetwork = cellData[0];
-    // const initCells = initNetwork.cells;
-    // indexing(initNetwork.en_name);
-    // const info = await Promise.all(initCells.map(item => fetch(`/api/section/${item}`).then(res=>res.json())));
-    // chageCurrentSection(info);
+    const { current: currentCells, chageCurrentSection, indexing } = this.props;
+    console.log(this.props);
+    const initNetwork = cellData.find(v => v.path === currentCells);
+    const initCells = initNetwork.cells;
+    indexing(initNetwork.en_name);
+    const info = await Promise.all(initCells.map(item => fetch(`/api/section/${item}`).then(res=>res.json())));
+    chageCurrentSection(info);
   }
 
   handleCheck = async (id, sectionIdx, kind, memberName = false) => {
