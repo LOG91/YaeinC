@@ -14,7 +14,8 @@ const Root = () => {
           <Route exact path="/" component={Home} />
           <Route path="/israel_1" component={Home} />
           <Route path="/israel_2" component={Home} />
-          <Route path="/youth" component={Youth} />
+          <Route path="/youth_m" component={Youth} />
+          <Route path="/youth_w" component={Youth} />
           <Route path="/admin" component={Admin} />
           <Route path="/jjp" component={Extra} />
         </BrowserRouter>

@@ -14,10 +14,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-const addLeader = ({ name, section, cellName, cellNameKr, age, dawn = 0, word = 0, cc = false, mc = false, yc = false, youth }) => {
+const addLeader = ({ name, gender, section, cellName, cellNameKr, age, dawn = 0, word = 0, cc = false, mc = false, yc = false, youth }) => {
   return (
     {
       name,
+      gender,
       section,
       cellName,
       cellNameKr,
@@ -32,10 +33,11 @@ const addLeader = ({ name, section, cellName, cellNameKr, age, dawn = 0, word = 
   )
 }
 
-const addMember = ({ leaderId, sec, name, section, cellName, cellNameKr, cc = false, mc = false, yc = false, youth }) => {
+const addMember = ({ leaderId, gender, sec, name, section, cellName, cellNameKr, cc = false, mc = false, yc = false, youth }) => {
   return (
     {
       leaderId,
+      gender,
       sec,
       name,
       section,
@@ -51,18 +53,64 @@ const addMember = ({ leaderId, sec, name, section, cellName, cellNameKr, cc = fa
 
 const addYouthAtt = () => ({ att: {} });
 
-app.get('/api/section/:section', (req, res) => {
-  const cellName = req.params.section;
-  Leader.find({ cellName: cellName })
-        .populate('members')
-        .exec((err, user) =>{
-    res.send(user);
+app.get('/api/cells/:cells', async (req, res) => {
+  const cellNames = JSON.parse(req.params.cells);
+  const obj = {};
+  cellNames.forEach((v, i) => {
+    obj[v] = i;
   })
-  YouthAtt.find({}).exec((err, docs) => {
-    console.log(docs);
-  })
+  const data = await Leader.find({})
+    .populate('youth')
+    .populate({
+      path: 'members',
+      populate: {
+        path: 'youth'
+      }
+    })
+    .then(lead => {
+      const reduced = lead.reduce((acc, cv) => {
+        console.log(obj[cv.cellName], 'ccccc');
+        if (!acc[obj[cv.cellName]]) acc[obj[cv.cellName]] = [cv];
+        else acc[obj[cv.cellName]].push(cv);
+        console.log(acc);
+        return acc;
+      }, [])
+      console.log(reduced, '리듀스드');
+      return reduced;
+    });
+  res.send(data);
 })
 
+app.get('/api/oneCell/:oneCell', async (req, res) => {
+  const cellName = req.params.oneCell;
+  // Leader.find().all('cellName', ['israel_ga', 'israel_na']).then(res => console.log(res, 22222323232));
+  const data = await Leader.find({ cellName: cellName })
+    .populate('youth')
+    .populate({
+      path: 'members',
+      populate: {
+        path: 'youth'
+      }
+    })
+    .then();
+  console.log(data, 'data');
+  res.send(data);
+})
+
+app.get('/api/gender/:gender', (req, res) => {
+  const gender = req.params.gender;
+  Leader.find({ gender: gender })
+    .populate('youth')
+    .populate({
+      path: 'members',
+      populate: {
+        path: 'youth'
+      }
+    })
+    .exec((err, user) => {
+      res.send(user);
+    })
+})
 
 // just kidding
 app.get('/api/jjp', (req, res) => {
@@ -78,12 +126,12 @@ app.get('/api/jjp', (req, res) => {
 });
 
 app.post('/api/leader', (req, res, next) => {
-  const { name, age, cellName, cellNameKr, section, members } = req.body;
-  const youth = new YouthAtt(addYouthAtt({}));
+  const { name, age, gender, cellName, cellNameKr, section, members } = req.body;
+  const youth = new YouthAtt(addYouthAtt());
   youth.save((err, y) => {
     if (err) return console.error(err);
   })
-  const lead = new Leader(addLeader({ name, age, cellName, cellNameKr, section, members, youth: youth._id }));
+  const lead = new Leader(addLeader({ name, age, gender, cellName, cellNameKr, section, members, youth: youth._id }));
   if (!members.length) {
     lead.save((err, leader) => {
       if (err) return console.error(err);
@@ -91,29 +139,32 @@ app.post('/api/leader', (req, res, next) => {
     // res.send({ a: 1, b: 2, c: 3, d: 4 });
   }
   members.forEach((memberName, idx) => {
-    const youth = new YouthAtt(addYouthAtt({}));
+    const youth = new YouthAtt(addYouthAtt());
     youth.save((err, y) => {
       if (err) return console.error(err);
     })
     const memb =
       new Member(addMember({
         name: memberName,
+        gender,
         sec: idx,
         cellName,
         cellNameKr,
         section,
         leaderId: lead._id,
-        youth: youth._id }));
+        youth: youth._id
+      }));
     memb.save((err, member) => {
     })
     lead.members.push(memb._id);
-      if (idx === members.length - 1) {
-        lead.save((err, book) => {
+    if (idx === members.length - 1) {
+      lead.save((err, book) => {
         if (err) return console.error(err);
       }
-    )}
+      )
+    }
   });
-  
+
   res.send({ a: 1, b: 2, c: 3, d: 4 });
 });
 

@@ -1,0 +1,21 @@
+.youthContainer {
+  .youthContainer__navbar {
+    display: flex;
+  }
+  .youthContainer__nav {
+    text-align: center;
+    width: 5rem;
+    height: 3rem;
+  }
+  .youthContainer__scrollbox {
+    overflow-y: scroll;
+    height: 500px;
+  }
+  .youthContainer__nav--leader {
+    @extend .youthContainer__nav;
+    font-weight: 600;
+  }
+  .youthContainer__flexbox {
+    display: flex;
+  }
+}

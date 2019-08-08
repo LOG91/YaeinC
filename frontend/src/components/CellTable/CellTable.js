@@ -8,14 +8,14 @@ import { cellData } from '../../data/cellData';
 
 
 class CellTable extends Component{
-  
+
   async componentDidMount() {
     const { current: currentCells, chageCurrentSection, indexing } = this.props;
-    console.log(this.props);
+    if (currentCells === '/') return;
     const initNetwork = cellData.find(v => v.path === currentCells);
     const initCells = initNetwork.cells;
     indexing(initNetwork.en_name);
-    const info = await Promise.all(initCells.map(item => fetch(`/api/section/${item}`).then(res=>res.json())));
+    const info = await fetch(`/api/cells/${JSON.stringify(initCells)}`).then(res => res.json());
     chageCurrentSection(info);
   }
 
@@ -62,6 +62,7 @@ class CellTable extends Component{
   }
   
   render(){
+    console.log(this.props.currentSection);
     return (
       <table border="1" cellPadding="10">
             <tbody>

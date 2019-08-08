@@ -6,6 +6,9 @@ let Member = new Schema({
     name: {
         type: String
     },
+    gender: {
+        type: String
+    },
     sec: {
         type: Number
     },
@@ -37,6 +40,12 @@ let Leader = new Schema({
     name: {
         type: String
     },
+    age: {
+        type: Number
+    },
+    gender: {
+        type: String
+    },
     section: {
         type: String
     },
@@ -45,9 +54,6 @@ let Leader = new Schema({
     },
     cellNameKr: {
         type: String
-    },
-    age: {
-        type: Number
     },
     dawn: {
         type: Number
@@ -76,9 +82,9 @@ let Leader = new Schema({
 
 const YouthAtt = new Schema({
     att: {
-        type: Object
+        type: Object, default: {}
     }
-})
+}, { minimize: false })
 
 
 module.exports = {

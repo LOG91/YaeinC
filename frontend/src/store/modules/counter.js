@@ -21,7 +21,7 @@ export const countContent = (id, sectionIdx, left, count) => ({ type: COUNT_CONT
 const initialState = {
   number: 0,
   idx: '',
-  insertedMember: { name: '', age: '', section: '', cellName: '', cellNameKr: '', members: [] },
+  insertedMember: { name: '', age: '', gender: '', section: '', cellName: '', cellNameKr: '', members: [] },
   currentSection: []
 }
 

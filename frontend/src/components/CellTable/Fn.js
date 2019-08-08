@@ -79,7 +79,6 @@ const renderLeaderList = (list, idx, networkName, handleCheck, handleCount, hand
 
 export const mapNetworkTable = (list, handleCheck, handleCount, handleCheckMember) => {
   if (!list) return <div>아직 데이터가 없습니다😨</div>;
-    
     return list.map((network, idx) => {
       const networkName = network.length ? network[0].cellNameKr : '';
       return renderLeaderList(network, idx, networkName, handleCheck, handleCount, handleCheckMember);
