@@ -11,11 +11,36 @@
     overflow-y: scroll;
     height: 500px;
   }
+  .youthContainer__nav--empty {
+    @extend .youthContainer__nav;
+    width: 10rem;
+    height: 2rem;
+    p {
+      width: 10rem;
+    }
+  }
+  .youthContainer__nav--date {
+    @extend .youthContainer__nav;
+    height: 2rem;
+  }
   .youthContainer__nav--leader {
     @extend .youthContainer__nav;
     font-weight: 600;
+    p {
+      width: 5rem;
+    }
   }
   .youthContainer__flexbox {
     display: flex;
+  }
+  .youthContainer--networkBox {
+    border: 1px dotted #9775fa;
+    margin-bottom: 1rem;
+  }
+  .youthContainer--networkName {
+    margin: auto 0;
+    p {
+      width: 5rem;
+    }
   }
 }

@@ -14,7 +14,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-const addLeader = ({ name, gender, section, cellName, cellNameKr, age, dawn = 0, word = 0, cc = false, mc = false, yc = false, youth }) => {
+const addLeader = ({ name, gender, section, cellName, cellNameKr, age, dawn = 0, word = 0, cc = false, mc = false, yc = false, youth
+ }) => {
   return (
     {
       name,
@@ -51,7 +52,7 @@ const addMember = ({ leaderId, gender, sec, name, section, cellName, cellNameKr,
   )
 }
 
-const addYouthAtt = () => ({ att: {} });
+const addYouthAtt = () => ({ att: { empty: 'no' } });
 
 app.get('/api/cells/:cells', async (req, res) => {
   const cellNames = JSON.parse(req.params.cells);
@@ -69,21 +70,32 @@ app.get('/api/cells/:cells', async (req, res) => {
     })
     .then(lead => {
       const reduced = lead.reduce((acc, cv) => {
-        console.log(obj[cv.cellName], 'ccccc');
         if (!acc[obj[cv.cellName]]) acc[obj[cv.cellName]] = [cv];
         else acc[obj[cv.cellName]].push(cv);
-        console.log(acc);
         return acc;
       }, [])
-      console.log(reduced, '리듀스드');
       return reduced;
     });
   res.send(data);
 })
 
+app.post('/api/youth/:id', (req, res) => {
+  console.log('heell')
+  const { id, date } = req.body;
+  console.log(id, date);
+  YouthAtt.findOne({ _id: id }, (err, member) => {
+    if (err) {
+      console.log(err);
+    } else {
+      YouthAtt.update({ _id: id }, { $set: { [`att.${date}`]: !member.att[date] } }, () => {
+        res.json({ consol: 'log' })
+      })
+    }
+  });
+})
+
 app.get('/api/oneCell/:oneCell', async (req, res) => {
   const cellName = req.params.oneCell;
-  // Leader.find().all('cellName', ['israel_ga', 'israel_na']).then(res => console.log(res, 22222323232));
   const data = await Leader.find({ cellName: cellName })
     .populate('youth')
     .populate({
@@ -93,7 +105,6 @@ app.get('/api/oneCell/:oneCell', async (req, res) => {
       }
     })
     .then();
-  console.log(data, 'data');
   res.send(data);
 })
 
@@ -114,7 +125,6 @@ app.get('/api/gender/:gender', (req, res) => {
 
 // just kidding
 app.get('/api/jjp', (req, res) => {
-  console.log('This is JJP page');
   res.send(`
     <div>
       <h2 style="text-align:center">정재필 홈페이지</h2>
@@ -169,7 +179,7 @@ app.post('/api/leader', (req, res, next) => {
 });
 
 app.put('/api/check/leader/:id', (req, res) => {
-  const { id, kind, memberName } = req.body;
+  const { id, kind } = req.body;
   Leader.findOne({ _id: id }, (err, leader) => {
     if (err) {
       console.log(err);

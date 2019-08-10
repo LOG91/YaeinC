@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { chageCurrentSection } from '../../store/modules/counter';
+import { chageCurrentSection, checkYouth, checkMemberYouth } from '../../store/modules/counter';
 import './Youth.scss';
 
 class Youth extends React.Component {
@@ -9,40 +9,77 @@ class Youth extends React.Component {
     this.fetchInfo();
   }
   async fetchInfo() {
-    console.log('fetch')
     const { chageCurrentSection } = this.props;
     const tempCells = ['israel_ga', 'israel_na', 'israel_da'];
     const info = await fetch(`/api/cells/${JSON.stringify(tempCells)}`).then(res => res.json()).then();
-    console.log(info, 'infofo');
     chageCurrentSection(info);
+  }
 
+  handleYouthCheck = async ({ sectionIdx, leaderIdx, leaderId, youthId, date, memberIdx = null }) => {
+    // if (memberId)
+    console.log(youthId, '유스아이디');
+    const { checkYouth, checkMemberYouth } = this.props;
+    const temp = await fetch(`/api/youth/${youthId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: youthId, date })
+    });
+    if (temp.status === 200) {
+      console.log(sectionIdx, leaderIdx, leaderId, date, memberIdx);
+      memberIdx !== null ? checkMemberYouth({ sectionIdx, leaderIdx, memberIdx, date }) :
+        checkYouth(sectionIdx, leaderIdx, leaderId, date);
+    }
+    // console.log('checked!', leaderId, date);
   }
 
   youthTableTpl = (arr, networks) => {
+    console.log(networks);
     if (!networks.length) return;
-    const checkList = (networks) => networks.map(leader => {
+    const checkList = (networks, sectionIdx) => networks.map((leader, leaderIdx) => {
       return (
         <div>
           <li className="youthContainer__navbar">
             <div className="youthContainer__nav--leader"><p>{leader.name}</p></div>
-            {arr.map(v => {
+            {arr.map(date => {
               return (
                 <div className="youthContainer__nav">
-                  <input className="styled-checkbox" checked={(leader.youth.att && leader.youth.att[v]) ? true : false} readOnly type="checkbox" />
-                  <label />
+                  <p>
+                    <input className="styled-checkbox" checked={(leader.youth.att && leader.youth.att[date]) ? true : false} readOnly type="checkbox" />
+                    <label onClick={e =>
+                      this.handleYouthCheck({
+                        leaderId: leader._id,
+                        sectionIdx,
+                        leaderIdx,
+                        youthId: leader.youth._id,
+                        date
+                      })} />
+                  </p>
                 </div>
               )
             })}
           </li>
-          {leader.members.map(member => {
+          {leader.members.map((member, memberIdx) => {
+            console.log(leader.youth._id, member.youth._id);
             return (
               <li className="youthContainer__navbar">
-                <div className="youthContainer__nav"><p>{member.name}</p></div>
-                {arr.map(v => {
+                <div className="youthContainer__nav"><div>{member.name}</div></div>
+                {arr.map(date => {
                   return (
                     <div className="youthContainer__nav">
-                      <input className="styled-checkbox" checked={(member.youth.att && member.youth.att[v]) ? true : false} readOnly type="checkbox" />
-                      <label />
+                      <p>
+                        <input className="styled-checkbox" checked={(member.youth.att && member.youth.att[date]) ? true : false} readOnly type="checkbox" />
+                        <label
+                          onClick={() => this.handleYouthCheck({
+                            leaderId: leader._id,
+                            sectionIdx,
+                            leaderIdx,
+                            youthId: member.youth._id,
+                            date,
+                            memberIdx
+                          })} />
+                      </p>
                     </div>
                   )
                 })}
@@ -53,16 +90,16 @@ class Youth extends React.Component {
       )
     });
 
-    const dd = (network) =>
-      (<div className="container">
+    const dd = (network, sectionIdx) =>
+      (<div className="youthContainer--networkBox">
         <div className="youthContainer__flexbox">
-          <div><p>{network[0].cellNameKr}</p></div>
+          <div className="youthContainer--networkName"><p>{network[0].cellNameKr}</p></div>
           <div>
-            {checkList(network)}
+            {checkList(network, sectionIdx)}
           </div>
         </div>
       </div>);
-    const mapped = networks.map(network => dd(network));
+    const mapped = networks.map((network, sectionIdx) => dd(network, sectionIdx));
     return mapped;
   }
   render() {
@@ -71,11 +108,14 @@ class Youth extends React.Component {
     return (
       <React.Fragment>
         <div className="youthContainer">
-          <div className="youthContainer__navbar">
-            <div className="youthContainer__nav">이름</div>
-            {tempArr.map(v => (
-              <div className="youthContainer__nav">{v}</div>
-            ))}
+          <div className="youthContainer__flexbox">
+            <div className="youthContainer__nav--empty"><p></p></div>
+            <div className="youthContainer__navbar">
+              {tempArr.map(v => {
+                const [month, day] = v.split('_');
+                return <div className="youthContainer__nav--date"><div>{`${month}월 ${day}일`}</div></div>
+              })}
+            </div>
           </div>
           <div className="youthContainer__scrollbox">
             {this.youthTableTpl(tempArr, currentSection)}
@@ -91,7 +131,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  chageCurrentSection: section => dispatch(chageCurrentSection(section))
+  chageCurrentSection: section => dispatch(chageCurrentSection(section)),
+  checkYouth: (sectionIdx, leaderIdx, leaderId, date) => dispatch(checkYouth(sectionIdx, leaderIdx, leaderId, date)),
+  checkMemberYouth: ({ sectionIdx, leaderIdx, memberIdx, date }) => dispatch(checkMemberYouth({ sectionIdx, leaderIdx, memberIdx, date }))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Youth);
