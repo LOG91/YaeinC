@@ -21,7 +21,6 @@ class AdminPage extends Component {
     this.props.insertMember(target.name, target.value);
   }
   handleChangeGender = (evt) => {
-    console.log(evt.target.name);
     this.props.insertMember('gender', evt.target.name);
   }
 

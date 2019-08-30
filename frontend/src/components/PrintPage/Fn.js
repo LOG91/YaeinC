@@ -40,26 +40,32 @@ const renderLeaderList = (list, idx, networkName, handleCheck, handleCount, hand
           </select>
         </td>
         <td rowSpan={MEMBER_CNT}>
-          <input className="checkbox" checked={member.cc} readOnly type="checkbox" onClick={() => handleCheck(member._id, idx, 'cc')} />
+          <input className="styled-checkbox" checked={member.cc} readOnly type="checkbox" />
+          <label onClick={() => handleCheck(member._id, idx, 'cc')} />
         </td>
         <td rowSpan={MEMBER_CNT}>
-          <input className="checkbox" checked={member.mc} readOnly type="checkbox" onClick={() => handleCheck(member._id, idx, 'mc')} />
+          <input className="styled-checkbox" checked={member.mc} readOnly type="checkbox" />
+          <label onClick={() => handleCheck(member._id, idx, 'mc')} />
         </td>
         <td rowSpan={MEMBER_CNT}>
-          <input className="checkbox" checked={member.yc} readOnly type="checkbox" onClick={() => handleCheck(member._id, idx, 'yc')} />
+          <input className="styled-checkbox" checked={member.yc} readOnly type="checkbox" />
+          <label onClick={() => handleCheck(member._id, idx, 'yc')} />
         </td>
       </tr>
       {MEMBER_CNT !== 1 ? member.members.map((v, i) =>(
         <tr key={i}>
           <td rowSpan="1" key={i} className={evenClsName}>{v.name}</td>
           <td rowSpan="1" className={evenClsName}>
-            <input className="checkbox" checked={v.cc} readOnly type="checkbox" onClick={() => handleCheckMember(member._id, v._id, v.sec, idx, 'cc')} />
+            <input className="styled-checkbox" checked={v.cc} readOnly type="checkbox" />
+            <label onClick={() => handleCheckMember(member._id, v._id, v.sec, idx, 'cc')} />
           </td>
           <td rowSpan="1" className={evenClsName}>
-            <input className="checkbox" checked={v.mc} readOnly type="checkbox" onClick={() => handleCheckMember(member._id, v._id, v.sec, idx, 'mc')} />
+            <input className="styled-checkbox" checked={v.mc} readOnly type="checkbox" />
+            <label onClick={() => handleCheckMember(member._id, v._id, v.sec, idx, 'mc')} />
           </td>
           <td rowSpan="1" className={evenClsName}>
-            <input className="checkbox" checked={v.yc} readOnly type="checkbox" onClick={() => handleCheckMember(member._id, v._id, v.sec, idx, 'yc')} />
+            <input className="styled-checkbox" checked={v.yc} readOnly type="checkbox" />
+            <label onClick={() => handleCheckMember(member._id, v._id, v.sec, idx, 'yc')} />
           </td>
         </tr>
       )): (

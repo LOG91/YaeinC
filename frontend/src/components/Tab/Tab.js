@@ -6,11 +6,16 @@ import { cellData } from '../../data/cellData';
 import './Tab.scss';
 
 class Tab extends Component {
+  handleClick = (en_name) => {
+    const { indexing } = this.props;
+    indexing(en_name);
+  }
+
   render() {
     return (
         <ul className="tab">
           {cellData.map((v, idx) =>{
-            return <li key={idx} className={v.clsName}>
+            return <li key={idx} className={v.clsName} onClick={() => this.handleClick(v.en_name)}>
               <Link to={`/${v.en_name}`} className={this.props.idx === v.en_name ? "active" : ""}>{v.name}</Link>
           </li>})}
         </ul>

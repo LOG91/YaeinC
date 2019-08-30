@@ -3,17 +3,18 @@
     display: flex;
   }
   .youthContainer__nav {
-    text-align: center;
+    display: flex;
+    align-items: center;
     width: 5rem;
     height: 3rem;
-  }
-  .youthContainer__scrollbox {
-    overflow-y: scroll;
-    height: 500px;
+    div {
+      margin: auto;
+    }
   }
   .youthContainer__nav--empty {
     @extend .youthContainer__nav;
     width: 10rem;
+    padding: 0 1rem;
     height: 2rem;
     p {
       width: 10rem;
@@ -38,7 +39,9 @@
     margin-bottom: 1rem;
   }
   .youthContainer--networkName {
-    margin: auto 0;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
     p {
       width: 5rem;
     }

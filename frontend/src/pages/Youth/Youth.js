@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { chageCurrentSection, checkYouth, checkMemberYouth } from '../../store/modules/counter';
+import { indexing, chageCurrentSection, checkYouth, checkMemberYouth } from '../../store/modules/counter';
 import './Youth.scss';
 
 class Youth extends React.Component {
   componentDidMount() {
-    console.log('did0');
+    const { indexing, match: { path } } = this.props;
+    indexing(path.slice(1));
     this.fetchInfo();
   }
   async fetchInfo() {
@@ -16,8 +17,6 @@ class Youth extends React.Component {
   }
 
   handleYouthCheck = async ({ sectionIdx, leaderIdx, leaderId, youthId, date, memberIdx = null }) => {
-    // if (memberId)
-    console.log(youthId, '유스아이디');
     const { checkYouth, checkMemberYouth } = this.props;
     const temp = await fetch(`/api/youth/${youthId}`, {
       method: 'POST',
@@ -31,7 +30,6 @@ class Youth extends React.Component {
       memberIdx !== null ? checkMemberYouth({ sectionIdx, leaderIdx, memberIdx, date }) :
         checkYouth(sectionIdx, leaderIdx, leaderId, date);
     }
-    // console.log('checked!', leaderId, date);
   }
 
   youthTableTpl = (arr, networks) => {
@@ -41,36 +39,43 @@ class Youth extends React.Component {
       return (
         <div>
           <li className="youthContainer__navbar">
-            <div className="youthContainer__nav--leader"><p>{leader.name}</p></div>
+            <div className="youthContainer__nav--leader"><div>{leader.name}</div></div>
             {arr.map(date => {
               return (
                 <div className="youthContainer__nav">
-                  <p>
-                    <input className="styled-checkbox" checked={(leader.youth.att && leader.youth.att[date]) ? true : false} readOnly type="checkbox" />
-                    <label onClick={e =>
-                      this.handleYouthCheck({
-                        leaderId: leader._id,
-                        sectionIdx,
-                        leaderIdx,
-                        youthId: leader.youth._id,
-                        date
-                      })} />
-                  </p>
+                  <div>
+                    <input
+                      className="checkbox"
+                      checked={(leader.youth.att && leader.youth.att[date]) ? true : false}
+                      readOnly
+                      type="checkbox"
+                      onClick={e =>
+                        this.handleYouthCheck({
+                          leaderId: leader._id,
+                          sectionIdx,
+                          leaderIdx,
+                          youthId: leader.youth._id,
+                          date
+                        })}
+                    />
+                  </div>
                 </div>
               )
             })}
           </li>
           {leader.members.map((member, memberIdx) => {
-            console.log(leader.youth._id, member.youth._id);
             return (
               <li className="youthContainer__navbar">
                 <div className="youthContainer__nav"><div>{member.name}</div></div>
                 {arr.map(date => {
                   return (
                     <div className="youthContainer__nav">
-                      <p>
-                        <input className="styled-checkbox" checked={(member.youth.att && member.youth.att[date]) ? true : false} readOnly type="checkbox" />
-                        <label
+                      <div>
+                        <input
+                          className="checkbox"
+                          checked={(member.youth.att && member.youth.att[date]) ? true : false}
+                          readOnly
+                          type="checkbox"
                           onClick={() => this.handleYouthCheck({
                             leaderId: leader._id,
                             sectionIdx,
@@ -78,8 +83,9 @@ class Youth extends React.Component {
                             youthId: member.youth._id,
                             date,
                             memberIdx
-                          })} />
-                      </p>
+                          })}
+                        />
+                      </div>
                     </div>
                   )
                 })}
@@ -132,6 +138,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
   chageCurrentSection: section => dispatch(chageCurrentSection(section)),
+  indexing: idx => dispatch(indexing(idx)),
   checkYouth: (sectionIdx, leaderIdx, leaderId, date) => dispatch(checkYouth(sectionIdx, leaderIdx, leaderId, date)),
   checkMemberYouth: ({ sectionIdx, leaderIdx, memberIdx, date }) => dispatch(checkMemberYouth({ sectionIdx, leaderIdx, memberIdx, date }))
 });
