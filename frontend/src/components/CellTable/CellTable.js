@@ -10,13 +10,8 @@ import { cellData } from '../../data/cellData';
 class CellTable extends Component {
 
   async componentDidMount() {
-    const { current, chageCurrentSection, indexing } = this.props;
+    const { current } = this.props;
     if (current === '/') return;
-    indexing(current.slice(1));
-    const initNetwork = cellData.find(v => v.path === current);
-    const initCells = initNetwork.cells;
-    const currentCells = await fetch(`/api/cells/${JSON.stringify(initCells)}`).then(res => res.json());
-    chageCurrentSection(currentCells);
   }
 
   handleCheck = async (id, sectionIdx, kind, memberName = false) => {

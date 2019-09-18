@@ -10,12 +10,7 @@ const Root = () => {
       <div className="container">
         <BrowserRouter>
           <Route exact path="/" component={Home} />
-          <Route path="/israel_1" component={Home} />
-          <Route path="/israel_2" component={Home} />
-          <Route path="/arab_1" component={Home} />
-          <Route path="/arab_2" component={Home} />
-          <Route path="/turkey" component={Home} />
-          <Route path="/russia" component={Home} />
+          <Route path="/cell/:name" component={Home} />
           <Route path="/youth_m" component={Youth} />
           <Route path="/youth_w" component={Youth} />
           <Route path="/admin" component={Home} />
