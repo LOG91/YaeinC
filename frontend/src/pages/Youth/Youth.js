@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { indexing, chageCurrentSection, checkYouth, checkMemberYouth } from '../../store/modules/counter';
+import Tab from '../../components/Tab/Tab';
 import './Youth.scss';
 
 class Youth extends React.Component {
@@ -113,6 +114,7 @@ class Youth extends React.Component {
     const { currentSection } = this.props;
     return (
       <React.Fragment>
+        <Tab />
         <div className="youthContainer">
           <div className="youthContainer__flexbox">
             <div className="youthContainer__nav--empty"><p></p></div>

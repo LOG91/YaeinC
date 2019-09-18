@@ -73,7 +73,7 @@ class CellTable extends Component {
     // printDiv.style.display = 'none';
   }
   render() {
-    console.log(this.props.currentSection);
+    console.log(this.props.current);
     return (
       <table border="1" cellPadding="10">
         <tbody>
