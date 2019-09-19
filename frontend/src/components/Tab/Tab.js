@@ -20,11 +20,8 @@ class Tab extends Component {
         <ul className="tab">
           {cellData.map((v, idx) =>{
             return <li key={idx} className={v.clsName} onClick={() => this.handleClick(v.en_name)}>
-              <Link to={`/cell/${v.en_name}`} className={this.props.idx === v.en_name ? "active" : ""}>{v.name}</Link>
+              <Link to={`/${isAdmin ? 'admin/' : ''}cell/${v.en_name}`} className={this.props.idx === v.en_name ? "active" : ""}>{v.name}</Link>
           </li>})}
-          {isAdmin ? <li key={cellData.length} className="index">
-              <Link to="/admin">셀원 추가</Link>
-          </li> : null}
         </ul>
     )
   }

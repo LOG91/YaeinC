@@ -4,7 +4,10 @@ import { indexing, checkWorship, checkMemberWorship, countContent, chageCurrentS
 import { connect } from 'react-redux';
 
 import { mapNetworkTable } from './Fn'
-import { cellData } from '../../data/cellData';
+
+import FortalModal from '../FortalModal';
+import Modal from '../Modal/Modal';
+import AddForm from '../AddForm/AddForm';
 
 
 class CellTable extends Component {
@@ -12,6 +15,10 @@ class CellTable extends Component {
   async componentDidMount() {
     const { current } = this.props;
     if (current === '/') return;
+  }
+  state = {
+    openModal: false,
+    clickedCellInfo: {}
   }
 
   handleCheck = async (id, sectionIdx, kind, memberName = false) => {
@@ -54,6 +61,16 @@ class CellTable extends Component {
       this.props.countContent(id, sectionIdx, kind, Number(count));
     }
   }
+
+  handleToggleModal = () => {
+    this.setState({ openModal: !this.state.openModal })
+  }
+
+  handleAddLeader = memberInfo => {
+    this.handleToggleModal();
+    this.setState({ clickedCellInfo: memberInfo })
+  }
+
   onPrint() {
     const html = document.querySelector('html');
     const printContents = document.querySelector('.printArea').innerHTML;
@@ -67,8 +84,9 @@ class CellTable extends Component {
     document.body.style.display = 'block';
     // printDiv.style.display = 'none';
   }
+
   render() {
-    console.log(this.props.current);
+    const { isAdmin } = this.props;
     return (
       <table border="1" cellPadding="10">
         <tbody>
@@ -89,8 +107,22 @@ class CellTable extends Component {
             <td>주일</td>
             <td>청년</td>
           </tr>
-          {mapNetworkTable(this.props.currentSection, this.handleCheck, this.handleCount, this.handleCheckMember)}
+          {mapNetworkTable({
+            currentSection: this.props.currentSection,
+            handleCheck: this.handleCheck,
+            handleCount: this.handleCount,
+            handleCheckMember: this.handleCheckMember,
+            handleAddLeader: this.handleAddLeader,
+            isAdmin
+          })}
         </tbody>
+        {this.state.openModal ? (
+          <FortalModal>
+            <Modal>
+              <AddForm cellInfo={this.state.clickedCellInfo} onToggleModal={this.handleToggleModal}/>
+            </Modal>
+          </FortalModal>
+        ) : <div />}
       </table>
     )
   }

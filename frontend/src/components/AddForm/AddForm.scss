@@ -1,0 +1,14 @@
+.add-form {
+  text-align: center;
+  .add-form__box {
+    display: flex;
+    width: fit-content;
+    margin: auto;
+  }
+  .add-form--alert {
+    font-size: 0.7rem;
+    visibility: hidden;
+    color: #f164a2;
+  }
+  
+}

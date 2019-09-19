@@ -13,7 +13,7 @@ const Root = () => {
           <Route path="/cell/:name" component={Home} />
           <Route path="/youth_m" component={Youth} />
           <Route path="/youth_w" component={Youth} />
-          <Route path="/admin" component={Home} />
+          <Route path="/admin" component={Admin} />
           <Route path="/jjp" component={Extra} />
         </BrowserRouter>
       </div>
