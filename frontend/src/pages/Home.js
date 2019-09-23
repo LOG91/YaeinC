@@ -4,7 +4,7 @@ import Tab from '../components/Tab/Tab';
 
 const Home = ({ match }) => {
   return (
-    <div className="printArea">
+    <div>
         <Tab isAdmin={match.path === '/admin' ? true : null}/>
         <CellTable current={match.params.name} />
     </div>

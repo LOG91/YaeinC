@@ -10,6 +10,8 @@ import Modal from '../Modal/Modal';
 import AddForm from '../AddForm/AddForm';
 
 
+
+
 class CellTable extends Component {
 
   async componentDidMount() {
@@ -72,24 +74,11 @@ class CellTable extends Component {
     this.setState({ clickedCellInfo: memberInfo, cellIndex: idx })
   }
 
-  onPrint() {
-    const html = document.querySelector('html');
-    const printContents = document.querySelector('.printArea').innerHTML;
-    const printDiv = document.createElement("DIV");
-    printDiv.className = "print-div";
-
-    html.appendChild(printDiv);
-    printDiv.innerHTML = printContents;
-    document.body.style.display = 'none';
-    window.print();
-    document.body.style.display = 'block';
-    // printDiv.style.display = 'none';
-  }
 
   render() {
     const { isAdmin } = this.props;
     return (
-      <table border="1" cellPadding="10">
+      <table className={isAdmin ? "printArea": ""} border="1" cellPadding="10">
         <tbody>
           <tr>
             <th rowSpan="2" className="leader_name_header" onClick={() => this.re('israel')}>이스라엘군</th>

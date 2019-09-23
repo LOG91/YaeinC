@@ -6,6 +6,9 @@ import { CellTable } from '../../components/CellTable';
 import Tab from '../../components/Tab/Tab';
 import './Admin.scss'
 
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 class AdminPage extends Component {
   
   async addLeader () {
@@ -24,6 +27,21 @@ class AdminPage extends Component {
   }
   handleChangeGender = (evt) => {
     this.props.insertMember('gender', evt.target.name);
+  }
+
+  handlePrint() {
+    const html = document.querySelector('html');
+    const printContents = document.querySelector('.printArea').innerHTML;
+    const printDiv = document.createElement("DIV");
+    printDiv.className = "print-div";
+    // const tabDiv = document.querySelector('.tab');
+    // tabDiv.style.display = 'none';
+    html.appendChild(printDiv);
+    printDiv.innerHTML = printContents;
+    document.body.style.display = 'none';
+    window.print();
+    document.body.style.display = 'block';
+    printDiv.style.display = 'none';
   }
 
   renderMembersList(list) {
@@ -56,8 +74,9 @@ class AdminPage extends Component {
   render(){
     return (
       <div>
+        <div className="printButton"><FontAwesomeIcon icon={faPrint} onClick={this.handlePrint}/></div>
         <Tab isAdmin={true} />
-        <CellTable isAdmin={true} />
+        <div className="printArea"><CellTable isAdmin={true} /></div>
       </div>
     )
   }

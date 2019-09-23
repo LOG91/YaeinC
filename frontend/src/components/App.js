@@ -8,17 +8,6 @@ import { cellData } from '../data/cellData';
 
 class App extends Component {
   
-  async componentDidMount() {
-    // const { chageCurrentSection, indexing } = this.props;
-    // const initNetwork = cellData.find(v => v.en_name === 'israel_1');
-    // const initCells = initNetwork.cells;
-    // indexing(initNetwork.en_name);
-    // const info = await fetch(`/api/cells/${JSON.stringify(initCells)}`).then(res => res.json());
-    // chageCurrentSection(info);
-    // const info = await Promise.all(initCells.map(item => fetch(`/api/section/${item}`).then(res=>res.json())));
-    // chageCurrentSection(info);
-  }
-  
   handleSubmit = async e => {
     e.preventDefault();
     const response = await fetch('/api/world', {
