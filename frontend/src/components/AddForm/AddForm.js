@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './AddForm.scss';
 import { connect } from 'react-redux';
-import { insertMember, insertCellMember, removeCellMember } from '../../store/modules/counter';
+import { insertMember, insertCellMember, removeCellMember, idx, chageCurrentSection } from '../../store/modules/counter';
+import { cellData } from '../../data/cellData';
 
 class AddForm extends Component {
 
@@ -11,17 +12,25 @@ class AddForm extends Component {
     this.handleChange('cellName', cellInfo.cellName);
     this.handleChange('section', cellInfo.section);
     this.handleChange('gender', cellInfo.gender);
+    
   }
   async addLeader() {
-    const { insertedMember } = this.props;
-
+    const { insertedMember, onToggleModal, cellIndex, idx, chageCurrentSection } = this.props;
+    console.log(cellIndex)
     await fetch('/api/leader', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(insertedMember),
-    }).then(res => res.json());
+    }).then(res => {
+      onToggleModal();
+      return res.json();
+    }).then(async res=> {
+      const initCells = cellData.find(v => v.en_name === idx).cells;
+      const currentCells = await fetch(`/api/cells/${JSON.stringify(initCells)}`).then(res => res.json());
+      chageCurrentSection(currentCells);
+    });
   }
 
   handleChange = (key, value) => {
@@ -56,7 +65,7 @@ class AddForm extends Component {
   }
 
   render() {
-    const { onToggleModal, cellInfo } = this.props;
+    const { onToggleModal, cellInfo, cellIndex } = this.props;
     return (
       <div className="add-form">
         <h3>멤버 추가</h3>
@@ -66,7 +75,6 @@ class AddForm extends Component {
             <input name="name" onChange={({ target }) => this.handleChange(target.name, target.value)} />
           </div>
           <div className="add-form--alert">이름을 입력하세요</div>
-
           <div className="add-form__box"><div>나이</div><input name="age" onChange={({ target }) => this.handleChange(target.name, target.value)}></input></div>
           <div className="add-form__box">
             <div>지역군</div>
@@ -88,13 +96,15 @@ class AddForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  insertedMember: state.insertedMember
+  insertedMember: state.insertedMember,
+  idx: state.idx,
 })
 
 const mapDispatchToProps = dispatch => ({
   insertMember: (left, value) => dispatch(insertMember(left, value)),
   insertCellMember: (member, idx) => dispatch(insertCellMember(member, idx)),
-  removeCellMember: (idx) => dispatch(removeCellMember(idx))
+  removeCellMember: (idx) => dispatch(removeCellMember(idx)),
+  chageCurrentSection: (section, enName) => dispatch(chageCurrentSection(section, enName))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddForm);

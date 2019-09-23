@@ -18,7 +18,8 @@ class CellTable extends Component {
   }
   state = {
     openModal: false,
-    clickedCellInfo: {}
+    clickedCellInfo: {},
+    cellIndex: null
   }
 
   handleCheck = async (id, sectionIdx, kind, memberName = false) => {
@@ -66,9 +67,9 @@ class CellTable extends Component {
     this.setState({ openModal: !this.state.openModal })
   }
 
-  handleAddLeader = memberInfo => {
+  handleAddLeader = (memberInfo, idx) => {
     this.handleToggleModal();
-    this.setState({ clickedCellInfo: memberInfo })
+    this.setState({ clickedCellInfo: memberInfo, cellIndex: idx })
   }
 
   onPrint() {
@@ -119,7 +120,7 @@ class CellTable extends Component {
         {this.state.openModal ? (
           <FortalModal>
             <Modal>
-              <AddForm cellInfo={this.state.clickedCellInfo} onToggleModal={this.handleToggleModal}/>
+              <AddForm cellInfo={this.state.clickedCellInfo} cellIndex={this.state.cellIndex} onToggleModal={this.handleToggleModal}/>
             </Modal>
           </FortalModal>
         ) : <div />}

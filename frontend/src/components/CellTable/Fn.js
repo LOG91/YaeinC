@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import FortalModal from '../FortalModal';
 
-const renderLeaderList = ({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader }) => {
+const renderLeaderList = ({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin }) => {
   const all_members = network.reduce((ac, cv) => {
     ac += cv.members.length;
     return ac;
@@ -17,7 +17,7 @@ const renderLeaderList = ({ network, idx, networkName, handleCheck, handleCount,
             <td
               rowSpan={all_members + 1}>
               <p>{networkName}</p>
-              <button className="networkName-box__button" onClick={e=> handleAddLeader(member)}>추가</button>
+              {isAdmin ? <button className="networkName-box__button" onClick={e => handleAddLeader(member, idx)}>추가</button> : null}
             </td>
           </tr>
         ) : null}

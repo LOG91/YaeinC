@@ -175,7 +175,7 @@ app.post('/api/leader', (req, res, next) => {
     }
   });
 
-  res.send({ a: 1, b: 2, c: 3, d: 4 });
+  res.send(lead);
 });
 
 app.put('/api/check/leader/:id', (req, res) => {
