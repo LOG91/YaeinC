@@ -1,35 +1,39 @@
 import React, { Component } from 'react';
 import './CellTable.scss';
-import { indexing, checkWorship, checkMemberWorship ,countContent ,chageCurrentSection } from '../../store/modules/counter';
+import { indexing, checkWorship, checkMemberWorship, countContent, chageCurrentSection } from '../../store/modules/counter';
 import { connect } from 'react-redux';
 
 import { mapNetworkTable } from './Fn'
-import { cellData } from '../../data/cellData';
+
+import FortalModal from '../FortalModal';
+import Modal from '../Modal/Modal';
+import AddForm from '../AddForm/AddForm';
 
 
-class CellTable extends Component{
+
+
+class CellTable extends Component {
 
   async componentDidMount() {
-    const { current: currentCells, chageCurrentSection, indexing } = this.props;
-    if (currentCells === '/') return;
-    const initNetwork = cellData.find(v => v.path === currentCells);
-    const initCells = initNetwork.cells;
-    indexing(initNetwork.en_name);
-    const info = await fetch(`/api/cells/${JSON.stringify(initCells)}`).then(res => res.json());
-    chageCurrentSection(info);
+    const { current } = this.props;
+    if (current === '/') return;
+  }
+  state = {
+    openModal: false,
+    clickedCellInfo: {},
+    cellIndex: null
   }
 
   handleCheck = async (id, sectionIdx, kind, memberName = false) => {
-    console.log(id, '아이디');
     const responsedData = await fetch(`/api/check/leader/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id, kind, memberName})
+      body: JSON.stringify({ id, kind, memberName })
     });
 
-    if(responsedData.status === 200) {
+    if (responsedData.status === 200) {
       this.props.checkWorship(id, sectionIdx, kind);
     }
   }
@@ -42,7 +46,7 @@ class CellTable extends Component{
       body: JSON.stringify({ id, kind })
     });
 
-    if(responsedData.status === 200) {
+    if (responsedData.status === 200) {
       console.log(leaderId, id, sec, sectionIdx, kind);
       this.props.checkMemberWorship(leaderId, id, sec, sectionIdx, kind);
     }
@@ -56,36 +60,60 @@ class CellTable extends Component{
       },
       body: JSON.stringify({ id, kind, count: Number(count) })
     });
-    if(responsedData.status === 200) {
+    if (responsedData.status === 200) {
       this.props.countContent(id, sectionIdx, kind, Number(count));
     }
   }
-  
-  render(){
-    console.log(this.props.currentSection);
+
+  handleToggleModal = () => {
+    this.setState({ openModal: !this.state.openModal })
+  }
+
+  handleAddLeader = (memberInfo, idx) => {
+    this.handleToggleModal();
+    this.setState({ clickedCellInfo: memberInfo, cellIndex: idx })
+  }
+
+
+  render() {
+    const { isAdmin } = this.props;
     return (
-      <table border="1" cellPadding="10">
-            <tbody>
-              <tr>
-                <th rowSpan="2" className="leader_name_header" onClick={() => this.re('israel')}>이스라엘군</th>
-                <th rowSpan="2" className="leader_name_header">리더</th>
-                <th colSpan="5" className="leader_check_header">리더 체크리스트</th>
-                <th rowSpan="2" className="cell_member_name_header">셀원</th>
-                <th colSpan="3" className="cell_member_check_header">셀원 체크리스트</th>
-              </tr>
-              <tr>
-                  <td>새벽</td>
-                  <td>말씀</td>
-                  <td>셀</td>
-                  <td>주일</td>
-                  <td>청년</td>
-                  <td>셀</td>
-                  <td>주일</td>
-                  <td>청년</td>
-              </tr>
-              {mapNetworkTable(this.props.currentSection, this.handleCheck, this.handleCount, this.handleCheckMember)}
-            </tbody>
-          </table>
+      <table className={isAdmin ? "printArea": ""} border="1" cellPadding="10">
+        <tbody>
+          <tr>
+            <th rowSpan="2" className="leader_name_header" onClick={() => this.re('israel')}>이스라엘군</th>
+            <th rowSpan="2" className="leader_name_header" onClick={this.onPrint}>리더</th>
+            <th colSpan="5" className="leader_check_header">리더 체크리스트</th>
+            <th rowSpan="2" className="cell_member_name_header">셀원</th>
+            <th colSpan="3" className="cell_member_check_header">셀원 체크리스트</th>
+          </tr>
+          <tr>
+            <td>새벽</td>
+            <td>말씀</td>
+            <td>셀</td>
+            <td>주일</td>
+            <td>청년</td>
+            <td>셀</td>
+            <td>주일</td>
+            <td>청년</td>
+          </tr>
+          {mapNetworkTable({
+            currentSection: this.props.currentSection,
+            handleCheck: this.handleCheck,
+            handleCount: this.handleCount,
+            handleCheckMember: this.handleCheckMember,
+            handleAddLeader: this.handleAddLeader,
+            isAdmin
+          })}
+        </tbody>
+        {this.state.openModal ? (
+          <FortalModal>
+            <Modal>
+              <AddForm cellInfo={this.state.clickedCellInfo} cellIndex={this.state.cellIndex} onToggleModal={this.handleToggleModal}/>
+            </Modal>
+          </FortalModal>
+        ) : <div />}
+      </table>
     )
   }
 }

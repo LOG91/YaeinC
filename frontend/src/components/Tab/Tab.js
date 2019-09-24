@@ -6,12 +6,21 @@ import { cellData } from '../../data/cellData';
 import './Tab.scss';
 
 class Tab extends Component {
+  handleClick = async (en_name) => {
+    const { indexing, chageCurrentSection } = this.props;
+    indexing(en_name);
+    const initCells = cellData.find(v => v.en_name === en_name).cells;
+    const currentCells = await fetch(`/api/cells/${JSON.stringify(initCells)}`).then(res => res.json());
+    chageCurrentSection(currentCells);
+  }
+
   render() {
+    const { isAdmin } = this.props;
     return (
         <ul className="tab">
           {cellData.map((v, idx) =>{
-            return <li key={idx} className={v.clsName}>
-              <Link to={`/${v.en_name}`} className={this.props.idx === v.en_name ? "active" : ""}>{v.name}</Link>
+            return <li key={idx} className={v.clsName} onClick={() => this.handleClick(v.en_name)}>
+              <Link to={`/${isAdmin ? 'admin/' : ''}cell/${v.en_name}`} className={this.props.idx === v.en_name ? "active" : ""}>{v.name}</Link>
           </li>})}
         </ul>
     )

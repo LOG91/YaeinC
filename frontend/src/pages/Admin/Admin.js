@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { insertMember, insertCellMember, removeCellMember } from '../../store/modules/counter'
 import ReactDOM from 'react-dom';
+import { CellTable } from '../../components/CellTable';
+import Tab from '../../components/Tab/Tab';
 import './Admin.scss'
+
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class AdminPage extends Component {
   
@@ -21,8 +26,22 @@ class AdminPage extends Component {
     this.props.insertMember(target.name, target.value);
   }
   handleChangeGender = (evt) => {
-    console.log(evt.target.name);
     this.props.insertMember('gender', evt.target.name);
+  }
+
+  handlePrint() {
+    const html = document.querySelector('html');
+    const printContents = document.querySelector('.printArea').innerHTML;
+    const printDiv = document.createElement("DIV");
+    printDiv.className = "print-div";
+    // const tabDiv = document.querySelector('.tab');
+    // tabDiv.style.display = 'none';
+    html.appendChild(printDiv);
+    printDiv.innerHTML = printContents;
+    document.body.style.display = 'none';
+    window.print();
+    document.body.style.display = 'block';
+    printDiv.style.display = 'none';
   }
 
   renderMembersList(list) {
@@ -55,42 +74,9 @@ class AdminPage extends Component {
   render(){
     return (
       <div>
-        <div>
-          <div>이름</div><input name="name" onChange={this.handleChange}></input>
-          <div>나이</div><input name="age" onChange={this.handleChange}></input>
-          <div className="radios">
-            <div className="radio">
-              <input
-                type="radio"
-                id="radio1"
-                name="male"
-                onChange={this.handleChangeGender}
-                checked={this.props.insertedMember.gender ==='male' ? true : false}
-              />
-              <label htmlFor="radio1">
-                형제
-              </label>
-            </div>
-            <div className="radio">
-              <input
-                type="radio"
-                id="radio2"
-                name="female"
-                onChange={this.handleChangeGender}
-                checked={this.props.insertedMember.gender ==='female' ? true : false}
-              />
-              <label htmlFor="radio2">
-                자매
-              </label>
-            </div>
-          </div>
-          <div>지역군</div><input name="section" onChange={this.handleChange}></input>
-          <div>셀이름(en)</div><input name="cellName" onChange={this.handleChange}></input>
-          <div>셀이름(kr)</div><input name="cellNameKr" onChange={this.handleChange}></input>
-          {this.renderMembersList(this.props.insertedMember.members)}
-          <button onClick={() => this.handleAddMember()}>셀원 추가</button>
-        </div>
-        <button className="add_member_btn" onClick={() => this.addLeader()}>등록</button>
+        <div className="printButton"><FontAwesomeIcon icon={faPrint} onClick={this.handlePrint}/></div>
+        <Tab isAdmin={true} />
+        <div className="printArea"><CellTable isAdmin={true} /></div>
       </div>
     )
   }

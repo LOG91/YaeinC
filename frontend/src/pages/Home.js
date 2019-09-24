@@ -1,11 +1,12 @@
 import React from 'react';
-import CellTable from '../components/CellTable/CellTable';
+import { CellTable } from '../components/CellTable';
+import Tab from '../components/Tab/Tab';
 
 const Home = ({ match }) => {
-  console.log(match);
   return (
     <div>
-        <CellTable current={match.path} />
+        <Tab isAdmin={match.path === '/admin' ? true : null}/>
+        <CellTable current={match.params.name} />
     </div>
   )
 }
