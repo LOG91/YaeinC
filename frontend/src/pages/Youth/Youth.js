@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { indexing, chageCurrentSection, checkYouth, checkMemberYouth } from '../../store/modules/counter';
+import { indexing, changeCurrentSection, checkYouth, checkMemberYouth } from '../../store/modules/checker';
 import Tab from '../../components/Tab/Tab';
 import './Youth.scss';
 
@@ -11,10 +11,10 @@ class Youth extends React.Component {
     this.fetchInfo();
   }
   async fetchInfo() {
-    const { chageCurrentSection } = this.props;
+    const { changeCurrentSection } = this.props;
     const tempCells = ['israel_ga', 'israel_na', 'israel_da'];
     const info = await fetch(`/api/cells/${JSON.stringify(tempCells)}`).then(res => res.json()).then();
-    chageCurrentSection(info);
+    changeCurrentSection(info);
   }
 
   handleYouthCheck = async ({ sectionIdx, leaderIdx, leaderId, youthId, date, memberIdx = null }) => {
@@ -111,10 +111,10 @@ class Youth extends React.Component {
   }
   render() {
     const tempArr = ['7_10', '7_17', '7_24', '7_31', '8_7', '8_14', '8_21', '8_28', '9_4', '9_11', '9_18', '9_25'];
-    const { currentSection } = this.props;
+    const { currentSection, match: {path} } = this.props;
     return (
       <React.Fragment>
-        <Tab />
+        <Tab isAdmin={path.match(/admin/g)}/>
         <div className="youthContainer">
           <div className="youthContainer__flexbox">
             <div className="youthContainer__nav--empty"><p></p></div>
@@ -135,11 +135,11 @@ class Youth extends React.Component {
 };
 
 const mapStateToProps = (state) => ({
-  currentSection: state.currentSection
+  currentSection: state.checker.currentSection
 });
 
 const mapDispatchToProps = dispatch => ({
-  chageCurrentSection: section => dispatch(chageCurrentSection(section)),
+  changeCurrentSection: section => dispatch(changeCurrentSection(section)),
   indexing: idx => dispatch(indexing(idx)),
   checkYouth: (sectionIdx, leaderIdx, leaderId, date) => dispatch(checkYouth(sectionIdx, leaderIdx, leaderId, date)),
   checkMemberYouth: ({ sectionIdx, leaderIdx, memberIdx, date }) => dispatch(checkMemberYouth({ sectionIdx, leaderIdx, memberIdx, date }))

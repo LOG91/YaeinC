@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import FortalModal from '../FortalModal';
 
 const renderLeaderList = ({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin }) => {
   const all_members = network.reduce((ac, cv) => {

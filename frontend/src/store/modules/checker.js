@@ -1,79 +1,54 @@
-const INCREMENT = 'counter/INCREMENT';
-const INDEXING = 'counter/INDEXING';
-const INSERT_MEMBER = 'counter/INSERT_MEMBER';
-const INSERT_CELL_MEMBER = 'counter/INSERT_CELL_MEMBER';
-const REMOVE_CELL_MEMBER = 'counter/REMOVE_CELL_MEMBER';
-const CHANGE_CURRENT_SECTION = 'counter/CHANGE_CURRENT_SECTION';
-const CHECK_WORSHIP = 'counter/CHECK_WORSHIP';
-const CHECK_MEMBER_WORSHIP = 'counter/CHECK_MEMBER_WORSHIP';
-const COUNT_CONTENT = 'counter/COUNT_CONTENT';
-const CHECK_YOUTH = 'counter/CHECK_YOUTH';
-const CHECK_MEMBER_YOUTH = 'counter/CHECK_MEMBER_YOUTH';
+const INDEXING = 'checker/INDEXING';
+const CHANGE_CURRENT_SECTION = 'checker/CHANGE_CURRENT_SECTION';
+const CHECK_WORSHIP = 'checker/CHECK_WORSHIP';
+const CHECK_MEMBER_WORSHIP = 'checker/CHECK_MEMBER_WORSHIP';
+const COUNT_CONTENT = 'checker/COUNT_CONTENT';
+const CHECK_YOUTH = 'checker/CHECK_YOUTH';
+const CHECK_MEMBER_YOUTH = 'checker/CHECK_MEMBER_YOUTH';
+const INSERT_MEMBER_DATA = 'checker/INSERT_MEMBER_DATA';
+const INSERT_CELL_MEMBER = 'checker/INSERT_CELL_MEMBER';
+const REMOVE_CELL_MEMBER = 'checker/REMOVE_CELL_MEMBER';
 
-export const increment = () => ({ type: INCREMENT });
 export const indexing = idx => ({ type: INDEXING, idx });
-export const insertMember = (left, value) => ({ type: INSERT_MEMBER, left, value });
-export const insertCellMember = (member, idx) => ({ type: INSERT_CELL_MEMBER, member, idx });
-export const removeCellMember = (idx) => ({ type: REMOVE_CELL_MEMBER, idx });
-export const chageCurrentSection = (section, enName) => ({ type: CHANGE_CURRENT_SECTION, section, enName });
+export const changeCurrentSection = (section, enName) => ({ type: CHANGE_CURRENT_SECTION, section, enName });
+
 export const checkWorship = (id, sectionIdx, left) => ({ type: CHECK_WORSHIP, id, sectionIdx, left });
 export const checkMemberWorship = (leaderId, id, sec, sectionIdx, left) => ({ type: CHECK_MEMBER_WORSHIP, leaderId, id, sec, sectionIdx, left });
 export const countContent = (id, sectionIdx, left, count) => ({ type: COUNT_CONTENT, id, sectionIdx, left, count });
 export const checkYouth = (sectionIdx, leaderIdx, leaderId, date) => ({ type: CHECK_YOUTH, leaderId, sectionIdx, leaderIdx, date });
 export const checkMemberYouth = ({ sectionIdx, leaderIdx, leaderId, date, memberIdx }) => ({ type: CHECK_MEMBER_YOUTH, leaderId, sectionIdx, leaderIdx, date, memberIdx });
 
+export const insertMemberData = (left, value) => ({ type: INSERT_MEMBER_DATA, left, value });
+export const insertCellMember = (member, idx) => ({ type: INSERT_CELL_MEMBER, member, idx });
+export const removeCellMember = (idx) => ({ type: REMOVE_CELL_MEMBER, idx });
+
 const initialState = {
-  number: 0,
   idx: '',
-  insertedMember: { name: '', age: '', gender: '', section: '', cellName: '', cellNameKr: '', members: [] },
+  insertedMember: {
+    name: '',
+    age: '',
+    gender: '',
+    section: '',
+    cellName: '',
+    cellNameKr: '',
+    members: []
+  },
   currentSection: []
 }
 
-export default function counter(state = initialState, action) {
+export default function checker(state = initialState, action) {
   switch (action.type) {
-    case INCREMENT:
-      return {
-        ...state,
-        number: state.number + 1
-      }
     case INDEXING:
       return {
         ...state,
         idx: action.idx
       }
-    case INSERT_MEMBER:
-      return {
-        ...state,
-        insertedMember: {
-          ...state.insertedMember,
-          [action.left]: action.value
-        }
-      }
-    case INSERT_CELL_MEMBER:
-      return {
-        ...state,
-        insertedMember: {
-          ...state.insertedMember,
-          members:
-            [...state.insertedMember.members.slice(0, action.idx),
-            action.member,
-            ...state.insertedMember.members.slice(action.idx + 1, state.insertedMember.members.length)]
-        }
-      }
-    case REMOVE_CELL_MEMBER:
-      return {
-        ...state,
-        insertedMember: {
-          ...state.insertedMember,
-          members: state.insertedMember.members.filter((v, idx) => idx !== action.idx)
-        }
-      }
-
     case CHANGE_CURRENT_SECTION:
       return {
         ...state,
         currentSection: action.section
       }
+
 
     case CHECK_WORSHIP:
       return {
@@ -89,7 +64,6 @@ export default function counter(state = initialState, action) {
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ],
       }
-
     case CHECK_MEMBER_WORSHIP:
       return {
         ...state,
@@ -109,7 +83,6 @@ export default function counter(state = initialState, action) {
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ],
       }
-
     case COUNT_CONTENT:
       return {
         ...state,
@@ -124,7 +97,6 @@ export default function counter(state = initialState, action) {
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ],
       }
-
     case CHECK_YOUTH:
       return {
         ...state,
@@ -177,6 +149,36 @@ export default function counter(state = initialState, action) {
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
       }
+
+    case INSERT_MEMBER_DATA:
+      return {
+        ...state,
+        insertedMember: {
+          ...state.insertedMember,
+          [action.left]: action.value
+        }
+      }
+    case INSERT_CELL_MEMBER:
+      return {
+        ...state,
+        insertedMember: {
+          ...state.insertedMember,
+          members:
+            [...state.insertedMember.members.slice(0, action.idx),
+            action.member,
+            ...state.insertedMember.members.slice(action.idx + 1, state.insertedMember.members.length)]
+        }
+      }
+    case REMOVE_CELL_MEMBER:
+      return {
+        ...state,
+        insertedMember: {
+          ...state.insertedMember,
+          members: state.insertedMember.members.filter((v, idx) => idx !== action.idx)
+        }
+      }
+
+
     default:
       return state;
   }

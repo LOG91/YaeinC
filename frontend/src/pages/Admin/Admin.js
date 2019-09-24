@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { insertMember, insertCellMember, removeCellMember } from '../../store/modules/counter'
-import ReactDOM from 'react-dom';
+import { insertMemberData, insertCellMember, removeCellMember } from '../../store/modules/registerer'
 import { CellTable } from '../../components/CellTable';
 import Tab from '../../components/Tab/Tab';
 import './Admin.scss'
@@ -23,10 +22,10 @@ class AdminPage extends Component {
   }
 
   handleChange = ({ target }) => {
-    this.props.insertMember(target.name, target.value);
+    this.props.insertMemberData(target.name, target.value);
   }
   handleChangeGender = (evt) => {
-    this.props.insertMember('gender', evt.target.name);
+    this.props.insertMemberData('gender', evt.target.name);
   }
 
   handlePrint() {
@@ -84,11 +83,11 @@ class AdminPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  insertedMember: state.insertedMember
+  insertedMember: state.registerer.insertedMember
 })
 
 const mapDispatchToProps = dispatch => ({
-  insertMember: (left, value) => dispatch(insertMember(left, value)),
+  insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),
   insertCellMember: (member, idx) => dispatch(insertCellMember(member, idx)),
   removeCellMember: (idx) => dispatch(removeCellMember(idx))
 })

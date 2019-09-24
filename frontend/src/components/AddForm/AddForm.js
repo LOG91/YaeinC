@@ -1,22 +1,23 @@
 import React, { Component } from 'react';
 import './AddForm.scss';
 import { connect } from 'react-redux';
-import { insertMember, insertCellMember, removeCellMember, idx, chageCurrentSection } from '../../store/modules/counter';
+import { changeCurrentSection, insertMemberData, insertCellMember, removeCellMember } from '../../store/modules/checker';
 import { cellData } from '../../data/cellData';
 
 class AddForm extends Component {
 
   componentDidMount() {
     const { cellInfo } = this.props;
-    this.handleChange('cellNameKr', cellInfo.cellNameKr);
-    this.handleChange('cellName', cellInfo.cellName);
-    this.handleChange('section', cellInfo.section);
-    this.handleChange('gender', cellInfo.gender);
-    
+    this.initData({info: cellInfo, wish: ['cellNameKr', 'cellName', 'section', 'gender'], fn: this.handleChange});
   }
-  async addLeader() {
-    const { insertedMember, onToggleModal, cellIndex, idx, chageCurrentSection } = this.props;
-    console.log(cellIndex)
+
+  initData = ({ info, wish, fn }) => {
+    wish.forEach(item => {
+      fn(item, info[item]);
+    })
+  }
+  addLeader = async () => {
+    const { insertedMember, onToggleModal, idx, changeCurrentSection } = this.props;
     await fetch('/api/leader', {
       method: 'POST',
       headers: {
@@ -26,15 +27,15 @@ class AddForm extends Component {
     }).then(res => {
       onToggleModal();
       return res.json();
-    }).then(async res=> {
+    }).then(async res => {
       const initCells = cellData.find(v => v.en_name === idx).cells;
       const currentCells = await fetch(`/api/cells/${JSON.stringify(initCells)}`).then(res => res.json());
-      chageCurrentSection(currentCells);
+      changeCurrentSection(currentCells);
     });
   }
 
   handleChange = (key, value) => {
-    this.props.insertMember(key, value);
+    this.props.insertMemberData(key, value);
   }
 
   renderMembersList(list) {
@@ -65,7 +66,7 @@ class AddForm extends Component {
   }
 
   render() {
-    const { onToggleModal, cellInfo, cellIndex } = this.props;
+    const { onToggleModal, cellInfo } = this.props;
     return (
       <div className="add-form">
         <h3>멤버 추가</h3>
@@ -96,15 +97,15 @@ class AddForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  insertedMember: state.insertedMember,
-  idx: state.idx,
+  insertedMember: state.checker.insertedMember,
+  idx: state.checker.idx,
 })
 
 const mapDispatchToProps = dispatch => ({
-  insertMember: (left, value) => dispatch(insertMember(left, value)),
+  insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),
   insertCellMember: (member, idx) => dispatch(insertCellMember(member, idx)),
   removeCellMember: (idx) => dispatch(removeCellMember(idx)),
-  chageCurrentSection: (section, enName) => dispatch(chageCurrentSection(section, enName))
+  changeCurrentSection: (section, enName) => dispatch(changeCurrentSection(section, enName))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddForm);

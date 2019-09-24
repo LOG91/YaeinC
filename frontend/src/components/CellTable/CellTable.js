@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import './CellTable.scss';
-import { indexing, checkWorship, checkMemberWorship, countContent, chageCurrentSection } from '../../store/modules/counter';
+import { indexing, changeCurrentSection, checkWorship, checkMemberWorship, countContent } from '../../store/modules/checker';
 import { connect } from 'react-redux';
 
 import { mapNetworkTable } from './Fn'
 
-import FortalModal from '../FortalModal';
+import FortalModal from '../Modal/FortalModal';
 import Modal from '../Modal/Modal';
 import AddForm from '../AddForm/AddForm';
-
-
 
 
 class CellTable extends Component {
@@ -25,6 +23,7 @@ class CellTable extends Component {
   }
 
   handleCheck = async (id, sectionIdx, kind, memberName = false) => {
+    console.log(id, sectionIdx, kind, memberName)
     const responsedData = await fetch(`/api/check/leader/${id}`, {
       method: 'PUT',
       headers: {
@@ -119,18 +118,21 @@ class CellTable extends Component {
 }
 
 
-const mapStateToProps = (state) => ({
-  members: state.members,
-  idx: state.idx,
-  currentSection: state.currentSection
-});
+const mapStateToProps = (state) => {
+  console.log(state);
+  return({
+  members: state.checker.members,
+  seokki: 23,
+  idx: state.checker.idx,
+  currentSection: state.checker.currentSection
+})};
 
 const mapDispatchToProps = dispatch => ({
   indexing: idx => dispatch(indexing(idx)),
   checkWorship: (name, sectionIdx, left) => dispatch(checkWorship(name, sectionIdx, left)),
   checkMemberWorship: (leaderId, id, sec, sectionIdx, left) => dispatch(checkMemberWorship(leaderId, id, sec, sectionIdx, left)),
   countContent: (name, sectionIdx, left, count) => dispatch(countContent(name, sectionIdx, left, count)),
-  chageCurrentSection: section => dispatch(chageCurrentSection(section))
+  changeCurrentSection: section => dispatch(changeCurrentSection(section))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CellTable);
