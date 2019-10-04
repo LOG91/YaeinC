@@ -22,19 +22,22 @@ class CellTable extends Component {
     cellIndex: null
   }
 
-  handleCheck = async (id, sectionIdx, kind, memberName = false) => {
+  handleCheck = (id, sectionIdx, kind, memberName = false) => {
     console.log(id, sectionIdx, kind, memberName)
-    const responsedData = await fetch(`/api/check/leader/${id}`, {
+    // const responsedData =
+    fetch(`/api/check/leader/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ id, kind, memberName })
+    }).then(responsedData => {
+      if (responsedData.status === 200) {
+        this.props.checkWorship(id, sectionIdx, kind);
+      }
     });
 
-    if (responsedData.status === 200) {
-      this.props.checkWorship(id, sectionIdx, kind);
-    }
+    
   }
   handleCheckMember = async (leaderId, id, sec, sectionIdx, kind) => {
     const responsedData = await fetch(`/api/check/member/${id}`, {

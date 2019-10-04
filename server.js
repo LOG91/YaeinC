@@ -54,6 +54,16 @@ const addMember = ({ leaderId, gender, sec, name, section, cellName, cellNameKr,
 
 const addYouthAtt = () => ({ att: { empty: 'no' } });
 
+app.post('/api/reset', (req, res) => {
+  // const { currentLocation } = req.body;
+  Leader.updateMany({}, {$set: { mc: false, cc: false, yc: false } }, () => {
+  })
+  Member.updateMany({}, {$set: { mc: false, cc: false, yc: false } }, () => {
+  })
+  // console.log(currentLocation)
+  res.send({});
+})
+
 app.get('/api/cells/:cells', async (req, res) => {
   const cellNames = JSON.parse(req.params.cells);
   const obj = {};
@@ -122,18 +132,6 @@ app.get('/api/gender/:gender', (req, res) => {
       res.send(user);
     })
 })
-
-// just kidding
-app.get('/api/jjp', (req, res) => {
-  res.send(`
-    <div>
-      <h2 style="text-align:center">정재필 홈페이지</h2>
-      <img 
-        style="display: block; margin: 0 auto;"
-        src="https://post-phinf.pstatic.net/MjAxODAxMzBfMjI1/MDAxNTE3MjY5MzA3NTgz.V6faZ0lf5APcXPXCLchR5XUHOdzz5MQRNOA5Y7dL-iog.COU5qG5ACVgPJNgV3PpXr-oVVmpCxqbrYSzaRDtbnoYg.JPEG/2.jpg?type=w1200"></img>
-    </div>
-  `);
-});
 
 app.post('/api/leader', (req, res, next) => {
   const { name, age, gender, cellName, cellNameKr, section, members } = req.body;
