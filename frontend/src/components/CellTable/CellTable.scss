@@ -1,3 +1,4 @@
+@import "~bootstrap/scss/bootstrap";
 
 table {
   margin: 0 auto;
@@ -24,7 +25,6 @@ td {
 .select_box_dawn,
 .select_box_word {
   border: 0;
-  width: 40px;
 }
 
 select {
@@ -139,11 +139,11 @@ select {
   opacity: 1;
 }
 .check:hover svg {
-  stroke: #4285f4;
+  stroke: #9775fa
 }
 
 input:checked + .check svg {
-  stroke: #4285f4;
+  stroke: #9775fa;
 }
 input:checked + .check svg path {
   stroke-dashoffset: 60;

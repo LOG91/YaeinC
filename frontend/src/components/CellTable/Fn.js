@@ -23,6 +23,7 @@ const renderLeaderList = ({ network, idx, networkName, handleCheck, handleCount,
         <tr className={evenClsName}>
           <td rowSpan={MEMBER_CNT}>{member.name}</td>
           <td rowSpan={MEMBER_CNT}>
+
             <select
               className="select_box_dawn"
               onChange={({ target }) => handleCount(member._id, idx, 'dawn', target.value)}

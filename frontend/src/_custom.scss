@@ -1,5 +1,5 @@
 // @import "custom";
-// @import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/bootstrap";
 
 $fontSize: 52px;
 ul {
@@ -9,7 +9,6 @@ ul {
 
 .title {
   padding: 3rem;
-  color: #9775fa;
   font-size: $fontSize;
   text-align: center;
   a {
