@@ -1,3 +1,6 @@
+// @import "custom";
+// @import "~bootstrap/scss/bootstrap";
+
 $fontSize: 52px;
 ul {
   list-style: none;
@@ -5,6 +8,7 @@ ul {
 }
 
 .title {
+  padding: 3rem;
   color: #9775fa;
   font-size: $fontSize;
   text-align: center;
@@ -15,5 +19,5 @@ ul {
 }
 
 .container {
-  background-color: #eaeaea;
+  background-color: #f3f3f3;
 }

@@ -4,6 +4,7 @@ table {
   border: 0;
   background-color: #fff;
   width: 90%;
+  text-align: center;
 }
 
 th,
@@ -11,7 +12,6 @@ td {
   border-left: 0;
   border-right: 0;
   border-top: 0;
-  text-align: center;
 }
 
 .leader_check_header {
@@ -31,9 +31,6 @@ select {
   font-size: 0.9rem;
 }
 
-.i2 {
-  background-color: #f7f6f5;
-}
 .i3 {
   background-color: #f7f6f5;
 }
@@ -62,7 +59,6 @@ select {
     border-left: 0;
     border-right: 0;
     border-top: 0;
-    text-align: center;
   }
 
   .leader_check_header {

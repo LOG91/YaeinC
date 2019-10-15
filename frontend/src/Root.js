@@ -1,5 +1,5 @@
 import React from 'react';
-import './style.scss';
+import './_custom.scss';
 import { Home, Youth, Admin } from './pages';
 import { BrowserRouter, Route } from 'react-router-dom';
 

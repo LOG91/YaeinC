@@ -12,17 +12,21 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
+    "bootstrap": "^4.3.1",
     "concurrently": "^4.1.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jquery": "^3.4.1",
     "mongoose": "^5.6.2",
     "nodemon": "^1.19.1",
     "path": "^0.12.7",
     "pm2": "^3.5.1",
+    "popper.js": "^1.15.0",
     "react-redux": "^7.1.0",
     "redux": "^4.0.1"
   },
   "devDependencies": {
+    "autoprefixer": "^9.6.4",
     "bulma": "^0.7.5"
   },
   "scripts": {
