@@ -1,7 +1,10 @@
+@import '../../_custom.scss';
+
 .tab {
   display: flex;
   margin: 0;
   justify-content: center;
+  font-size: 14px;
   .index {
     color: #5d5d5d;
     text-align: center;
@@ -23,4 +26,9 @@
     
   }
   
+}
+@include media(mobile) {
+  .tab {
+    font-size: 11px;
+  }
 }

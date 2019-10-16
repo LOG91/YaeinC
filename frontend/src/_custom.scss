@@ -1,5 +1,55 @@
 // @import "custom";
 // @import "~bootstrap/scss/bootstrap";
+
+$i-desktop: 1440px;
+$i-laptop: 1024px;
+$i-mobile: 767px;
+
+$header-size-mobile: 48px;
+$header-size-desktop: 64px;
+
+$hero-size-mobile: 320px;
+$hero-size-desktop: 470px;
+
+/** custom  */
+$breakpoints: (
+  mobile: $i-mobile,
+  laptop: $i-laptop,
+  desktop: $i-desktop,
+);
+
+@function calc-percent($target, $container) {
+  @return ($target / $container) * 100%;
+};
+
+@function calc-multiply($a, $b) {
+  @return ($a * $b);
+}
+
+@mixin media($breakpoint) {
+  $bp: map-get($breakpoints, $breakpoint);
+  @if $bp == $i-mobile {
+    @media screen and (max-width: $i-mobile + 1) {
+      @content;
+    }
+  } @else if $bp == $i-laptop {
+    @media screen and (max-width: $i-laptop) {
+      @content;
+    }
+  } @else if $bp == $i-desktop {
+    @media screen and (min-width: $i-laptop + 1) {
+      @content;
+    }
+  } @else {
+    @warn "wrong breakpoint '#{$breakpoint}'";
+  }
+}
+
+
+//*********** bulma 설정 레이아웃 *************//
+// - 헤더 모바일 UI 로 변하는 분기
+$navbar-breakpoint: $i-mobile + 2px;
+
 a:hover {
  text-decoration: none;
 }
@@ -26,4 +76,11 @@ ul {
 
 .container {
   background-color: #f3f3f3;
+}
+@include media(mobile) {
+  div.container {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
 }
