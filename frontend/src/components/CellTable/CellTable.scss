@@ -1,4 +1,4 @@
-@import "~bootstrap/scss/bootstrap";
+// @import "~bootstrap/scss/bootstrap";
 
 table {
   margin: 0 auto;
@@ -25,10 +25,15 @@ td {
 .select_box_dawn,
 .select_box_word {
   border: 0;
+  font-size: 0.8rem;
 }
 
 select {
-  font-size: 0.9rem;
+  
+  background: #fff;
+  // -moz-appearance: none; /* Firefox */
+  // -webkit-appearance: none; /* Safari and Chrome */
+  // appearance: none;
 }
 
 .i3 {
@@ -112,7 +117,7 @@ select {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(34,50,84,0.03);
+  background: rgba(34, 50, 84, 0.03);
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -139,7 +144,7 @@ select {
   opacity: 1;
 }
 .check:hover svg {
-  stroke: #9775fa
+  stroke: #9775fa;
 }
 
 input:checked + .check svg {

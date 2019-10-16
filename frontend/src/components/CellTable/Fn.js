@@ -1,4 +1,6 @@
 import React, { Fragment } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
 
 const renderLeaderList = ({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin }) => {
   const all_members = network.reduce((ac, cv) => {
@@ -23,12 +25,12 @@ const renderLeaderList = ({ network, idx, networkName, handleCheck, handleCount,
         <tr className={evenClsName}>
           <td rowSpan={MEMBER_CNT}>{member.name}</td>
           <td rowSpan={MEMBER_CNT}>
-
             <select
               className="select_box_dawn"
               onChange={({ target }) => handleCount(member._id, idx, 'dawn', target.value)}
               value={member.dawn}
             >
+              
               <option value="0">0</option>
               <option value="1">1</option>
               <option value="2">2</option>

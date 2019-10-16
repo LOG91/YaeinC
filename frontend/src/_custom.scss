@@ -1,5 +1,8 @@
 // @import "custom";
-@import "~bootstrap/scss/bootstrap";
+// @import "~bootstrap/scss/bootstrap";
+a:hover {
+ text-decoration: none;
+}
 
 $fontSize: 52px;
 ul {
@@ -12,6 +15,10 @@ ul {
   font-size: $fontSize;
   text-align: center;
   a {
+    text-decoration: none;
+    color: #9775fa;
+  }
+  a:hover {
     text-decoration: none;
     color: #9775fa;
   }
