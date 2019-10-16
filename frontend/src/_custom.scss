@@ -54,7 +54,6 @@ a:hover {
  text-decoration: none;
 }
 
-$fontSize: 52px;
 ul {
   list-style: none;
   padding: 0;
@@ -62,7 +61,7 @@ ul {
 
 .title {
   padding: 3rem;
-  font-size: $fontSize;
+  font-size: 52px;
   text-align: center;
   a {
     text-decoration: none;
@@ -78,6 +77,10 @@ ul {
   background-color: #f3f3f3;
 }
 @include media(mobile) {
+  .title {
+    font-size: 32px;
+    padding: 0.5rem;
+  }
   div.container {
     max-width: none;
     padding: 0;

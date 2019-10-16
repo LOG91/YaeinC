@@ -18,6 +18,11 @@
         color: #9775fa;
       }
     }
+    @include media(mobile) {
+      a {
+        padding: 5px;
+      }
+    }
     &:hover {
       a {
         color: #9775fa;
