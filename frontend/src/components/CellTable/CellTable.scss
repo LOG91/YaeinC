@@ -1,5 +1,5 @@
 // @import "~bootstrap/scss/bootstrap";
-@import '../../_custom.scss';
+@import "../../_custom.scss";
 
 table {
   margin: 0 auto;
@@ -13,7 +13,8 @@ table {
     font-size: 9px;
     width: 100%;
   }
-  .section_name_header, .networkName-box {
+  .section_name_header,
+  .networkName-box {
     display: none;
   }
   svg {
@@ -43,7 +44,6 @@ td {
 }
 
 select {
-  
   background: #fff;
   // -moz-appearance: none; /* Firefox */
   // -webkit-appearance: none; /* Safari and Chrome */
@@ -87,7 +87,6 @@ select {
     width: 20%;
   }
 
-  
   .select_box_dawn,
   .select_box_word {
     font-size: 0.7rem;
@@ -135,6 +134,14 @@ select {
   background: rgba(34, 50, 84, 0.03);
   opacity: 0;
   transition: opacity 0.2s ease;
+}
+@include media(mobile) {
+  .check:before {
+    top: -3px;
+    left: -3px;
+    width: 24px;
+    height: 24px;
+  }
 }
 .check svg {
   position: relative;
