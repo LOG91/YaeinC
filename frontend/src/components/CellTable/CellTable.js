@@ -9,12 +9,21 @@ import FortalModal from '../Modal/FortalModal';
 import Modal from '../Modal/Modal';
 import AddForm from '../AddForm/AddForm';
 
+import { cellData } from '../../data/cellData';
+
 
 class CellTable extends Component {
 
   async componentDidMount() {
-    const { current } = this.props;
-    if (current === '/') return;
+    console.log(this.props);
+    // const { current } = this.props;
+    // if (current === '/') return;
+    // const initCells = cellData.find(v => v.en_name === current).cells;
+    // const currentCells = await fetch(`/api/cells/${JSON.stringify(initCells)}`).then(res => res.json());
+    // this.setState( {currentSection: currentCells});
+    // console.log(currentCells);
+    // changeCurrentSection(currentCells);
+    // console.log(current);
   }
   state = {
     openModal: false,
@@ -83,7 +92,7 @@ class CellTable extends Component {
       <table className={isAdmin ? "printArea": ""} border="1" cellPadding="10">
         <tbody>
           <tr>
-            <th rowSpan="2" className="leader_name_header" onClick={() => this.re('israel')}>이스라엘군</th>
+            <th rowSpan="2" className="section_name_header" onClick={() => this.re('israel')}>이스라엘군</th>
             <th rowSpan="2" className="leader_name_header" onClick={this.onPrint}>리더</th>
             <th colSpan="5" className="leader_check_header">리더 체크리스트</th>
             <th rowSpan="2" className="cell_member_name_header">셀원</th>

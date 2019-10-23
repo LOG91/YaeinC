@@ -10,8 +10,17 @@ table {
 }
 @include media(mobile) {
   table {
-    font-size: 11px;
+    font-size: 9px;
     width: 100%;
+  }
+  .section_name_header, .networkName-box {
+    display: none;
+  }
+  svg {
+    width: 12px;
+  }
+  td {
+    padding: 0.2rem;
   }
 }
 th,
@@ -78,6 +87,7 @@ select {
     width: 20%;
   }
 
+  
   .select_box_dawn,
   .select_box_word {
     font-size: 0.7rem;
