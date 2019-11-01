@@ -15,12 +15,12 @@ $hero-size-desktop: 470px;
 $breakpoints: (
   mobile: $i-mobile,
   laptop: $i-laptop,
-  desktop: $i-desktop,
+  desktop: $i-desktop
 );
 
 @function calc-percent($target, $container) {
   @return ($target / $container) * 100%;
-};
+}
 
 @function calc-multiply($a, $b) {
   @return ($a * $b);
@@ -44,6 +44,40 @@ $breakpoints: (
     @warn "wrong breakpoint '#{$breakpoint}'";
   }
 }
+.table-wrapper {
+  overflow-x: scroll;
+  overflow-y: visible;
+  // margin-left: 100px;
+  table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  tbody {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    height: 1000px;
+  }
+  tr {
+    display: block;
+  }
+  td,
+  th {
+    padding: 5px 10px;
+    width: 100px;
+  }
+}
+@include media(mobile) {
+ table {
+   font-size: 9px;
+   width: 1000px;
+ }
+ th {
+  padding: 5px 10px;
+  width: 50px;
+}
+}
 
 
 //*********** bulma 설정 레이아웃 *************//
@@ -51,7 +85,7 @@ $breakpoints: (
 $navbar-breakpoint: $i-mobile + 2px;
 
 a:hover {
- text-decoration: none;
+  text-decoration: none;
 }
 
 ul {
