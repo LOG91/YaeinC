@@ -250,7 +250,7 @@ class Youth extends React.Component {
     return mapped;
   }
   render() {
-    const tempArr = ['7_10', '7_17', '7_24', '7_31', '8_7', '8_14', '8_21', '8_28', '9_4', '9_11', '9_18', '9_25'];
+    const tempArr = ['7_10', '7_17', '7_24', '7_31', '8_7', '8_14', '8_21', '8_28'];
     const { currentSection, match: { path } } = this.props;
     return (
       <React.Fragment>

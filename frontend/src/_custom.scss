@@ -73,7 +73,9 @@ $breakpoints: (
   .table-wrapper {
     table {
       font-size: 9px;
-      // width: 1000px;
+    }
+    tbody {
+      height: 500px;
     }
     td {
       width: 50px;
