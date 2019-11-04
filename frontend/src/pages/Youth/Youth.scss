@@ -1,3 +1,5 @@
+@import '../../custom';
+
 .youthContainer {
   .youthContainer--networkName {
     display: block;
@@ -6,12 +8,27 @@
   }
 
   th:first-child {
-    width: 90px;
+    // width: 90px;
   }
   .check:before {
     top: -9px;
     left: -9px;
     width: 36px;
     height: 36px;
+  }
+}
+
+@include media(mobile) {
+  .youthContainer {
+    font-size: 9px;
+    td,
+    th {
+      font-weight: 400;
+      padding: 5px 10px;
+      width: 50px;
+    }
+    th:first-child {
+      width: 50px;
+    }
   }
 }

@@ -49,7 +49,7 @@ $breakpoints: (
   overflow-y: visible;
   // margin-left: 100px;
   table {
-    table-layout: fixed;
+    // table-layout: fixed;
     border-collapse: collapse;
     font-size: 14px;
   }
@@ -70,13 +70,21 @@ $breakpoints: (
   }
 }
 @include media(mobile) {
-  table {
-    font-size: 9px;
-    // width: 1000px;
-  }
-  th {
-    padding: 5px 10px;
-    width: 50px;
+  .table-wrapper {
+    table {
+      font-size: 9px;
+      // width: 1000px;
+    }
+    td {
+      width: 50px;
+    }
+    th {
+      padding: 5px 10px;
+      width: 50px;
+    }
+    th:first-child {
+      width: 50px;
+    }
   }
 }
 
