@@ -48,20 +48,20 @@ class AdminPage extends Component {
     printDiv.style.display = 'none';
   }
 
-  renderMembersList(list) {
-    return list.map((member, i) => {
-      return (
-        <div key={i}>
-          <div>셀원 {i + 1}</div>
-          <input
-            className="cellMember"
-            name="members"
-            onChange={evt => this.handleChangeMember(evt, i)} />
-          <button onClick={evt => this.handleRemoveMember(evt, i)}>삭제</button>
-        </div>
-      )
-    })
-  }
+  // renderMembersList(list) {
+  //   return list.map((member, i) => {
+  //     return (
+  //       <div key={i}>
+  //         <div>셀원 {i + 1}</div>
+  //         <input
+  //           className="cellMember"
+  //           name="members"
+  //           onChange={evt => this.handleChangeMember(evt, i)} />
+  //         <button onClick={evt => this.handleRemoveMember(evt, i)}>삭제</button>
+  //       </div>
+  //     )
+  //   })
+  // }
 
   handleRemoveMember = (evt, idx) => {
     this.props.removeCellMember(idx)
@@ -83,7 +83,7 @@ class AdminPage extends Component {
           <div className="button-box"><button className="edit-box__button--init" onClick={this.resetCheck}>초기화</button></div>
         </div>
         <Tab isAdmin={true} />
-        <div className="printArea"><CellTable isAdmin={true} /></div>
+        <div className="printArea"><CellTable current={this.props.match.params.name} isAdmin={true} /></div>
       </div>
     )
   }

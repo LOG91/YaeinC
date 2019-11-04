@@ -14,7 +14,7 @@ const Root = () => {
           <Route path="/youth_m" component={Youth} />
           <Route path="/youth_w" component={Youth} />
           <Route exact path="/admin" component={Admin} />
-          <Route path="/admin/cell/:name" component={Admin} />
+          <Route path="/admin/cell/:name" component={Home} />
           <Route path="/admin/youth_m" component={Youth} />
           <Route path="/admin/youth_w" component={Youth} />
         </BrowserRouter>

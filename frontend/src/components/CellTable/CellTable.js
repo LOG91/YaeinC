@@ -89,7 +89,7 @@ class CellTable extends Component {
   render() {
     const { isAdmin } = this.props;
     return (
-      <table className={isAdmin ? "printArea": "cellTable"} border="1" cellPadding="10">
+      <table className={isAdmin ? "printArea cellTable": "cellTable"} border="1" cellPadding="10">
         <tbody>
           <tr>
             <th rowSpan="2" className="section_name_header" onClick={() => this.re('israel')}>네트워크</th>

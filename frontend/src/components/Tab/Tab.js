@@ -19,6 +19,7 @@ class Tab extends Component {
   render() {
     console.log(this.props);
     const { isAdmin } = this.props;
+    console.log(isAdmin, 12312);
     return (
         <ul className="tab">
           {cellData.map((v, idx) =>{

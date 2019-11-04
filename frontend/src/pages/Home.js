@@ -8,16 +8,12 @@ import { connect } from 'react-redux';
 class Home extends Component {
   componentDidMount() {
     const { match, changeCurrentSection } = this.props;
-    console.log(this.props);
     const { name: current } = match.params;
-    // console.log(this.props.match.params);
-    console.log(match.path);
     if (match.path !== '/') {
       const initCells = cellData.find(v => v.en_name === current).cells;
       fetch(`/api/cells/${JSON.stringify(initCells)}`)
         .then(res => res.json())
         .then(cells => {
-          console.log(cells);
           changeCurrentSection(cells);
         })
     }
@@ -31,26 +27,65 @@ class Home extends Component {
       fetch(`/api/cells/${JSON.stringify(initCells)}`)
         .then(res => res.json())
         .then(cells => {
-          console.log(cells);
           changeCurrentSection(cells);
         })
     }
   }
 
+  async resetCheck() {
+    const currentLocation = window.location.href;
+    await fetch('/api/reset', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ currentLocation })
+    }).then(() => {
+      window.location.href = window.location.href;
+    });
+  }
+
+  handlePrint() {
+    const html = document.querySelector('html');
+    const tabDiv = document.querySelector('.tab');
+    tabDiv.style.display = 'none';
+    const printContents = document.querySelector('.container').innerHTML;
+    const printDiv = document.createElement("DIV");
+    printDiv.className = "print-div";
+    
+    html.appendChild(printDiv);
+    printDiv.innerHTML = printContents;
+    document.body.style.display = 'none';
+    window.print();
+    document.body.style.display = 'block';
+    printDiv.style.display = 'none';
+    tabDiv.style.display = 'flex';
+  }
+
   render() {
     const { match } = this.props;
-    console.log(match, 2222);
+    const isAdmin = match.path.match(/admin/g);
+    console.log(isAdmin,123123);
     return (
       <div>
-        <Tab idx={match.params.name} isAdmin={match.path === '/admin' ? true : null} />
+        {isAdmin ? (<div className="edit-box">
+          <div className="button-box"><button className="edit-box__button--print" onClick={this.handlePrint}>프린트</button></div>
+          <div className="button-box"><button className="edit-box__button--init" onClick={this.resetCheck}>초기화</button></div>
+        </div>) : ''}
+        <Tab idx={match.params.name} isAdmin={isAdmin ? true : null} />
         {match.path !== '/' ?
-          <CellTable current={match.params.name} /> : <p className="root__description">예인청년 출석체크 페이지 :)</p>}
+          <CellTable isAdmin={isAdmin} current={match.params.name} /> : 
+          <div>
+            <div className="root__description">예인청년 출석체크 페이지 :)</div>
+            <div className="root__description">🇮🇱🇪🇬🇸🇾🇰🇷🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
+          </div>
+          
+          }
       </div>
     )
   }
 }
 const mapStateToProps = (state) => ({
-  idx: state.checker.idx,
   currentSection: state.checker.currentSection
 });
 
