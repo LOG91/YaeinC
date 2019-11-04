@@ -6,16 +6,26 @@ import { indexing, changeCurrentSection } from '../store/modules/checker';
 import { connect } from 'react-redux';
 
 class Home extends Component {
-
+  componentDidMount() {
+    const { match, changeCurrentSection } = this.props;
+    console.log(this.props);
+    const { name: current } = match.params;
+    // console.log(this.props.match.params);
+    console.log(match.path);
+    if (match.path !== '/') {
+      const initCells = cellData.find(v => v.en_name === current).cells;
+      fetch(`/api/cells/${JSON.stringify(initCells)}`)
+        .then(res => res.json())
+        .then(cells => {
+          console.log(cells);
+          changeCurrentSection(cells);
+        })
+    }
+  }
   componentDidUpdate(prevProps) {
-    // console.log(this.props);
     const { match, changeCurrentSection, currentSection } = this.props;
-    console.log(currentSection);
+    if (match.path === '/') return;
     if (prevProps.currentSection === currentSection) {
-      console.log(match, '매치');
-      console.log(changeCurrentSection, '체인지커런트섹션');
-      console.log(currentSection, '커런트섹션');
-
       const { name: current } = match.params;
       const initCells = cellData.find(v => v.en_name === current).cells;
       fetch(`/api/cells/${JSON.stringify(initCells)}`)
@@ -25,27 +35,18 @@ class Home extends Component {
           changeCurrentSection(cells);
         })
     }
-
   }
-  //  ({ match, changeCurrentSection, currentSection }) => {
-  render() {
 
-    // debugger;
+  render() {
     const { match } = this.props;
+    console.log(match, 2222);
     return (
       <div>
-        <Tab isAdmin={match.path === '/admin' ? true : null} />
+        <Tab idx={match.params.name} isAdmin={match.path === '/admin' ? true : null} />
         {match.path !== '/' ?
-          <CellTable current={match.params.name} /> : <h2>예인교회 출석부</h2>}
+          <CellTable current={match.params.name} /> : <p className="root__description">예인청년 출석체크 페이지 :)</p>}
       </div>
     )
-    //   console.log(match.params.name, '매치');
-    //   console.log(currentSection, '커런트섹션');
-    //   if(match.params.name)
-
-    // changeCurrentSection(currentCells);
-
-
   }
 }
 const mapStateToProps = (state) => ({

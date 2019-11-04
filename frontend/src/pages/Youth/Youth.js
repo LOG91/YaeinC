@@ -27,102 +27,13 @@ class Youth extends React.Component {
       body: JSON.stringify({ id: youthId, date })
     });
     if (temp.status === 200) {
-      console.log(sectionIdx, leaderIdx, leaderId, date, memberIdx);
       memberIdx !== null ? checkMemberYouth({ sectionIdx, leaderIdx, memberIdx, date }) :
         checkYouth(sectionIdx, leaderIdx, leaderId, date);
     }
   }
 
   youthTableTpl = (arr, networks) => {
-    console.log(networks);
     if (!networks.length) return;
-    <div class="table-wrapper">
-      <table id="consumption-data" class="data">
-        <thead class="header">
-          <tr>
-            {/* <th>네트워크</th> */}
-            <th>이름</th>
-            {arr.map(v => {
-              const [month, day] = v.split('_');
-              return <th>{`${month}월 ${day}일`}</th>
-            })}
-          </tr>
-        </thead>
-        <tbody class="results">
-          <tr>
-            <th>Jan</th>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-          </tr>
-          <tr>
-            <th>Feb</th>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-          </tr>
-          <tr>
-            <th>Mar</th>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-          </tr>
-          <tr>
-            <th>Apr</th>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-          </tr>
-          <tr>
-            <th>May</th>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-          </tr>
-          <tr>
-            <th>Jun</th>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-          </tr>
-          <tr>
-            <th>Jun</th>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-          </tr>
-          <tr>
-            <th>Jun</th>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-          </tr>
-          <tr>
-            <th>Jun</th>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-            <td>3163</td>
-          </tr>
-
-          <tr>
-            <th>...</th>
-            <td>...</td>
-            <td>...</td>
-            <td>...</td>
-            <td>...</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     const checkList = (networks, sectionIdx) => networks.map((leader, leaderIdx) => {
       return (
         <React.Fragment>
@@ -149,20 +60,6 @@ class Youth extends React.Component {
                       <polyline points="1 9 7 14 15 4"></polyline>
                     </svg>
                   </label>
-                  {/* <input
-                    className="checkbox"
-                    checked={(leader.youth.att && leader.youth.att[date]) ? true : false}
-                    readOnly
-                    type="checkbox"
-                    onClick={e =>
-                      this.handleYouthCheck({
-                        leaderId: leader._id,
-                        sectionIdx,
-                        leaderIdx,
-                        youthId: leader.youth._id,
-                        date
-                      })}
-                  /> */}
                 </td>
               )
             })}
@@ -193,20 +90,6 @@ class Youth extends React.Component {
                           <polyline points="1 9 7 14 15 4"></polyline>
                         </svg>
                       </label>
-                      {/* <input
-                        className="checkbox"
-                        checked={(member.youth.att && member.youth.att[date]) ? true : false}
-                        readOnly
-                        type="checkbox"
-                        onClick={() => this.handleYouthCheck({
-                          leaderId: leader._id,
-                          sectionIdx,
-                          leaderIdx,
-                          youthId: member.youth._id,
-                          date,
-                          memberIdx
-                        })}
-                      /> */}
                     </td>
                   )
                 })}
@@ -250,11 +133,12 @@ class Youth extends React.Component {
     return mapped;
   }
   render() {
-    const tempArr = ['7_10', '7_17', '7_24', '7_31', '8_7', '8_14', '8_21', '8_28'];
+    const tempArr = ['7_10', '7_17', '7_24', '7_31', '8_7', '8_14', '8_21', '8_28', '9_4', '9_11', '9_18', '9_25'];
     const { currentSection, match: { path } } = this.props;
+    const idx = path.slice(1);
     return (
       <React.Fragment>
-        <Tab isAdmin={path.match(/admin/g)} />
+        <Tab idx={idx} isAdmin={path.match(/admin/g)} />
         {this.youthTableTpl(tempArr, currentSection)}
       </React.Fragment>
     );
