@@ -1,49 +1,17 @@
 .youthContainer {
-  .youthContainer__navbar {
-    display: flex;
-  }
-  .youthContainer__nav {
-    display: flex;
-    align-items: center;
-    width: 5rem;
-    height: 3rem;
-    div {
-      margin: auto;
-    }
-  }
-  .youthContainer__nav--empty {
-    @extend .youthContainer__nav;
-    width: 10rem;
-    padding: 0 1rem;
-    height: 2rem;
-    p {
-      width: 10rem;
-    }
-  }
-  .youthContainer__nav--date {
-    @extend .youthContainer__nav;
-    height: 2rem;
-  }
-  .youthContainer__nav--leader {
-    @extend .youthContainer__nav;
-    font-weight: 600;
-    p {
-      width: 5rem;
-    }
-  }
-  .youthContainer__flexbox {
-    display: flex;
-  }
-  .youthContainer--networkBox {
-    border: 1px dotted #9775fa;
-    margin-bottom: 1rem;
-  }
   .youthContainer--networkName {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    p {
-      width: 5rem;
-    }
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  th:first-child {
+    width: 90px;
+  }
+  .check:before {
+    top: -9px;
+    left: -9px;
+    width: 36px;
+    height: 36px;
   }
 }

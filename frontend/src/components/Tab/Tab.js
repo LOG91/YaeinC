@@ -6,13 +6,6 @@ import { cellData } from '../../data/cellData';
 import './Tab.scss';
 
 class Tab extends Component {
-  handleClick = async (en_name) => {
-    // const { indexing, changeCurrentSection } = this.props;
-    // indexing(en_name);
-    // const initCells = cellData.find(v => v.en_name === en_name).cells;
-    // const currentCells = await fetch(`/api/cells/${JSON.stringify(initCells)}`).then(res => res.json());
-    // changeCurrentSection(currentCells);
-  }
 
   render() {
     const { isAdmin } = this.props;

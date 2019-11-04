@@ -132,6 +132,24 @@ class Youth extends React.Component {
               return (
                 <td>
                   <input
+                    type="checkbox"
+                    className="custom-checkbox"
+                    checked={(leader.youth.att && leader.youth.att[date]) ? true : false}
+                    readOnly />
+                  <label className="check" onClick={e =>
+                    this.handleYouthCheck({
+                      leaderId: leader._id,
+                      sectionIdx,
+                      leaderIdx,
+                      youthId: leader.youth._id,
+                      date
+                    })}>
+                    <svg width="18px" height="18px" viewBox="0 0 18 18">
+                      <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
+                      <polyline points="1 9 7 14 15 4"></polyline>
+                    </svg>
+                  </label>
+                  {/* <input
                     className="checkbox"
                     checked={(leader.youth.att && leader.youth.att[date]) ? true : false}
                     readOnly
@@ -144,7 +162,7 @@ class Youth extends React.Component {
                         youthId: leader.youth._id,
                         date
                       })}
-                  />
+                  /> */}
                 </td>
               )
             })}
@@ -157,6 +175,25 @@ class Youth extends React.Component {
                   return (
                     <td>
                       <input
+                        type="checkbox"
+                        className="custom-checkbox"
+                        checked={(member.youth.att && member.youth.att[date]) ? true : false}
+                        readOnly />
+                      <label className="check"
+                        onClick={() => this.handleYouthCheck({
+                          leaderId: leader._id,
+                          sectionIdx,
+                          leaderIdx,
+                          youthId: member.youth._id,
+                          date,
+                          memberIdx
+                        })}>
+                        <svg width="18px" height="18px" viewBox="0 0 18 18">
+                          <path d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"></path>
+                          <polyline points="1 9 7 14 15 4"></polyline>
+                        </svg>
+                      </label>
+                      {/* <input
                         className="checkbox"
                         checked={(member.youth.att && member.youth.att[date]) ? true : false}
                         readOnly
@@ -169,7 +206,7 @@ class Youth extends React.Component {
                           date,
                           memberIdx
                         })}
-                      />
+                      /> */}
                     </td>
                   )
                 })}
@@ -185,31 +222,22 @@ class Youth extends React.Component {
         return acc += 1 + cv.members.length;
       }, 0) + 1;
       return (<React.Fragment>
-        {/* <tr>
+        <tr>
           <td rowSpan={allMembersLength} className="youthContainer--networkName">{network[0].cellNameKr}</td>
-        </tr> */}
+        </tr>
         {checkList(network, sectionIdx)}
       </React.Fragment>);
-      // return (<div className="youthContainer--networkBox">
-      //   <div className="youthContainer__flexbox">
-      //     <div className="youthContainer--networkName"><p>{network[0].cellNameKr}</p></div>
-      //     <div>
-      //       {checkList(network, sectionIdx)}
-      //     </div>
-      //   </div>
-      // </div>);
     }
 
     const mapped = (
-      <div class="table-wrapper">
+      <div class="table-wrapper youthContainer">
         <table id="consumption-data" class="data">
           <thead class="header">
             <tr>
-              {/* <th>네트워크</th> */}
               <th>이름</th>
               {arr.map(v => {
                 const [month, day] = v.split('_');
-                return <th>{`${month}월 ${day}일`}</th>
+                return <th>{`${month}/${day}`}</th>
               })}
             </tr>
           </thead>
@@ -227,20 +255,7 @@ class Youth extends React.Component {
     return (
       <React.Fragment>
         <Tab isAdmin={path.match(/admin/g)} />
-        {/* <div className="youthContainer">
-          <div className="youthContainer__scrollbox">
-          <div className="youthContainer__flexbox">
-            <div className="youthContainer__nav--empty"><p></p></div>
-            <div className="youthContainer__navbar">
-              {tempArr.map(v => {
-                const [month, day] = v.split('_');
-                return <div className="youthContainer__nav--date"><div>{`${month}월 ${day}일`}</div></div>
-              })}
-            </div>
-          </div> */}
         {this.youthTableTpl(tempArr, currentSection)}
-        {/* </div>
-        </div> */}
       </React.Fragment>
     );
   }

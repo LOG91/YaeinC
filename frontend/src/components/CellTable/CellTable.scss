@@ -8,10 +8,15 @@ table {
   width: 90%;
   text-align: center;
 }
+.cellTable {
+  th, td {
+    border: 1px dotted #eaeaea;
+  }
+}
 @include media(mobile) {
   table {
     font-size: 9px;
-    width: 100%;
+    // width: 100%;
   }
   .section_name_header,
   .networkName-box {
@@ -46,10 +51,6 @@ select {
   // -moz-appearance: none; /* Firefox */
   // -webkit-appearance: none; /* Safari and Chrome */
   // appearance: none;
-}
-
-.i3 {
-  background-color: #f7f6f5;
 }
 
 // 프린트용

@@ -64,21 +64,21 @@ $breakpoints: (
   }
   td,
   th {
+    font-weight: 400;
     padding: 5px 10px;
-    width: 100px;
+    width: 80px;
   }
 }
 @include media(mobile) {
- table {
-   font-size: 9px;
-   width: 1000px;
- }
- th {
-  padding: 5px 10px;
-  width: 50px;
+  table {
+    font-size: 9px;
+    width: 1000px;
+  }
+  th {
+    padding: 5px 10px;
+    width: 50px;
+  }
 }
-}
-
 
 //*********** bulma 설정 레이아웃 *************//
 // - 헤더 모바일 UI 로 변하는 분기

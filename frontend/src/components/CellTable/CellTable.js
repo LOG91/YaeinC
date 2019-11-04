@@ -89,10 +89,10 @@ class CellTable extends Component {
   render() {
     const { isAdmin } = this.props;
     return (
-      <table className={isAdmin ? "printArea": ""} border="1" cellPadding="10">
+      <table className={isAdmin ? "printArea": "cellTable"} border="1" cellPadding="10">
         <tbody>
           <tr>
-            <th rowSpan="2" className="section_name_header" onClick={() => this.re('israel')}>이스라엘군</th>
+            <th rowSpan="2" className="section_name_header" onClick={() => this.re('israel')}>네트워크</th>
             <th rowSpan="2" className="leader_name_header" onClick={this.onPrint}>리더</th>
             <th colSpan="5" className="leader_check_header">리더 체크리스트</th>
             <th rowSpan="2" className="cell_member_name_header">셀원</th>
