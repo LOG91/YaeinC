@@ -5,7 +5,15 @@ import { cellData } from '../data/cellData';
 import { indexing, changeCurrentSection } from '../store/modules/checker';
 import { connect } from 'react-redux';
 
+import FortalModal from '../components/Modal/FortalModal';
+import Modal from '../components/Modal/Modal';
+import ConfirmModal from '../components/Modal/ConfirmModal';
+
 class Home extends Component {
+  state = {
+    openModal: false
+  }
+
   componentDidMount() {
     const { match, changeCurrentSection } = this.props;
     const { name: current } = match.params;
@@ -52,7 +60,7 @@ class Home extends Component {
     const printContents = document.querySelector('.container').innerHTML;
     const printDiv = document.createElement("DIV");
     printDiv.className = "print-div";
-    
+
     html.appendChild(printDiv);
     printDiv.innerHTML = printContents;
     document.body.style.display = 'none';
@@ -61,26 +69,38 @@ class Home extends Component {
     printDiv.style.display = 'none';
     tabDiv.style.display = 'flex';
   }
+  handleToggleModal = () => {
+    this.setState({ openModal: !this.state.openModal })
+  }
 
   render() {
     const { match } = this.props;
     const isAdmin = match.path.match(/admin/g);
-    console.log(isAdmin,123123);
+    console.log(isAdmin, 123123);
     return (
       <div>
         {isAdmin ? (<div className="edit-box">
           <div className="button-box"><button className="edit-box__button--print" onClick={this.handlePrint}>프린트</button></div>
-          <div className="button-box"><button className="edit-box__button--init" onClick={this.resetCheck}>초기화</button></div>
+          <div className="button-box"><button className="edit-box__button--init" onClick={this.handleToggleModal}>초기화</button></div>
         </div>) : ''}
         <Tab idx={match.params.name} isAdmin={isAdmin ? true : null} />
         {match.path !== '/' ?
-          <CellTable isAdmin={isAdmin} current={match.params.name} /> : 
+          <CellTable isAdmin={isAdmin} current={match.params.name} /> :
           <div>
             <div className="root__description">예인청년 출석체크 페이지 :)</div>
             <div className="root__description">🇮🇱🇪🇬🇸🇾🇰🇷🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
           </div>
-          
-          }
+        }
+        {
+          this.state.openModal ? (
+            <FortalModal>
+              <Modal>
+                <ConfirmModal confirmAction={this.resetCheck} cancelAction={this.handleToggleModal} />
+              </Modal>
+            </FortalModal>
+          ) : <div />
+        }
+
       </div>
     )
   }

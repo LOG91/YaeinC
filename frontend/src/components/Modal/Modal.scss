@@ -16,3 +16,16 @@
   width: 400px;
   height: auto;
 }
+
+.confirmModal-container {
+  .confirmModal-container__message {
+    font-weight: 400;
+  }
+  .confirmModal-container__button-box {
+    display: flex;
+    justify-content: center;
+    button {
+      margin: 5px;
+    }
+  }
+}
