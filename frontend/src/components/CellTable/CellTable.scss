@@ -1,14 +1,11 @@
-// @import "~bootstrap/scss/bootstrap";
 @import "../../_custom.scss";
 
-table {
+.cellTable {
   margin: 0 auto;
   border: 0;
   background-color: #fff;
   width: 90%;
   text-align: center;
-}
-.cellTable {
   th, td {
     border: 1px dotted #eaeaea;
   }
@@ -29,10 +26,7 @@ table {
     padding: 0.2rem;
   }
 }
-th,
-td {
-  border: 0;
-}
+
 
 .leader_check_header {
   width: 55%;

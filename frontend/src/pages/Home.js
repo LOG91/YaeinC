@@ -17,20 +17,8 @@ class Home extends Component {
   componentDidMount() {
     const { match, changeCurrentSection } = this.props;
     const { name: current } = match.params;
+    console.log(12);
     if (match.path !== '/') {
-      const initCells = cellData.find(v => v.en_name === current).cells;
-      fetch(`/api/cells/${JSON.stringify(initCells)}`)
-        .then(res => res.json())
-        .then(cells => {
-          changeCurrentSection(cells);
-        })
-    }
-  }
-  componentDidUpdate(prevProps) {
-    const { match, changeCurrentSection, currentSection } = this.props;
-    if (match.path === '/') return;
-    if (prevProps.currentSection === currentSection) {
-      const { name: current } = match.params;
       const initCells = cellData.find(v => v.en_name === current).cells;
       fetch(`/api/cells/${JSON.stringify(initCells)}`)
         .then(res => res.json())
@@ -74,9 +62,9 @@ class Home extends Component {
   }
 
   render() {
+    console.log(11);
     const { match } = this.props;
     const isAdmin = match.path.match(/admin/g);
-    console.log(isAdmin, 123123);
     return (
       <div>
         {isAdmin ? (<div className="edit-box">

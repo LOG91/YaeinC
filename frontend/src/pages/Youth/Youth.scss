@@ -1,26 +1,56 @@
-@import '../../custom';
+@import "../../custom";
 
 .youthContainer {
+  overflow-x: scroll;
+  overflow-y: visible;
+  text-align: center;
+
   .youthContainer--networkName {
     display: block;
     margin: 0 auto;
     width: 100%;
   }
-
+  
   .check:before {
     top: -9px;
     left: -9px;
     width: 36px;
     height: 36px;
   }
+  
+  table {
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  tbody {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    height: 1000px;
+  }
+  tr {
+    display: block;
+  }
+  td,
+  th {
+    font-weight: 400;
+    padding: 5px 10px;
+    width: 80px;
+  }
 }
 
 @include media(mobile) {
-  .youthContainer {
-    font-size: 9px;
-    td,
+  .table-wrapper {
+    table {
+      font-size: 9px;
+    }
+    tbody {
+      height: 500px;
+    }
+    td {
+      width: 50px;
+    }
     th {
-      font-weight: 400;
       padding: 5px 10px;
       width: 50px;
     }

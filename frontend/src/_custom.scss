@@ -44,51 +44,6 @@ $breakpoints: (
     @warn "wrong breakpoint '#{$breakpoint}'";
   }
 }
-.table-wrapper {
-  overflow-x: scroll;
-  overflow-y: visible;
-  // margin-left: 100px;
-  table {
-    // table-layout: fixed;
-    border-collapse: collapse;
-    font-size: 14px;
-  }
-  tbody {
-    display: block;
-    width: 100%;
-    overflow: auto;
-    height: 1000px;
-  }
-  tr {
-    display: block;
-  }
-  td,
-  th {
-    font-weight: 400;
-    padding: 5px 10px;
-    width: 80px;
-  }
-}
-@include media(mobile) {
-  .table-wrapper {
-    table {
-      font-size: 9px;
-    }
-    tbody {
-      height: 500px;
-    }
-    td {
-      width: 50px;
-    }
-    th {
-      padding: 5px 10px;
-      width: 50px;
-    }
-    th:first-child {
-      width: 50px;
-    }
-  }
-}
 
 //*********** bulma 설정 레이아웃 *************//
 // - 헤더 모바일 UI 로 변하는 분기

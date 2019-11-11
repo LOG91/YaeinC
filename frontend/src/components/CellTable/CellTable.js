@@ -3,28 +3,14 @@ import './CellTable.scss';
 import { indexing, changeCurrentSection, checkWorship, checkMemberWorship, countContent } from '../../store/modules/checker';
 import { connect } from 'react-redux';
 
-import { mapNetworkTable } from './Fn'
-
+import renderCellList from './CellListTable'
 import FortalModal from '../Modal/FortalModal';
 import Modal from '../Modal/Modal';
 import AddForm from '../AddForm/AddForm';
 
-import { cellData } from '../../data/cellData';
-
 
 class CellTable extends Component {
 
-  async componentDidMount() {
-    console.log(this.props);
-    // const { current } = this.props;
-    // if (current === '/') return;
-    // const initCells = cellData.find(v => v.en_name === current).cells;
-    // const currentCells = await fetch(`/api/cells/${JSON.stringify(initCells)}`).then(res => res.json());
-    // this.setState( {currentSection: currentCells});
-    // console.log(currentCells);
-    // changeCurrentSection(currentCells);
-    // console.log(current);
-  }
   state = {
     openModal: false,
     clickedCellInfo: {},
@@ -32,8 +18,6 @@ class CellTable extends Component {
   }
 
   handleCheck = (id, sectionIdx, kind, memberName = false) => {
-    console.log(id, sectionIdx, kind, memberName)
-    // const responsedData =
     fetch(`/api/check/leader/${id}`, {
       method: 'PUT',
       headers: {
@@ -45,9 +29,8 @@ class CellTable extends Component {
         this.props.checkWorship(id, sectionIdx, kind);
       }
     });
-
-    
   }
+
   handleCheckMember = async (leaderId, id, sec, sectionIdx, kind) => {
     const responsedData = await fetch(`/api/check/member/${id}`, {
       method: 'PUT',
@@ -56,9 +39,7 @@ class CellTable extends Component {
       },
       body: JSON.stringify({ id, kind })
     });
-
     if (responsedData.status === 200) {
-      console.log(leaderId, id, sec, sectionIdx, kind);
       this.props.checkMemberWorship(leaderId, id, sec, sectionIdx, kind);
     }
   }
@@ -87,9 +68,10 @@ class CellTable extends Component {
 
 
   render() {
-    const { isAdmin } = this.props;
+    const { isAdmin, currentSection } = this.props;
+    const { clickedCellInfo, cellIndex } = this.state;
     return (
-      <table className={isAdmin ? "printArea cellTable": "cellTable"} border="1" cellPadding="10">
+      <table className={isAdmin ? "printArea cellTable" : "cellTable"} border="1" cellPadding="10">
         <tbody>
           <tr>
             <th rowSpan="2" className="section_name_header" onClick={() => this.re('israel')}>네트워크</th>
@@ -108,19 +90,19 @@ class CellTable extends Component {
             <td>주일</td>
             <td>청년</td>
           </tr>
-          {mapNetworkTable({
-            currentSection: this.props.currentSection,
+          {renderCellList({
+            isAdmin,
+            currentSection,
             handleCheck: this.handleCheck,
             handleCount: this.handleCount,
             handleCheckMember: this.handleCheckMember,
             handleAddLeader: this.handleAddLeader,
-            isAdmin
           })}
         </tbody>
-        {this.state.openModal ? (
+        {isAdmin && this.state.openModal ? (
           <FortalModal>
             <Modal>
-              <AddForm cellInfo={this.state.clickedCellInfo} cellIndex={this.state.cellIndex} onToggleModal={this.handleToggleModal}/>
+              <AddForm cellInfo={clickedCellInfo} cellIndex={cellIndex} onToggleModal={this.handleToggleModal} />
             </Modal>
           </FortalModal>
         ) : <div />}
@@ -131,13 +113,12 @@ class CellTable extends Component {
 
 
 const mapStateToProps = (state) => {
-  console.log(state);
-  return({
-  members: state.checker.members,
-  seokki: 23,
-  idx: state.checker.idx,
-  currentSection: state.checker.currentSection
-})};
+  return ({
+    members: state.checker.members,
+    idx: state.checker.idx,
+    currentSection: state.checker.currentSection
+  })
+};
 
 const mapDispatchToProps = dispatch => ({
   indexing: idx => dispatch(indexing(idx)),
