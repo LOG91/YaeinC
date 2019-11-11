@@ -47,6 +47,20 @@ select {
   appearance: none;
 }
 
+button.selectBox {
+  font-size: 0.5rem;
+  padding: 0 0.4rem;
+}
+
+div.selectBox__option {
+  min-width: 0;
+  padding: 0;
+  .dropdown-item {
+    cursor: pointer;
+    padding: 0.2rem 0.8rem;
+  }
+}
+
 // 프린트용
 .printArea {
   input[type="checkbox"] {

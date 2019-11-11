@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import { CheckBox } from '../CheckBox';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { CountDropDown } from '../DropDown';
 
 const renderCellList =
   ({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin }) => {
@@ -14,7 +13,6 @@ const renderCellList =
     });
     return mappedByNetwork;
   };
-
 
 const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, }) => {
   const all_members = network.reduce((ac, cv) => {
@@ -39,30 +37,22 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
         <tr className={evenClsName}>
           <td rowSpan={MEMBER_CNT}>{leader.name}</td>
           <td rowSpan={MEMBER_CNT}>
-              <select
-                className="select_box_dawn"
-                onChange={({ target }) => handleCount(leader._id, idx, 'dawn', target.value)}
-                value={leader.dawn}
-              >
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-              </select>
-              <FontAwesomeIcon icon={faCaretDown} />
+            <CountDropDown
+              handler={handleCount}
+              length={6}
+              leaderInfo={leader}
+              leaderIndex={idx}
+              option={'dawn'}
+            />
           </td>
           <td rowSpan={MEMBER_CNT}>
-            <select
-              className="select_box_word"
-              onChange={({ target }) => handleCount(leader._id, idx, 'word', target.value)}
-              value={leader.word}
-            >
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-            </select>
+            <CountDropDown
+              handler={handleCount}
+              length={3}
+              leaderInfo={leader}
+              leaderIndex={idx}
+              option={'word'}
+            />
           </td>
           <td rowSpan={MEMBER_CNT}>
             <CheckBox checkedValue={leader.cc} onCheck={() => handleCheck(leader._id, idx, 'cc')} />
