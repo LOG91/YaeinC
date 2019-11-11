@@ -17,7 +17,6 @@ class Home extends Component {
   componentDidMount() {
     const { match, changeCurrentSection } = this.props;
     const { name: current } = match.params;
-    console.log(12);
     if (match.path !== '/') {
       const initCells = cellData.find(v => v.en_name === current).cells;
       fetch(`/api/cells/${JSON.stringify(initCells)}`)

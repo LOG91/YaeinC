@@ -42,9 +42,9 @@
 
 select {
   background: #fff;
-  // -moz-appearance: none; /* Firefox */
-  // -webkit-appearance: none; /* Safari and Chrome */
-  // appearance: none;
+  -moz-appearance: none; /* Firefox */
+  -webkit-appearance: none; /* Safari and Chrome */
+  appearance: none;
 }
 
 // 프린트용
@@ -89,6 +89,7 @@ select {
 
   select {
     font-size: 0.9rem;
+    -webkit-appearance: button;
   }
   .check:before {
     top: -3px;

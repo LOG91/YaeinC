@@ -8,7 +8,6 @@ import FortalModal from '../Modal/FortalModal';
 import Modal from '../Modal/Modal';
 import AddForm from '../AddForm/AddForm';
 
-
 class CellTable extends Component {
 
   state = {

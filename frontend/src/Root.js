@@ -1,5 +1,4 @@
 import React from 'react';
-import './_custom.scss';
 import { Home, Youth, Admin } from './pages';
 import { BrowserRouter, Route } from 'react-router-dom';
 
