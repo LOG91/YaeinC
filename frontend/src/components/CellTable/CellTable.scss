@@ -50,6 +50,8 @@ select {
 button.selectBox {
   font-size: 0.5rem;
   padding: 0 0.4rem;
+  color: #000;
+  background-color: #fff;
 }
 
 div.selectBox__option {
@@ -59,6 +61,11 @@ div.selectBox__option {
     cursor: pointer;
     padding: 0.2rem 0.8rem;
   }
+}
+@include media(mobile) {
+  button.selectBox {
+    padding: 0 0.2rem;
+  } 
 }
 
 // 프린트용
@@ -173,11 +180,11 @@ div.selectBox__option {
   opacity: 1;
 }
 .check:hover svg {
-  stroke: #9775fa;
+  stroke: #6c757d;
 }
 
 input:checked + .check svg {
-  stroke: #9775fa;
+  stroke: #6c757d;
 }
 input:checked + .check svg path {
   stroke-dashoffset: 60;
