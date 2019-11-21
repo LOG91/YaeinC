@@ -16,7 +16,7 @@ module.exports = {
     index: "index.html",
     disableHostCheck: true,
     historyApiFallback: true,
-    port: 80,
+    port: 8080,
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
