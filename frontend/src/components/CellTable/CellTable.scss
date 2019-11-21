@@ -48,24 +48,34 @@ select {
 }
 
 button.selectBox {
-  font-size: 0.5rem;
+  font-size: 0.7rem;
   padding: 0 0.4rem;
   color: #000;
   background-color: #fff;
 }
 
 div.selectBox__option {
+  font-size: 12px;
   min-width: 0;
   padding: 0;
-  .dropdown-item {
+  a.dropdown-item {
     cursor: pointer;
     padding: 0.2rem 0.8rem;
+    &:hover {
+      background-color: #545b62;
+      color: #fff;
+    }
   }
 }
 @include media(mobile) {
   button.selectBox {
+    font-size: 0.5rem;
     padding: 0 0.2rem;
   } 
+  div.selectBox__option {
+    font-size: 10px;
+    
+  }
 }
 
 // 프린트용

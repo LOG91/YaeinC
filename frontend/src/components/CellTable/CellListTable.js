@@ -2,8 +2,7 @@ import React, { Fragment } from 'react';
 import { CheckBox } from '../CheckBox';
 import { CountDropDown } from '../DropDown';
 
-const renderCellList =
-  ({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin }) => {
+function renderCellList ({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin }) {
     if (!currentSection) return <div>아직 데이터가 없습니다😨</div>;
 
     const mappedByNetwork = currentSection.map((network, idx) => {
