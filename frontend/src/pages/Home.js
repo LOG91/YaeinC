@@ -11,7 +11,7 @@ import ConfirmModal from '../components/Modal/ConfirmModal';
 
 class Home extends Component {
   state = {
-    openModal: false
+    modalOpened: false
   }
 
   componentDidMount() {
@@ -56,19 +56,22 @@ class Home extends Component {
     printDiv.style.display = 'none';
     tabDiv.style.display = 'flex';
   }
-  handleToggleModal = () => {
-    this.setState({ openModal: !this.state.openModal })
+  handleToggleModal = param => {
+    console.log(param);
+    param ? this.setState({ modalOpened: false }) :
+      this.setState({ modalOpened: !this.state.modalOpened })
   }
 
   render() {
     console.log(11);
     const { match } = this.props;
     const isAdmin = match.path.match(/admin/g);
+
     return (
       <div>
         {isAdmin ? (<div className="edit-box">
           <div className="button-box"><button className="edit-box__button--print" onClick={this.handlePrint}>프린트</button></div>
-          <div className="button-box"><button className="edit-box__button--init" onClick={this.handleToggleModal}>초기화</button></div>
+          <div className="button-box"><button className="edit-box__button--init" onClick={() => this.handleToggleModal()}>초기화</button></div>
         </div>) : ''}
         <Tab idx={match.params.name} isAdmin={isAdmin ? true : null} />
         {match.path !== '/' ?
@@ -78,16 +81,13 @@ class Home extends Component {
             <div className="root__description">🇮🇱🇪🇬🇸🇾🇰🇷🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
           </div>
         }
-        {
-          this.state.openModal ? (
-            <FortalModal>
-              <Modal>
-                <ConfirmModal confirmAction={this.resetCheck} cancelAction={this.handleToggleModal} />
-              </Modal>
-            </FortalModal>
-          ) : <div />
+        {this.state.modalOpened ?
+          <FortalModal>
+            <Modal onToggleModal={this.handleToggleModal}>
+              <ConfirmModal confirmAction={this.resetCheck} />
+            </Modal>
+          </FortalModal> : null
         }
-
       </div>
     )
   }

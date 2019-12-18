@@ -11,7 +11,7 @@ import AddForm from '../AddForm/AddForm';
 class CellTable extends Component {
 
   state = {
-    openModal: false,
+    modalOpend: false,
     clickedCellInfo: {},
     cellIndex: null
   }
@@ -56,8 +56,10 @@ class CellTable extends Component {
     }
   }
 
-  handleToggleModal = () => {
-    this.setState({ openModal: !this.state.openModal })
+  handleToggleModal = param => {
+    console.log(param);
+    if (param) this.setState({ modalOpend: false });
+    else this.setState({ modalOpend: !this.state.modalOpend })
   }
 
   handleAddLeader = (memberInfo, idx) => {
@@ -98,13 +100,13 @@ class CellTable extends Component {
             handleAddLeader: this.handleAddLeader,
           })}
         </tbody>
-        {isAdmin && this.state.openModal ? (
+        {this.state.modalOpend ?
           <FortalModal>
-            <Modal>
-              <AddForm cellInfo={clickedCellInfo} cellIndex={cellIndex} onToggleModal={this.handleToggleModal} />
+            <Modal onToggleModal={this.handleToggleModal}>
+              <AddForm cellInfo={clickedCellInfo} cellIndex={cellIndex} />
             </Modal>
-          </FortalModal>
-        ) : <div />}
+          </FortalModal> : null
+        }
       </table>
     )
   }

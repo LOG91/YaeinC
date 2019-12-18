@@ -11,7 +11,6 @@ const port = process.env.PORT || 5000;
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/members', { useNewUrlParser: true });
-// mongoose.connect('mongodb://127.0.0.1:27017/test', { useNewUrlParser: true });
 const connection = mongoose.connection;
 
 connection.once('open', function () {
@@ -47,16 +46,9 @@ app.use(session({
 
 
 app.use('/api', require('./api/api'));
-// app.use(
-//   '/hello',
-//   proxy({ target: 'http://localhost:8080', changeOrigin: true })
-// );
 
 
 app.get('/hello', (req, res, next) => {
-  // console.log(req.session, 123123);
-  // console.log(`hello ${req.session.num}`)
-  console.log(1111);
   if (req.session.logined) {
     res.render('logout', { id: req.session.user_id });
   } else {
@@ -75,16 +67,10 @@ app.post('/hello/register', (req, res) => {
 });
 
 app.post('/hello', (req, res) => {      // 2
-  if (req.body.id == user.user_id && req.body.pwd == user.user_pwd) {
-    req.session.logined = true;
-    req.session.user_id = req.body.id;
-    res.render('logout', { id: req.session.user_id });
-  } else {
-    res.send(`
-        <h1>Who are you?</h1>
-        <a href="/hello">Back </a>
-      `);
-  }
+  console.log(req.body);
+  let uid = req.body.id;
+  let upwd = req.body.pwd;
+  duplicate({ req, res, uid, upwd });
 });
 app.post('/hello/logout', (req, res) => {      // 3
   req.session.destroy();
@@ -105,7 +91,7 @@ app.post('/hello/logout', (req, res) => {      // 3
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 
-function duplicate(req, res, uid, upwd) {
+function duplicate({ req, res, uid, upwd }) {
   let parseUrl = url.parse(req.url);
   let resource = parseUrl.pathname;
   console.log(`리소스 = ${resource}`);
@@ -129,6 +115,7 @@ function duplicate(req, res, uid, upwd) {
     })
   } else {
     User.findOne({ "user_id": uid }, (err, user) => {
+      console.log(err, user, uid);
       if (err) return res.json(err);
 
       if (user) {
@@ -146,7 +133,7 @@ function duplicate(req, res, uid, upwd) {
               console.log('Welcome');
               req.session.user_id = uid;
               req.session.logined = true;
-              res.redirect('/');
+              res.redirect('/admin');
             }
           })
       } else {

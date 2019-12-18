@@ -1,4 +1,4 @@
-.Modal {
+.modal__wrap {
   background: rgba(0, 0, 0, 0.25);
   position: fixed;
   left: 0;
@@ -10,7 +10,7 @@
   justify-content: center;
 }
 
-.Modal .content {
+.modal__wrap .content {
   background: white;
   padding: 1rem;
   width: 400px;
