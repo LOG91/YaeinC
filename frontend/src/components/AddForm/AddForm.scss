@@ -1,14 +1,66 @@
 .add-form {
-  text-align: center;
   .add-form__box {
     display: flex;
-    width: fit-content;
-    margin: auto;
+    margin-bottom: 3px;
   }
+
   .add-form--alert {
     font-size: 0.7rem;
     visibility: hidden;
     color: #f164a2;
+  }
+
+  .add-form__icon {
+    display: flex;
+    h4 {
+      padding-left: 5px;
+    }
+    svg {
+      font-size: 30px;
+    }
+  }
+
+  .add-form__left {
+    font-size: 16px;
+    font-weight: 600;
+    width: 40%;
+    text-align: center;
+  }
+  .add-form__right {
+    font-size: 16px;
+    width: 60%;
+    text-align: center;
+    &--input {
+      width: 60%;
+      border: none;
+      border-bottom: 1px solid #ccc;
+    }
+  }
+  .add-member {
+    display: block;
+    padding: 5px 10px;
+    font-size: 13px;
+    margin: 10px auto 0 auto;
+  }
+  .add-form__bottom {
+    display: flex;
+    justify-content: center; 
+  }
+  .add-form__btn {
+    &--bottom {
+      margin: 3px;
+      font-size: 13px;
+      padding: 5px 10px;
+    }
+    &--cell {
+      padding: 1px 10px;
+      font-size: 14px;
+    }
+  }
+  .addMember-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
   }
   
 }
