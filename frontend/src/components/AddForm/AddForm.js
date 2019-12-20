@@ -31,7 +31,10 @@ class AddForm extends Component {
       onToggleModal();
       return res.json();
     }).then(async res => {
+      console.log(idx);
       const initCells = cellData.find(v => v.en_name === idx).cells;
+      console.log('이닛 셀스', initCells);
+      console.log('셀데이타', cellData);
       const currentCells = await fetch(`/api/cells/${JSON.stringify(initCells)}`).then(res => res.json());
       changeCurrentSection(currentCells);
     });
@@ -116,7 +119,7 @@ const mapDispatchToProps = dispatch => ({
   insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),
   insertCellMember: (member, idx) => dispatch(insertCellMember(member, idx)),
   removeCellMember: (idx) => dispatch(removeCellMember(idx)),
-  changeCurrentSection: (section, enName) => dispatch(changeCurrentSection(section, enName))
+  changeCurrentSection: (section, enName) => dispatch(changeCurrentSection(section, enName)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddForm);
