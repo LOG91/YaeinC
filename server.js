@@ -77,18 +77,7 @@ app.post('/hello/logout', (req, res) => {      // 3
   res.redirect('/hello');
 });
 
-// if (process.env.NODE_ENV === 'production') {
-//   // Serve any static files
-//   app.use(express.static(path.join(__dirname, 'front/build')));
-
-//   // Handle React routing, return all requests to React app
-//   app.get('*', function (req, res) {
-//     res.sendFile(path.join(__dirname, 'front/build', 'index.html'));
-//   });
-// }
-
-
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, () => console.log(`Listening on port ${1000000}`));
 
 
 function duplicate({ req, res, uid, upwd }) {
@@ -109,7 +98,7 @@ function duplicate({ req, res, uid, upwd }) {
         User.create({ "user_id": uid, "password": upwd }, (err) => {
           if (err) return res.json(err);
           console.log('Success');
-          res.redirect('/');
+          res.redirect('/admin');
         })
       }
     })

@@ -46,6 +46,15 @@ let Leader = new Schema({
     gender: {
         type: String
     },
+    attached: {
+        type: String
+    },
+    isNetworkLeader: {
+        type: Boolean
+    },
+    isLeader: {
+        type: Boolean
+    },
     section: {
         type: String
     },
@@ -72,7 +81,7 @@ let Leader = new Schema({
     },
     members: [{
         type: Schema.Types.ObjectId,
-        ref: 'Member' 
+        ref: 'Leader'
     }],
     youth: {
         type: Schema.Types.ObjectId,

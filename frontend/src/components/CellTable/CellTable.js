@@ -70,13 +70,14 @@ class CellTable extends Component {
 
   render() {
     const { isAdmin, currentSection } = this.props;
+    console.log(isAdmin, '이즈어드민!!');
     const { clickedCellInfo, cellIndex } = this.state;
     return (
       <table className={isAdmin ? "printArea cellTable" : "cellTable"} border="1" cellPadding="10">
         <tbody>
           <tr>
             <th rowSpan="2" className="section_name_header" onClick={() => this.re('israel')}>네트워크</th>
-            <th rowSpan="2" className="leader_name_header" onClick={this.onPrint}>리더</th>
+            <th rowSpan="2" className="leader_nam버e_header" onClick={this.onPrint}>리더</th>
             <th colSpan="5" className="leader_check_header">리더 체크리스트</th>
             <th rowSpan="2" className="cell_member_name_header">셀원</th>
             <th colSpan="3" className="cell_member_check_header">셀원 체크리스트</th>
@@ -100,6 +101,9 @@ class CellTable extends Component {
             handleAddLeader: this.handleAddLeader,
           })}
         </tbody>
+        <div colSpan="5" className="">
+          <button className="btn btn-outline-dark networkName-box__button" onClick={()=>this.handleAddLeader(null)}>네트워크 추가</button>
+        </div>
         {this.state.modalOpend ?
           <FortalModal>
             <Modal onToggleModal={this.handleToggleModal}>

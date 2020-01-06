@@ -26,3 +26,29 @@ export const CountDropDown = ({ handler, length, leaderInfo, option, leaderIndex
     </div>
   )
 }
+
+export const CellDropDown = ({ cellList }) => {
+  const options = Array(cellList.length).fill(0).map((cv, idx) => {
+    return (
+      <a
+        className="dropdown-item"
+        >{cv}
+      </a>)
+  })
+  return (
+    <div className="dropdown">
+      <button
+        className="btn btn-secondary dropdown-toggle selectBox"
+        type="button"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false">
+        셀선택
+      </button>
+      <div className="dropdown-menu selectBox__option" aria-labelledby="dropdownMenuButton">
+        {options}
+      </div>
+    </div>
+  )
+}

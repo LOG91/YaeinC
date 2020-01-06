@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { CellTable } from '../components/CellTable';
 import Tab from '../components/Tab/Tab';
 import { cellData } from '../data/cellData';
-import { indexing, changeCurrentSection } from '../store/modules/checker';
+import { indexing, changeCurrentSection, changeCurrentAttached, changeCurrentInfo } from '../store/modules/checker';
 import { connect } from 'react-redux';
 
 import FortalModal from '../components/Modal/FortalModal';
@@ -13,19 +13,29 @@ class Home extends Component {
   state = {
     modalOpened: false
   }
+  mapSectionByEnName(enName) {
+    const section =
+      enName.match(/israel/g) ?
+        '이스라엘군' : enName.match(/arab/g) ?
+          '아랍군' : enName.match(/asia/g) ? '아시아군'
+            : null;
+
+    return section;
+  }
 
   componentDidMount() {
-    const { match, changeCurrentSection, indexing } = this.props;
-    const { name: current } = match.params;
+    const { match, changeCurrentSection, indexing, changeCurrentAttached, changeCurrentInfo } = this.props;
+    const { name: current, attached } = match.params;
+    if (match.path === '/') return;
     indexing(current);
-    if (match.path !== '/') {
-      const initCells = cellData.find(v => v.en_name === current).cells;
-      fetch(`/api/cells/${JSON.stringify(initCells)}`)
-        .then(res => res.json())
-        .then(cells => {
-          changeCurrentSection(cells);
-        })
-    }
+    changeCurrentInfo('section', this.mapSectionByEnName(current));
+    changeCurrentInfo('attached', attached);
+    const initCells = cellData.find(v => v.en_name === current).cells;
+    fetch(`/api/cells/${JSON.stringify(initCells)}`)
+      .then(res => res.json())
+      .then(cells => {
+        changeCurrentSection(cells);
+      })
   }
 
   async resetCheck() {
@@ -66,8 +76,7 @@ class Home extends Component {
   render() {
     console.log(11);
     const { match } = this.props;
-    const isAdmin = match.path.match(/admin/g);
-
+    const isAdmin = match.url.match(/admin/g);
     return (
       <div>
         {isAdmin ? (<div className="edit-box">
@@ -99,7 +108,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
   indexing: idx => dispatch(indexing(idx)),
-  changeCurrentSection: (section, enName) => dispatch(changeCurrentSection(section, enName))
+  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
+  changeCurrentSection: (section, enName) => dispatch(changeCurrentSection(section, enName)),
+  changeCurrentAttached: attached => dispatch(changeCurrentAttached(attached))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

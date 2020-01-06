@@ -4,16 +4,19 @@ const router = express.Router();
 const { Leader, Member, YouthAtt } = require('../members.model');
 
 
-const addLeader = ({ name, gender, section, cellName, cellNameKr, age, dawn = 0, word = 0, cc = false, mc = false, yc = false, youth
+const addLeader = ({ name, gender, age, attached, isNetworkLeader, isLeader, section, cellName, cellNameKr, dawn = 0, word = 0, cc = false, mc = false, yc = false, youth
 }) => {
  return (
    {
      name,
+     age,
      gender,
+     attached,
+     isNetworkLeader,
+     isLeader,
      section,
      cellName,
      cellNameKr,
-     age,
      dawn,
      word,
      cc,
@@ -70,8 +73,8 @@ router.get('/cells/:cells', async (req, res) => {
    })
    .then(lead => {
      const reduced = lead.reduce((acc, cv) => {
-       if (!acc[obj[cv.cellName]]) acc[obj[cv.cellName]] = [cv];
-       else acc[obj[cv.cellName]].push(cv);
+       if (!acc[obj[cv.cellNameKr]]) acc[obj[cv.cellNameKr]] = [cv];
+       else acc[obj[cv.cellNameKr]].push(cv);
        return acc;
      }, [])
      return reduced;
@@ -124,28 +127,32 @@ router.get('/gender/:gender', (req, res) => {
 })
 
 router.post('/leader', (req, res, next) => {
- const { name, age, gender, cellName, cellNameKr, section, members } = req.body;
+ const { name, age, gender, attached, cellName, cellNameKr, section, members } = req.body;
  const youth = new YouthAtt(addYouthAtt());
  youth.save((err, y) => {
    if (err) return console.error(err);
  })
- const lead = new Leader(addLeader({ name, age, gender, cellName, cellNameKr, section, members, youth: youth._id }));
+ const lead = new Leader(addLeader({ name, age, gender, attached, isNetworkLeader: false, isLeader: true, cellName, cellNameKr, section, members, youth: youth._id }));
  if (!members.length) {
    lead.save((err, leader) => {
      if (err) return console.error(err);
    });
-   // res.send({ a: 1, b: 2, c: 3, d: 4 });
  }
- members.forEach((memberName, idx) => {
+
+ members.forEach((member, idx) => {
    const youth = new YouthAtt(addYouthAtt());
    youth.save((err, y) => {
      if (err) return console.error(err);
    })
    const memb =
-     new Member(addMember({
-       name: memberName,
+     new Leader(addLeader({
+       name: member.name,
+       age: member.age,
        gender,
        sec: idx,
+       attached,
+       isNetworkLeader: false,
+       isLeader: false,
        cellName,
        cellNameKr,
        section,

@@ -35,6 +35,11 @@
       border: none;
       border-bottom: 1px solid #ccc;
     }
+    &--member {
+      width: 20%;
+      border: none;
+      border-bottom: 1px solid #ccc;
+    }
   }
   .add-member {
     display: block;
@@ -63,4 +68,9 @@
     padding: 10px 0;
   }
   
+  .select__btn--gender {
+    color: #000;
+    background-color: #fff;
+    padding: 4px 10px;
+  }
 }
