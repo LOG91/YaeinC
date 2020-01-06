@@ -6,7 +6,8 @@
   background-color: #fff;
   width: 90%;
   text-align: center;
-  th, td {
+  th,
+  td {
     border: 1px dotted #eaeaea;
   }
 }
@@ -26,7 +27,6 @@
     padding: 0.2rem;
   }
 }
-
 
 .leader_check_header {
   width: 55%;
@@ -54,6 +54,12 @@ button.selectBox {
   background-color: #fff;
 }
 
+button.networkName-box__button {
+  margin-top: 5px;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
 div.selectBox__option {
   font-size: 12px;
   min-width: 0;
@@ -71,10 +77,9 @@ div.selectBox__option {
   button.selectBox {
     font-size: 0.5rem;
     padding: 0 0.2rem;
-  } 
+  }
   div.selectBox__option {
     font-size: 10px;
-    
   }
 }
 

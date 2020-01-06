@@ -29,7 +29,7 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
             <td
               rowSpan={all_members + 1}>
               <p>{networkName}</p>
-              {isAdmin ? <button className="networkName-box__button" onClick={e => handleAddLeader(leader, idx)}>추가</button> : null}
+              {isAdmin ? <button className="btn btn-outline-dark networkName-box__button" onClick={e => handleAddLeader(leader, idx)}>추가</button> : null}
             </td>
           </tr>
         ) : null}
