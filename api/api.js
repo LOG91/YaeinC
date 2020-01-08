@@ -63,7 +63,7 @@ router.get('/cells/:cells', async (req, res) => {
  cellNames.forEach((v, i) => {
    obj[v] = i;
  })
- const data = await Leader.find({})
+ const data = await Leader.find({ isLeader: true })
    .populate('youth')
    .populate({
      path: 'members',

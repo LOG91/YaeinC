@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { indexing, changeCurrentSection, checkYouth, checkMemberYouth } from '../../store/modules/checker';
+import { indexing, changeCurrentSection, checkYouth, checkMemberYouth, attached } from '../../store/modules/checker';
 import Tab from '../../components/Tab/Tab';
 import './Youth.scss';
 
@@ -12,7 +12,7 @@ class Youth extends React.Component {
   }
   async fetchInfo() {
     const { changeCurrentSection } = this.props;
-    const tempCells = ['israel_ga', 'israel_na', 'israel_da'];
+    const tempCells = ['이스라엘(가)', '이스라엘(나)', '이스라엘(다)'];
     const info = await fetch(`/api/cells/${JSON.stringify(tempCells)}`).then(res => res.json()).then();
     changeCurrentSection(info);
   }
@@ -101,6 +101,7 @@ class Youth extends React.Component {
     });
 
     const dd = (network, sectionIdx) => {
+      console.log(network, '넷웤');
       const allMembersLength = network.reduce((acc, cv) => {
         return acc += 1 + cv.members.length;
       }, 0) + 1;
@@ -134,11 +135,12 @@ class Youth extends React.Component {
   }
   render() {
     const tempArr = ['7_10', '7_17', '7_24', '7_31', '8_7', '8_14', '8_21', '8_28', '9_4', '9_11', '9_18', '9_25'];
-    const { currentSection, match: { path } } = this.props;
+    const { currentSection, attached ,match: { path } } = this.props;
+    console.log('어태치드0', attached)
     const idx = path.slice(1);
     return (
       <React.Fragment>
-        <Tab idx={idx} isAdmin={path.match(/admin/g)} />
+        <Tab idx={idx} attached={attached} isAdmin={path.match(/admin/g)} />
         {this.youthTableTpl(tempArr, currentSection)}
       </React.Fragment>
     );
@@ -146,7 +148,8 @@ class Youth extends React.Component {
 };
 
 const mapStateToProps = (state) => ({
-  currentSection: state.checker.currentSection
+  currentSection: state.checker.currentSection,
+  attached: state.checker.attached
 });
 
 const mapDispatchToProps = dispatch => ({

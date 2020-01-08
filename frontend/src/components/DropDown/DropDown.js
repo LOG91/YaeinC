@@ -4,6 +4,7 @@ export const CountDropDown = ({ handler, length, leaderInfo, option, leaderIndex
   const options = Array(length).fill(0).map((cv, idx) => {
     return (
       <a
+        key={leaderInfo._id + idx}
         className="dropdown-item"
         onClick={() => handler(leaderInfo._id, leaderIndex, option, idx)}>{idx}
       </a>)
@@ -31,6 +32,7 @@ export const CellDropDown = ({ cellList }) => {
   const options = Array(cellList.length).fill(0).map((cv, idx) => {
     return (
       <a
+        key={cv+idx}
         className="dropdown-item"
         >{cv}
       </a>)

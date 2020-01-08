@@ -67,13 +67,13 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
           <tr key={i}>
             <td rowSpan="1" key={i} className={evenClsName}>{member.name}</td>
             <td rowSpan="1" className={evenClsName}>
-              <CheckBox checkedValue={member.cc} onCheck={() => handleCheckMember(leader._id, member._id, member.sec, idx, 'cc')} />
+              <CheckBox checkedValue={member.cc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'cc')} />
             </td>
             <td rowSpan="1" className={evenClsName}>
-              <CheckBox checkedValue={member.mc} onCheck={() => handleCheckMember(leader._id, member._id, member.sec, idx, 'mc')} />
+              <CheckBox checkedValue={member.mc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'mc')} />
             </td>
             <td rowSpan="1" className={evenClsName}>
-              <CheckBox checkedValue={member.yc} onCheck={() => handleCheckMember(leader._id, member._id, member.sec, idx, 'yc')} />
+              <CheckBox checkedValue={member.yc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'yc')} />
             </td>
           </tr>
         )) : (

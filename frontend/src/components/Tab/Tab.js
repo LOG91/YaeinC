@@ -19,12 +19,13 @@ class Tab extends Component {
   }
 
   render() {
-    const { isAdmin } = this.props;
+    const { isAdmin, attached } = this.props;
+    console.log('어태치드', attached)
     return (
         <ul className="tab">
           {cellData.map((v, idx) =>{
             return <li key={idx} className={v.clsName}>
-              <Link to={`/${isAdmin ? 'admin/' : ''}${v.path}`} onClick={() => this.handleClick(v.en_name)} className={this.props.idx === v.en_name ? "active" : ""}>{v.name}</Link>
+              <Link to={`/${isAdmin ? 'admin/' : ''}${attached}/${v.path}`} onClick={() => this.handleClick(v.en_name)} className={this.props.idx === v.en_name ? "active" : ""}>{v.name}</Link>
           </li>})}
         </ul>
     )

@@ -16,13 +16,13 @@ class CellTable extends Component {
     cellIndex: null
   }
 
-  handleCheck = (id, sectionIdx, kind, memberName = false) => {
+  handleCheck = (id, sectionIdx, kind) => {
     fetch(`/api/check/leader/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id, kind, memberName })
+      body: JSON.stringify({ id, kind })
     }).then(responsedData => {
       if (responsedData.status === 200) {
         this.props.checkWorship(id, sectionIdx, kind);
@@ -30,8 +30,8 @@ class CellTable extends Component {
     });
   }
 
-  handleCheckMember = async (leaderId, id, sec, sectionIdx, kind) => {
-    const responsedData = await fetch(`/api/check/member/${id}`, {
+  handleCheckMember = async (leaderId, id, memberIdx, sectionIdx, kind) => {
+    const responsedData = await fetch(`/api/check/leader/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ class CellTable extends Component {
       body: JSON.stringify({ id, kind })
     });
     if (responsedData.status === 200) {
-      this.props.checkMemberWorship(leaderId, id, sec, sectionIdx, kind);
+      this.props.checkMemberWorship(leaderId, id, memberIdx, sectionIdx, kind);
     }
   }
 

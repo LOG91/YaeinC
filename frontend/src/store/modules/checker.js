@@ -71,6 +71,7 @@ export default function checker(state = initialState, action) {
 
 
     case CHECK_WORSHIP:
+      console.log(state.currentSection);
       return {
         ...state,
         currentSection: [

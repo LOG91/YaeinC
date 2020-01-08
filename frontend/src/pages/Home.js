@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { CellTable } from '../components/CellTable';
 import Tab from '../components/Tab/Tab';
 import { cellData } from '../data/cellData';
-import { indexing, changeCurrentSection, changeCurrentAttached, changeCurrentInfo } from '../store/modules/checker';
+import { attached, indexing, changeCurrentSection, changeCurrentAttached, changeCurrentInfo } from '../store/modules/checker';
 import { connect } from 'react-redux';
 
 import FortalModal from '../components/Modal/FortalModal';
@@ -26,7 +26,11 @@ class Home extends Component {
   componentDidMount() {
     const { match, changeCurrentSection, indexing, changeCurrentAttached, changeCurrentInfo } = this.props;
     const { name: current, attached } = match.params;
-    if (match.path === '/') return;
+    console.log(match.path);
+    if (match.path === '/ob' || match.path === '/yb') {
+      changeCurrentInfo('attached', match.path.slice(1));  
+      return;
+    }
     indexing(current);
     changeCurrentInfo('section', this.mapSectionByEnName(current));
     changeCurrentInfo('attached', attached);
@@ -75,7 +79,7 @@ class Home extends Component {
 
   render() {
     console.log(11);
-    const { match } = this.props;
+    const { match, attached } = this.props;
     const isAdmin = match.url.match(/admin/g);
     return (
       <div>
@@ -83,12 +87,12 @@ class Home extends Component {
           <div className="button-box"><button className="edit-box__button--print" onClick={this.handlePrint}>프린트</button></div>
           <div className="button-box"><button className="edit-box__button--init" onClick={() => this.handleToggleModal()}>초기화</button></div>
         </div>) : ''}
-        <Tab idx={match.params.name} isAdmin={isAdmin ? true : null} />
-        {match.path !== '/' ?
+        <Tab idx={match.params.name} attached={attached} isAdmin={isAdmin ? true : null} />
+        {match.path !== '/ob' && match.path !== '/yb' ?
           <CellTable isAdmin={isAdmin} current={match.params.name} /> :
           <div>
-            <div className="root__description">예인청년 출석체크 페이지 :)</div>
-            <div className="root__description">🇮🇱🇪🇬🇸🇾🇰🇷🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
+            <div className="root__description">{match.path.match(/ob/g) ? 'HOLY' : '벧엘'}청년부 출석체크 페이지 :)</div>
+            <div className="root__description">🇮🇱🇰🇷🇪🇬🇸🇾🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
           </div>
         }
         {this.state.modalOpened ?
@@ -103,7 +107,8 @@ class Home extends Component {
   }
 }
 const mapStateToProps = (state) => ({
-  currentSection: state.checker.currentSection
+  currentSection: state.checker.currentSection,
+  attached: state.checker.attached
 });
 
 const mapDispatchToProps = dispatch => ({
