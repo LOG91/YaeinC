@@ -20,7 +20,6 @@ class Tab extends Component {
 
   render() {
     const { isAdmin, attached } = this.props;
-    console.log('어태치드', attached)
     return (
         <ul className="tab">
           {cellData.map((v, idx) =>{

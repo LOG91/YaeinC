@@ -1,41 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-
-let Member = new Schema({
-    name: {
-        type: String
-    },
-    gender: {
-        type: String
-    },
-    sec: {
-        type: Number
-    },
-    section: {
-        type: String
-    },
-    cellName: {
-        type: String
-    },
-    cellNameKr: {
-        type: String
-    },
-    cc: {
-        type: Boolean
-    },
-    mc: {
-        type: Boolean
-    },
-    yc: {
-        type: Boolean
-    },
-    youth: {
-        type: Schema.Types.ObjectId,
-        ref: 'YouthAtt'
-    }
-})
-
 let Leader = new Schema({
     name: {
         type: String
@@ -89,6 +54,47 @@ let Leader = new Schema({
     }
 });
 
+let NetworkCell = new Schema({
+    name: {
+        type: String
+    },
+    networkLeaderName: {
+        type: String
+    },
+    gender: {
+        type: String
+    },
+    attached: {
+        type: String
+    }
+});
+
+let Church = new Schema({
+    name: {
+        type: String
+    },
+    sheet: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Sheet'
+    }]
+});
+
+let Sheet = new Schema({
+    name: {
+        type: String
+    },
+    section: {
+        type: String
+    },
+    attached: {
+        type: String
+    },
+    cells: [{
+        type: Schema.Types.ObjectId,
+        ref: 'NetworkCell'
+    }]
+});
+
 const YouthAtt = new Schema({
     att: {
         type: Object, default: {}
@@ -97,7 +103,9 @@ const YouthAtt = new Schema({
 
 
 module.exports = {
-    Member: mongoose.model('Member', Member),
     Leader: mongoose.model('Leader', Leader),
-    YouthAtt: mongoose.model('YouthAtt', YouthAtt)
+    YouthAtt: mongoose.model('YouthAtt', YouthAtt),
+    Church: mongoose.model('Church', Church),
+    Sheet: mongoose.model('Sheet', Sheet),
+    NetworkCell: mongoose.model('NetworkCell', NetworkCell)
 }

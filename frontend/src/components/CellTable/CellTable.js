@@ -101,9 +101,10 @@ class CellTable extends Component {
             handleAddLeader: this.handleAddLeader,
           })}
         </tbody>
-        <div colSpan="5" className="">
-          <button className="btn btn-outline-dark networkName-box__button" onClick={()=>this.handleAddLeader(null)}>네트워크 추가</button>
-        </div>
+        {isAdmin ? (
+          <div>
+            <button className="btn btn-outline-dark networkName-box__button" onClick={() => this.handleAddLeader(null)}>네트워크 추가</button>
+          </div>) : null}
         {this.state.modalOpend ?
           <FortalModal>
             <Modal onToggleModal={this.handleToggleModal}>

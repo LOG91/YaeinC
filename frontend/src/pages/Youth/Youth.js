@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { indexing, changeCurrentSection, checkYouth, checkMemberYouth, attached } from '../../store/modules/checker';
+import { indexing, changeCurrentSection, checkYouth, checkMemberYouth, attached, changeCurrentInfo } from '../../store/modules/checker';
 import Tab from '../../components/Tab/Tab';
 import './Youth.scss';
 
@@ -10,11 +10,20 @@ class Youth extends React.Component {
     indexing(path.slice(1));
     this.fetchInfo();
   }
+  // shouldComponentUpdate() {
+  //   const { indexing, match: { path } } = this.props;
+  //   indexing(path.slice(1));
+  //   this.fetchInfo();
+  //   return true;
+  // }
   async fetchInfo() {
-    const { changeCurrentSection } = this.props;
-    const tempCells = ['이스라엘(가)', '이스라엘(나)', '이스라엘(다)'];
+    const { changeCurrentSection, changeCurrentInfo, match: { params: { attached } } } = this.props;
+    const tempCells = ['이스라엘(가)', '연해주', '안디옥'];
     const info = await fetch(`/api/cells/${JSON.stringify(tempCells)}`).then(res => res.json()).then();
-    changeCurrentSection(info);
+    const tt = await fetch('/api/gender/male').then(res => res.json()).then();
+    changeCurrentInfo('attached', attached);
+    changeCurrentInfo('currentSection', info);
+    console.log(tt);
   }
 
   handleYouthCheck = async ({ sectionIdx, leaderIdx, leaderId, youthId, date, memberIdx = null }) => {
@@ -36,12 +45,12 @@ class Youth extends React.Component {
     if (!networks.length) return;
     const checkList = (networks, sectionIdx) => networks.map((leader, leaderIdx) => {
       return (
-        <React.Fragment>
+        <React.Fragment key={leader + leaderIdx}>
           <tr>
             <td>{leader.name}</td>
             {arr.map(date => {
               return (
-                <td>
+                <td key={date}>
                   <input
                     type="checkbox"
                     className="custom-checkbox"
@@ -66,11 +75,11 @@ class Youth extends React.Component {
           </tr>
           {leader.members.map((member, memberIdx) => {
             return (
-              <tr>
+              <tr key={member + memberIdx}>
                 <td>{member.name}</td>
                 {arr.map(date => {
                   return (
-                    <td>
+                    <td key={date}>
                       <input
                         type="checkbox"
                         className="custom-checkbox"
@@ -101,11 +110,10 @@ class Youth extends React.Component {
     });
 
     const dd = (network, sectionIdx) => {
-      console.log(network, '넷웤');
       const allMembersLength = network.reduce((acc, cv) => {
         return acc += 1 + cv.members.length;
       }, 0) + 1;
-      return (<React.Fragment>
+      return (<React.Fragment key={network + sectionIdx}>
         <tr>
           <td rowSpan={allMembersLength} className="youthContainer--networkName">{network[0].cellNameKr}</td>
         </tr>
@@ -114,18 +122,18 @@ class Youth extends React.Component {
     }
 
     const mapped = (
-      <div class="table-wrapper youthContainer">
-        <table id="consumption-data" class="data">
-          <thead class="header">
+      <div className="table-wrapper youthContainer">
+        <table id="consumption-data" className="data">
+          <thead className="header">
             <tr>
               <th>이름</th>
               {arr.map(v => {
                 const [month, day] = v.split('_');
-                return <th>{`${month}/${day}`}</th>
+                return <th key={`${month}/${day}`}>{`${month}/${day}`}</th>
               })}
             </tr>
           </thead>
-          <tbody class="results">
+          <tbody className="results">
             {networks.map((network, sectionIdx) => dd(network, sectionIdx))}
           </tbody>
         </table>
@@ -135,9 +143,9 @@ class Youth extends React.Component {
   }
   render() {
     const tempArr = ['7_10', '7_17', '7_24', '7_31', '8_7', '8_14', '8_21', '8_28', '9_4', '9_11', '9_18', '9_25'];
-    const { currentSection, attached ,match: { path } } = this.props;
-    console.log('어태치드0', attached)
+    const { currentSection, attached, match: { path } } = this.props;
     const idx = path.slice(1);
+    console.log(attached);
     return (
       <React.Fragment>
         <Tab idx={idx} attached={attached} isAdmin={path.match(/admin/g)} />
@@ -154,6 +162,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
   changeCurrentSection: section => dispatch(changeCurrentSection(section)),
+  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
   indexing: idx => dispatch(indexing(idx)),
   checkYouth: (sectionIdx, leaderIdx, leaderId, date) => dispatch(checkYouth(sectionIdx, leaderIdx, leaderId, date)),
   checkMemberYouth: ({ sectionIdx, leaderIdx, memberIdx, date }) => dispatch(checkMemberYouth({ sectionIdx, leaderIdx, memberIdx, date }))

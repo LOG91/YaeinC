@@ -22,16 +22,26 @@ class Home extends Component {
 
     return section;
   }
-
-  componentDidMount() {
-    const { match, changeCurrentSection, indexing, changeCurrentAttached, changeCurrentInfo } = this.props;
+  shouldComponentUpdate() {
+    const { match, changeCurrentSection, indexing, changeCurrentInfo } = this.props;
     const { name: current, attached } = match.params;
-    console.log(match.path);
-    if (match.path === '/ob' || match.path === '/yb') {
-      changeCurrentInfo('attached', match.path.slice(1));  
+    if (match.path === '/holy' || match.path === '/bethel') {
+      changeCurrentInfo('attached', match.path.slice(1));
+      return true;
+    }
+    changeCurrentInfo('idx', current);
+    changeCurrentInfo('section', this.mapSectionByEnName(current));
+    changeCurrentInfo('attached', attached);
+    return true;
+  }
+  componentDidMount() {
+    const { match, changeCurrentSection, indexing, changeCurrentInfo } = this.props;
+    const { name: current, attached } = match.params;
+    if (match.path === '/holy' || match.path === '/bethel') {
+      changeCurrentInfo('attached', match.path.slice(1));
       return;
     }
-    indexing(current);
+    changeCurrentInfo('idx', current);
     changeCurrentInfo('section', this.mapSectionByEnName(current));
     changeCurrentInfo('attached', attached);
     const initCells = cellData.find(v => v.en_name === current).cells;
@@ -71,27 +81,33 @@ class Home extends Component {
     printDiv.style.display = 'none';
     tabDiv.style.display = 'flex';
   }
+
   handleToggleModal = param => {
-    console.log(param);
     param ? this.setState({ modalOpened: false }) :
       this.setState({ modalOpened: !this.state.modalOpened })
   }
 
+  handleAddSheet = () => {
+      
+  }
+
   render() {
-    console.log(11);
     const { match, attached } = this.props;
     const isAdmin = match.url.match(/admin/g);
     return (
       <div>
-        {isAdmin ? (<div className="edit-box">
-          <div className="button-box"><button className="edit-box__button--print" onClick={this.handlePrint}>프린트</button></div>
-          <div className="button-box"><button className="edit-box__button--init" onClick={() => this.handleToggleModal()}>초기화</button></div>
-        </div>) : ''}
+        {isAdmin ? (
+          <div className="edit-box">
+            <div className="button-box"><button className="edit-box__button--print" onClick={this.handleAddSheet}>시트 추가</button></div>
+            <div className="button-box"><button className="edit-box__button--print" onClick={this.handlePrint}>프린트</button></div>
+            <div className="button-box"><button className="edit-box__button--init" onClick={() => this.handleToggleModal()}>초기화</button></div>
+          </div>
+        ) : ''}
         <Tab idx={match.params.name} attached={attached} isAdmin={isAdmin ? true : null} />
-        {match.path !== '/ob' && match.path !== '/yb' ?
+        {match.path !== '/holy' && match.path !== '/bethel' ?
           <CellTable isAdmin={isAdmin} current={match.params.name} /> :
           <div>
-            <div className="root__description">{match.path.match(/ob/g) ? 'HOLY' : '벧엘'}청년부 출석체크 페이지 :)</div>
+            <div className="root__description">{match.path.match(/holy/g) ? 'HOLY' : '벧엘'}청년부 출석체크 페이지 :)</div>
             <div className="root__description">🇮🇱🇰🇷🇪🇬🇸🇾🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
           </div>
         }

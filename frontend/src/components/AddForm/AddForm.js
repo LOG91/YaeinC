@@ -88,11 +88,11 @@ class AddForm extends Component {
     console.log('셀인포', cellInfo);
     return (
       <div className="add-form">
-        <div className="add-form__icon"><FontAwesomeIcon icon={faAddressCard} /><h4>리더 추가</h4></div>
+        <div className="add-form__icon"><FontAwesomeIcon icon={faAddressCard} /><h4>{cellInfo ? '리더 추가' : '네트워크 추가'}</h4></div>
         <div>
           <div className="add-form__box">
             <div className="add-form__left">소속</div>
-            <div className="add-form__right">{attached === 'ob' ? '1 청년부' : '2 청년부'}</div>
+            <div className="add-form__right">{attached === 'holy' ? 'HOLY 청년부' : '벧엘 청년부'}</div>
           </div>
           <div className="add-form__box">
             <div className="add-form__left">지역군</div>

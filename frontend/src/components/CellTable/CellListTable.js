@@ -2,16 +2,17 @@ import React, { Fragment } from 'react';
 import { CheckBox } from '../CheckBox';
 import { CountDropDown } from '../DropDown';
 
-function renderCellList ({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin }) {
-    if (!currentSection) return <div>아직 데이터가 없습니다😨</div>;
-
-    const mappedByNetwork = currentSection.map((network, idx) => {
-      const networkName = network.length ? network[0].cellNameKr : '';
-      const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin });
-      return tmp;
-    });
-    return mappedByNetwork;
-  };
+function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin }) {
+  if (!currentSection) return <div>아직 데이터가 없습니다😨</div>;
+  console.log(currentSection);
+  const mappedByNetwork = currentSection.map((network, idx) => {
+    if (!network) return;
+    const networkName = network.length ? network[0].cellNameKr : '';
+    const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin });
+    return tmp;
+  });
+  return mappedByNetwork;
+};
 
 const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, }) => {
   const all_members = network.reduce((ac, cv) => {
