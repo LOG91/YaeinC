@@ -39,6 +39,18 @@ const addSheet = ({ name, section, attached, cells = [] }) => {
   )
 };
 
+const addNetworkCell = ({ name, networkLeaderName, gender, attached, sheetId }) => {
+  return (
+    {
+      name,
+      networkLeaderName,
+      gender,
+      attached,
+      sheetId
+    }
+  )
+}
+
 const addYouthAtt = () => ({ att: { empty: 'no' } });
 
 router.post('/reset', (req, res) => {
@@ -47,14 +59,39 @@ router.post('/reset', (req, res) => {
   res.send({});
 });
 
-router.post('/sheet', (req, res) => {
-  const { name, section, attached } = req.params;
-  const sheet = new Sheet(addSheet({ name, section, attached }));
-  sheet.save((err, s) => {
-    if (err) console.log(err);
-    res.send(s);
+router.get('/networkCell/:sheetId', (req, res) => {
+  const sheetId = req.params.sheetId;
+  NetworkCell.find({ sheetId }).then(networkCells => {
+    console.log(networkCells, '네트워크셀');
+    res.send(networkCells);
   })
+})
 
+router.post('/networkCell', (req, res) => {
+  const { name, networkLeaderName, gender, attached, sheetId } = req.body;
+  const networkCell = new NetworkCell(addNetworkCell({ name, networkLeaderName, gender, attached, sheetId }));
+  networkCell.save((err, networkCell) => {
+    if (err) console.error(err);
+    res.send(networkCell);
+  })
+})
+
+router.post('/sheet', (req, res) => {
+  const { name, section, attached } = req.body;
+  const sheet = new Sheet(addSheet({ name, section, attached }));
+  sheet.save((err, sheet) => {
+    if (err) console.error(err);
+    res.send(sheet);
+  })
+});
+
+router.get('/sheet/:attached', (req, res) => {
+  const attached = req.params.attached;
+  console.log(attached);
+  Sheet.find({ attached }).then(sheet => {
+    console.log(sheet);
+    res.send(sheet);
+  });
 });
 
 router.get('/cells/:cells', async (req, res) => {

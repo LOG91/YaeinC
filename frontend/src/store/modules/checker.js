@@ -2,6 +2,7 @@ const INDEXING = 'checker/INDEXING';
 const CHANGE_CURRENT_ATTACHED = 'checker/CHANGE_CURRENT_ATTACHED';
 const CHANGE_CURRENT_INFO = 'checker/CHANGE_CURRENT_INFO';
 const CHANGE_CURRENT_SECTION = 'checker/CHANGE_CURRENT_SECTION';
+const INSERT_NETWORKCELL = 'checker/INSERT_NETWORKCELL';
 
 const CHECK_WORSHIP = 'checker/CHECK_WORSHIP';
 const CHECK_MEMBER_WORSHIP = 'checker/CHECK_MEMBER_WORSHIP';
@@ -16,8 +17,9 @@ const REMOVE_CELL_MEMBER = 'checker/REMOVE_CELL_MEMBER';
 
 export const indexing = idx => ({ type: INDEXING, idx });
 export const changeCurrentAttached = attached => ({ type: CHANGE_CURRENT_ATTACHED, attached });
-export const changeCurrentInfo = (left, right) => ({ type: CHANGE_CURRENT_INFO, left, right});
+export const changeCurrentInfo = (left, right) => ({ type: CHANGE_CURRENT_INFO, left, right });
 export const changeCurrentSection = (section, enName) => ({ type: CHANGE_CURRENT_SECTION, section, enName });
+export const insertNetworkCell = (addedNetworkCell) => ({ type: INSERT_NETWORKCELL, addedNetworkCell });
 
 export const checkWorship = (id, sectionIdx, left) => ({ type: CHECK_WORSHIP, id, sectionIdx, left });
 export const checkMemberWorship = (leaderId, id, sec, sectionIdx, left) => ({ type: CHECK_MEMBER_WORSHIP, leaderId, id, sec, sectionIdx, left });
@@ -34,6 +36,9 @@ const initialState = {
   idx: '',
   attached: '',
   section: '',
+  sheets: [],
+  currentSheetId: '',
+  networkCells: [],
   insertedMember: {
     name: '',
     age: '',
@@ -68,10 +73,13 @@ export default function checker(state = initialState, action) {
         ...state,
         currentSection: action.section
       }
-
+    case INSERT_NETWORKCELL:
+      return {
+        ...state,
+        networkCells: [...state.networkCells, action.addedNetworkCell]
+      }
 
     case CHECK_WORSHIP:
-      console.log(state.currentSection);
       return {
         ...state,
         currentSection: [

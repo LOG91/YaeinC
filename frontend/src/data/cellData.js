@@ -7,10 +7,10 @@ const mapCellName = {
 
 
 export const cellData = [
-  { path: 'israel_1', en_name: 'israel_1', cells: mapCellName['israel_1'], name: '이스라엘군1', to: '/israel_1', activeStyle: true, clsName: 'index'},
-  { path: 'arab_1', en_name: 'arab_1', cells: mapCellName['arab_1'], name: '아랍군1', to: '/arab_1', activeStyle: true, clsName: 'index'},
-  { path: 'arab_2', en_name: 'arab_2', cells: mapCellName['arab_2'], name: '아랍군2', to: '/arab_2', activeStyle: true, clsName: 'index'},
-  { path: 'asia', en_name: 'asia', cells: mapCellName['asia'], name: '아시아군', to: '/asia', activeStyle: true, clsName: 'index'},
-  { path: 'youth_m', en_name: 'youth_m', name: '청년예배(남)', cells: mapCellName['이스라엘(가)', '연해주', '안디옥'], to: '/youth_man', activeStyle: true, clsName: 'index'},
-  { path: 'youth_w', en_name: 'youth_w', name: '청년예배(여)', cells: [], to: '/posts', activeStyle: true, clsName: 'index'}
+  { path: 'israel_1', sheet: '이스라엘군1', cells: mapCellName['israel_1'], name: '이스라엘군1', to: '/israel_1', activeStyle: true, clsName: 'index'},
+  { path: 'arab_1', sheet: '아랍군1', cells: mapCellName['arab_1'], name: '아랍군1', to: '/arab_1', activeStyle: true, clsName: 'index'},
+  { path: 'arab_2', sheet: '아랍군2', cells: mapCellName['arab_2'], name: '아랍군2', to: '/arab_2', activeStyle: true, clsName: 'index'},
+  { path: 'asia', sheet: '아시아군1', cells: mapCellName['asia'], name: '아시아군', to: '/asia', activeStyle: true, clsName: 'index'},
+  { path: 'youth_m', sheet: 'youth_m', name: '청년예배(남)', cells: mapCellName['이스라엘(가)', '연해주', '안디옥'], to: '/youth_man', activeStyle: true, clsName: 'index'},
+  { path: 'youth_w', sheet: 'youth_w', name: '청년예배(여)', cells: [], to: '/posts', activeStyle: true, clsName: 'index'}
 ];

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './CellTable.scss';
-import { indexing, changeCurrentSection, checkWorship, checkMemberWorship, countContent } from '../../store/modules/checker';
+import { indexing, changeCurrentSection, checkWorship, checkMemberWorship, countContent, currentSheetId } from '../../store/modules/checker';
 import { connect } from 'react-redux';
 
 import renderCellList from './CellListTable'
@@ -70,7 +70,7 @@ class CellTable extends Component {
 
   render() {
     const { isAdmin, currentSection } = this.props;
-    console.log(isAdmin, '이즈어드민!!');
+    console.log(currentSection, '커런트섹션');
     const { clickedCellInfo, cellIndex } = this.state;
     return (
       <table className={isAdmin ? "printArea cellTable" : "cellTable"} border="1" cellPadding="10">
@@ -122,7 +122,8 @@ const mapStateToProps = (state) => {
   return ({
     members: state.checker.members,
     idx: state.checker.idx,
-    currentSection: state.checker.currentSection
+    currentSection: state.checker.currentSection,
+    currentSheetId: state.checker.currentSheetId
   })
 };
 

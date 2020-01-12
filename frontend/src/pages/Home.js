@@ -1,55 +1,72 @@
 import React, { Component } from 'react';
 import { CellTable } from '../components/CellTable';
 import Tab from '../components/Tab/Tab';
-import { cellData } from '../data/cellData';
-import { attached, indexing, changeCurrentSection, changeCurrentAttached, changeCurrentInfo } from '../store/modules/checker';
+import { attached, indexing, changeCurrentAttached, changeCurrentInfo, sheets, currentSheetId, networkCells } from '../store/modules/checker';
 import { connect } from 'react-redux';
 
 import FortalModal from '../components/Modal/FortalModal';
 import Modal from '../components/Modal/Modal';
 import ConfirmModal from '../components/Modal/ConfirmModal';
+import SheetForm from '../components/AddForm/SheetForm';
 
+const mapSectionByEnName = (enName) => {
+  const section =
+    enName.match(/이스라엘/g) ?
+      '이스라엘군' : enName.match(/아랍/g) ?
+        '아랍군' : enName.match(/아시아/g) ? '아시아군'
+          : null;
+
+  return section;
+}
 class Home extends Component {
   state = {
-    modalOpened: false
+    modalOpened: false,
+    modalAction: ''
   }
-  mapSectionByEnName(enName) {
-    const section =
-      enName.match(/israel/g) ?
-        '이스라엘군' : enName.match(/arab/g) ?
-          '아랍군' : enName.match(/asia/g) ? '아시아군'
-            : null;
 
-    return section;
-  }
   shouldComponentUpdate() {
-    const { match, changeCurrentSection, indexing, changeCurrentInfo } = this.props;
+    const { match, changeCurrentInfo, sheets } = this.props;
     const { name: current, attached } = match.params;
-    if (match.path === '/holy' || match.path === '/bethel') {
-      changeCurrentInfo('attached', match.path.slice(1));
+    console.log(match.path, attached);
+    if (!current) {
+      changeCurrentInfo('attached', attached);
       return true;
     }
     changeCurrentInfo('idx', current);
-    changeCurrentInfo('section', this.mapSectionByEnName(current));
+    sheets.length && changeCurrentInfo('currentSheetId', sheets.find(v => v.name === current)._id);
+    console.log('커런트1111')
+    changeCurrentInfo('section', mapSectionByEnName(current));
+
     changeCurrentInfo('attached', attached);
     return true;
   }
-  componentDidMount() {
-    const { match, changeCurrentSection, indexing, changeCurrentInfo } = this.props;
+  async componentDidMount() {
+    const { match, changeCurrentInfo } = this.props;
     const { name: current, attached } = match.params;
-    if (match.path === '/holy' || match.path === '/bethel') {
-      changeCurrentInfo('attached', match.path.slice(1));
+    changeCurrentInfo('attached', attached);
+    const sheets = await fetch(`/api/sheet/${attached}`).then(res => {
+      return res;
+    }).then(res => res.json())
+      .then();
+    changeCurrentInfo('sheets', sheets);
+    console.log(current,'커런트');
+    if (!current) {
       return;
     }
     changeCurrentInfo('idx', current);
-    changeCurrentInfo('section', this.mapSectionByEnName(current));
+    changeCurrentInfo('section', mapSectionByEnName(current));
     changeCurrentInfo('attached', attached);
-    const initCells = cellData.find(v => v.en_name === current).cells;
-    fetch(`/api/cells/${JSON.stringify(initCells)}`)
+    const currentSheetId = sheets.length && sheets.find(v => v.name === current)._id;
+    changeCurrentInfo('currentSheetId', currentSheetId);
+    const networkCells = await fetch(`api/networkCell/${currentSheetId}`).then(res => res.json()).then();
+    const mapped = networkCells.map(v => v.name);
+    changeCurrentInfo('networkCells', networkCells);
+    fetch(`/api/cells/${JSON.stringify(mapped)}`)
       .then(res => res.json())
       .then(cells => {
-        changeCurrentSection(cells);
-      })
+        console.log(cells);
+        changeCurrentInfo('currentSection', cells);
+      });
   }
 
   async resetCheck() {
@@ -82,28 +99,29 @@ class Home extends Component {
     tabDiv.style.display = 'flex';
   }
 
-  handleToggleModal = param => {
-    param ? this.setState({ modalOpened: false }) :
-      this.setState({ modalOpened: !this.state.modalOpened })
+  handleToggleModal = ({ action }) => {
+    this.setState({ modalAction: action });
+    this.setState({ modalOpened: !this.state.modalOpened })
   }
 
   handleAddSheet = () => {
-      
+    this.handleToggleModal({ action: 'addSheet' });
   }
 
   render() {
+    console.log('뭐가먼저일까 render');
     const { match, attached } = this.props;
     const isAdmin = match.url.match(/admin/g);
     return (
       <div>
         {isAdmin ? (
           <div className="edit-box">
-            <div className="button-box"><button className="edit-box__button--print" onClick={this.handleAddSheet}>시트 추가</button></div>
-            <div className="button-box"><button className="edit-box__button--print" onClick={this.handlePrint}>프린트</button></div>
-            <div className="button-box"><button className="edit-box__button--init" onClick={() => this.handleToggleModal()}>초기화</button></div>
+            <div className="button-box"><button className="btn btn-outline-dark edit-box__button" onClick={this.handleAddSheet}>시트 추가</button></div>
+            <div className="button-box"><button className="btn btn-outline-dark edit-box__button" onClick={this.handlePrint}>프린트</button></div>
+            <div className="button-box"><button className="btn btn-outline-dark edit-box__button" onClick={() => this.handleToggleModal({ action: 'init' })}>초기화</button></div>
           </div>
         ) : ''}
-        <Tab idx={match.params.name} attached={attached} isAdmin={isAdmin ? true : null} />
+        <Tab idx={match.params.name} sheets={this.state.sheets} attached={attached} isAdmin={isAdmin ? true : null} />
         {match.path !== '/holy' && match.path !== '/bethel' ?
           <CellTable isAdmin={isAdmin} current={match.params.name} /> :
           <div>
@@ -114,7 +132,8 @@ class Home extends Component {
         {this.state.modalOpened ?
           <FortalModal>
             <Modal onToggleModal={this.handleToggleModal}>
-              <ConfirmModal confirmAction={this.resetCheck} />
+              {this.state.modalAction === 'init' ? (<ConfirmModal confirmAction={this.resetCheck} />) :
+                (<SheetForm />)}
             </Modal>
           </FortalModal> : null
         }
@@ -124,13 +143,14 @@ class Home extends Component {
 }
 const mapStateToProps = (state) => ({
   currentSection: state.checker.currentSection,
-  attached: state.checker.attached
+  attached: state.checker.attached,
+  sheets: state.checker.sheets,
+  networkCells: state.checker.networkCells
 });
 
 const mapDispatchToProps = dispatch => ({
   indexing: idx => dispatch(indexing(idx)),
   changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
-  changeCurrentSection: (section, enName) => dispatch(changeCurrentSection(section, enName)),
   changeCurrentAttached: attached => dispatch(changeCurrentAttached(attached))
 });
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './AddForm.scss';
 import { connect } from 'react-redux';
-import { changeCurrentSection, insertMemberData, insertCellMember, removeCellMember, initMemberData } from '../../store/modules/checker';
+import { insertMemberData, insertCellMember, removeCellMember, initMemberData, currentSheetId, networkCells, changeCurrentInfo, insertNetworkCell } from '../../store/modules/checker';
 import { cellData } from '../../data/cellData';
 import { CellDropDown } from '../DropDown';
 
@@ -26,8 +26,8 @@ class AddForm extends Component {
       fn(item, info[item]);
     })
   }
-  addLeader = async () => {
-    const { insertedMember, onToggleModal, idx, changeCurrentSection } = this.props;
+  addNetworkCell = async () => {
+    const { insertedMember, onToggleModal, currentSheetId, cellInfo, networkCells, changeCurrentInfo, insertNetworkCell } = this.props;
     await fetch('/api/leader', {
       method: 'POST',
       headers: {
@@ -38,10 +38,42 @@ class AddForm extends Component {
       onToggleModal();
       return res.json();
     }).then(async res => {
-      const initCells = cellData.find(v => v.en_name === idx).cells;
-      const currentCells = await fetch(`/api/cells/${JSON.stringify(initCells)}`).then(res => res.json());
-      changeCurrentSection(currentCells);
+      const networkCellsNames = networkCells.map(v => v.name);
+      console.log(networkCellsNames, 19090);
+      fetch(`/api/cells/${JSON.stringify(networkCellsNames)}`)
+        .then(res => res.json())
+        .then(cells => {
+
+          // changeCurrentInfo('currentSection', cells);
+        });
     });
+
+
+    if (!cellInfo) {
+      await fetch('api/networkCell', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: insertedMember.cellNameKr, networkLeaderName: insertedMember.name, gender: insertedMember.gender, attached: insertedMember.attached, sheetId: currentSheetId })
+      }).then(res => res.json())
+        .then(cell => {
+          insertNetworkCell(cell);
+          console.log(networkCells);
+          const networkCellsNames = [...networkCells.map(v => v.name), cell.name];
+          console.log(networkCellsNames);
+          fetch(`/api/cells/${JSON.stringify(networkCellsNames)}`)
+            .then(res => res.json())
+            .then(cell => {
+              console.log(cell);
+              // insertNetworkCell(cell);
+              console.log(networkCells);
+
+              changeCurrentInfo('currentSection', cell);
+            });
+        });
+
+    }
   }
 
   handleChange = (key, value) => {
@@ -117,7 +149,7 @@ class AddForm extends Component {
             }
           </div>
           <div className="add-form__box">
-            <div className="add-form__left">이름</div>
+            <div className="add-form__left">{cellInfo ? '리더' : '네트워크리더'}</div>
             <input className="add-form__right--input" name="name" onChange={({ target }) => this.handleChange(target.name, target.value)} />
           </div>
           <div className="add-form__box">
@@ -127,7 +159,7 @@ class AddForm extends Component {
           {this.renderMembersList(this.props.insertedMember.members)}
           <button className="btn btn-outline-dark add-member" onClick={() => this.handleAddMember()}>셀원 추가</button>
           <div className="add-form__bottom">
-            <button className="btn btn-outline-dark add_member_btn add-form__btn--bottom" onClick={() => this.addLeader()}>등록</button>
+            <button className="btn btn-outline-dark add_member_btn add-form__btn--bottom" onClick={() => this.addNetworkCell()}>등록</button>
             <button className="btn btn-outline-dark add-form__btn--bottom" onClick={onToggleModal}>닫기</button>
           </div>
         </div>
@@ -141,15 +173,18 @@ const mapStateToProps = state => ({
   insertedMember: state.checker.insertedMember,
   idx: state.checker.idx,
   attached: state.checker.attached,
-  section: state.checker.section
+  section: state.checker.section,
+  currentSheetId: state.checker.currentSheetId,
+  networkCells: state.checker.networkCells
 })
 
 const mapDispatchToProps = dispatch => ({
   insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),
   insertCellMember: (left, right, idx) => dispatch(insertCellMember(left, right, idx)),
   removeCellMember: (idx) => dispatch(removeCellMember(idx)),
-  changeCurrentSection: (section, enName) => dispatch(changeCurrentSection(section, enName)),
-  initMemberData: () => dispatch(initMemberData())
+  initMemberData: () => dispatch(initMemberData()),
+  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
+  insertNetworkCell: addedNetworkCell => dispatch(insertNetworkCell(addedNetworkCell))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddForm);

@@ -1,30 +1,33 @@
 import React, { Component } from 'react';
-import { indexing, changeCurrentSection } from '../../store/modules/checker';
+import { indexing, changeCurrentInfo, sheets } from '../../store/modules/checker';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { cellData } from '../../data/cellData';
 import './Tab.scss';
 
 class Tab extends Component {
   
-  handleClick = async (en_name) => {
-    const { indexing, changeCurrentSection } = this.props;
-    indexing(en_name);
-    const initCells = cellData.find(v => v.en_name === en_name).cells;
-      fetch(`/api/cells/${JSON.stringify(initCells)}`)
-        .then(res => res.json())
-        .then(cells => {
-          changeCurrentSection(cells);
-        })
+  handleClick = async (sheetName) => {
+    const { indexing, changeCurrentInfo, sheets } = this.props;
+    indexing(sheetName);
+    const currentSheetId = sheets.length && sheets.find(v => v.name === sheetName)._id;
+    changeCurrentInfo('currentSheetId', currentSheetId);
+    const networkCells = await fetch(`api/networkCell/${currentSheetId}`).then(res => res.json()).then();
+    const mapped = networkCells.map(v => v.name);
+    changeCurrentInfo('networkCells', networkCells);
+    fetch(`/api/cells/${JSON.stringify(mapped)}`)
+      .then(res => res.json())
+      .then(cells => {
+        changeCurrentInfo('currentSection', cells);
+      });
   }
 
   render() {
-    const { isAdmin, attached } = this.props;
+    const { isAdmin, attached, sheets } = this.props;
     return (
         <ul className="tab">
-          {cellData.map((v, idx) =>{
-            return <li key={idx} className={v.clsName}>
-              <Link to={`/${isAdmin ? 'admin/' : ''}${attached}/${v.path}`} onClick={() => this.handleClick(v.en_name)} className={this.props.idx === v.en_name ? "active" : ""}>{v.name}</Link>
+          {sheets.map((v, idx) =>{
+            return <li key={idx} className="index">
+              <Link to={`/${isAdmin ? 'admin/' : ''}${attached}/${v.name}`} onClick={() => this.handleClick(v.name)} className={this.props.idx === v.name ? "active" : ""}>{v.name}</Link>
           </li>})}
         </ul>
     )
@@ -32,13 +35,16 @@ class Tab extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  currentSection: state.checker.currentSection
+  currentSection: state.checker.currentSection,
+  attached: state.checker.attached,
+  sheets: state.checker.sheets,
+  networkCells: state.checker.networkCells
 });
 
 const mapDispatchToProps = dispatch => ({
   increment: () => dispatch(increment()),
   indexing: idx => dispatch(indexing(idx)),
-  changeCurrentSection: (section, enName) => dispatch(changeCurrentSection(section, enName))
+  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tab);

@@ -1,4 +1,4 @@
-@import "../../_custom.scss";
+@import '../../_custom.scss';
 
 .cellTable {
   margin: 0 auto;
@@ -53,11 +53,22 @@ button.selectBox {
   color: #000;
   background-color: #fff;
 }
-
-button.networkName-box__button {
-  margin-top: 5px;
-  padding: 0 8px;
-  font-size: 12px;
+.cellTable {
+  .networkName-box {
+    p {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    td {
+      padding: 10px;
+    }
+  }
+  .btn.networkName-box__button {
+    width: 50px;
+    margin-top: 5px;
+    padding: 0 8px;
+    font-size: 12px;
+  }
 }
 
 div.selectBox__option {
@@ -85,7 +96,7 @@ div.selectBox__option {
 
 // 프린트용
 .printArea {
-  input[type="checkbox"] {
+  input[type='checkbox'] {
     /* Double-sized Checkboxes */
     -ms-transform: scale(1); /* IE */
     -moz-transform: scale(1); /* FF */
@@ -153,7 +164,7 @@ div.selectBox__option {
   transform: translate3d(0, 0, 0);
 }
 .check:before {
-  content: "";
+  content: '';
   position: absolute;
   top: -15px;
   left: -15px;

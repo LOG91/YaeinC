@@ -54,29 +54,10 @@ let Leader = new Schema({
     }
 });
 
-let NetworkCell = new Schema({
-    name: {
-        type: String
-    },
-    networkLeaderName: {
-        type: String
-    },
-    gender: {
-        type: String
-    },
-    attached: {
-        type: String
-    }
-});
-
 let Church = new Schema({
     name: {
         type: String
-    },
-    sheet: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Sheet'
-    }]
+    }
 });
 
 let Sheet = new Schema({
@@ -94,6 +75,26 @@ let Sheet = new Schema({
         ref: 'NetworkCell'
     }]
 });
+
+let NetworkCell = new Schema({
+    name: {
+        type: String
+    },
+    networkLeaderName: {
+        type: String
+    },
+    gender: {
+        type: String
+    },
+    attached: {
+        type: String
+    },
+    sheetId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Sheet'
+    }
+});
+
 
 const YouthAtt = new Schema({
     att: {
