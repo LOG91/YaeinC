@@ -1,73 +1,56 @@
 @import '../../_custom.scss';
 
-.cellTable {
+.cell-table {
   margin: 0 auto;
   border: 0;
   background-color: #fff;
   width: 90%;
   text-align: center;
-  th,
-  td {
+  &__th {
     border: 1px dotted #eaeaea;
   }
-}
-@include media(mobile) {
-  table {
-    font-size: 9px;
-    // width: 100%;
-  }
-  .section_name_header,
-  .networkName-box {
-    display: none;
-  }
-  svg {
-    width: 12px;
-  }
-  td {
-    padding: 0.2rem;
-  }
+  &__td {
+    border: 1px dotted #eaeaea;
+  } 
 }
 
-.leader_check_header {
-  width: 55%;
-}
-.cell_member_check_header {
-  width: 20%;
-}
-
-.select_box_dawn,
-.select_box_word {
-  border: 0;
-}
-
-select {
-  background: #fff;
-  -moz-appearance: none; /* Firefox */
-  -webkit-appearance: none; /* Safari and Chrome */
-  appearance: none;
-}
-
-button.selectBox {
-  font-size: 0.7rem;
-  padding: 0 0.4rem;
-  color: #000;
-  background-color: #fff;
-}
-.cellTable {
-  .networkName-box {
-    p {
-      font-size: 14px;
-      font-weight: 500;
-    }
-    td {
-      padding: 10px;
-    }
+.network-box {
+  &__p {
+    font-size: 14px;
+    font-weight: 500;
   }
-  .btn.networkName-box__button {
+  &__td {
+    border: 1px dotted #eaeaea;
+    padding: 10px;
+  }
+  .btn.network-box__button {
     width: 50px;
     margin-top: 5px;
     padding: 0 8px;
     font-size: 12px;
+    &--add-network {
+      width: 100px;
+    }
+  }
+}
+
+@include media(mobile) {
+  .cell-table {
+    font-size: 9px;
+    .cell-table__th {
+      &--section-name {
+        display: none;
+      }
+    }
+    .cell-table__td {
+      padding: 0.2rem;
+    }
+    .network-box {
+      display: none;
+    }
+    .check__svg {
+      width: 12px;
+    }
   }
 }
 
@@ -91,58 +74,6 @@ div.selectBox__option {
   }
   div.selectBox__option {
     font-size: 10px;
-  }
-}
-
-// 프린트용
-.printArea {
-  input[type='checkbox'] {
-    /* Double-sized Checkboxes */
-    -ms-transform: scale(1); /* IE */
-    -moz-transform: scale(1); /* FF */
-    -webkit-transform: scale(1); /* Safari and Chrome */
-    -o-transform: scale(1); /* Opera */
-  }
-  font-size: 12px;
-
-  table {
-    margin: 0 auto;
-    border: 0;
-    background-color: #fff;
-    width: 90%;
-  }
-
-  th,
-  td {
-    padding: 0;
-    border-left: 0;
-    border-right: 0;
-    border-top: 0;
-  }
-
-  .leader_check_header {
-    width: 55%;
-  }
-  .cell_member_check_header {
-    width: 20%;
-  }
-
-  .select_box_dawn,
-  .select_box_word {
-    font-size: 0.7rem;
-    border: 0;
-    width: 40px;
-  }
-
-  select {
-    font-size: 0.9rem;
-    -webkit-appearance: button;
-  }
-  .check:before {
-    top: -3px;
-    left: -3px;
-    width: 24px;
-    height: 24px;
   }
 }
 
@@ -220,4 +151,49 @@ input:checked + .check svg polyline {
   stroke-dashoffset: 42;
   transition: all 0.2s linear;
   transition-delay: 0.15s;
+}
+
+// ****************** 프린트용 ********************
+.print-area.cell-table {
+  input[type='checkbox'] {
+    /* Double-sized Checkboxes */
+    -ms-transform: scale(1); /* IE */
+    -moz-transform: scale(1); /* FF */
+    -webkit-transform: scale(1); /* Safari and Chrome */
+    -o-transform: scale(1); /* Opera */
+  }
+  font-size: 12px;
+  margin: 0 auto;
+  border: 0;
+  background-color: #fff;
+  width: 90%;
+  .cell-table__th {
+    padding: 0;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    &--leader-check {
+      width: 55%;
+    }
+    &--member-check {
+      width: 20%;
+    }
+  }
+  .cell-table__td {
+    padding: 0;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+  }
+
+  .cell_member_check_header {
+    width: 20%;
+  }
+
+  .check:before {
+    top: -3px;
+    left: -3px;
+    width: 24px;
+    height: 24px;
+  }
 }

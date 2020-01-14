@@ -70,27 +70,26 @@ class CellTable extends Component {
 
   render() {
     const { isAdmin, currentSection } = this.props;
-    console.log(currentSection, '커런트섹션');
     const { clickedCellInfo, cellIndex } = this.state;
     return (
-      <table className={isAdmin ? "printArea cellTable" : "cellTable"} border="1" cellPadding="10">
+      <table className={isAdmin ? "print-area cell-table" : "cell-table"} border="1" cellPadding="10">
         <tbody>
           <tr>
-            <th rowSpan="2" className="section_name_header" onClick={() => this.re('israel')}>네트워크</th>
-            <th rowSpan="2" className="leader_nam버e_header" onClick={this.onPrint}>리더</th>
-            <th colSpan="5" className="leader_check_header">리더 체크리스트</th>
-            <th rowSpan="2" className="cell_member_name_header">셀원</th>
-            <th colSpan="3" className="cell_member_check_header">셀원 체크리스트</th>
+            <th rowSpan="2" className="cell-table__th--section-name" onClick={() => this.re('israel')}>네트워크</th>
+            <th rowSpan="2" className="cell-table__th--leader-name" onClick={this.onPrint}>리더</th>
+            <th colSpan="5" className="cell-table__th--leader-check">리더 체크리스트</th>
+            <th rowSpan="2" className="cell-table__th cell_member_name_header">셀원</th>
+            <th colSpan="3" className="cell-table__th--member-check">셀원 체크리스트</th>
           </tr>
           <tr>
-            <td>새벽</td>
-            <td>말씀</td>
-            <td>셀</td>
-            <td>주일</td>
-            <td>청년</td>
-            <td>셀</td>
-            <td>주일</td>
-            <td>청년</td>
+            <td className="cell-table__td">새벽</td>
+            <td className="cell-table__td">말씀</td>
+            <td className="cell-table__td">셀</td>
+            <td className="cell-table__td">주일</td>
+            <td className="cell-table__td">청년</td>
+            <td className="cell-table__td">셀</td>
+            <td className="cell-table__td">주일</td>
+            <td className="cell-table__td">청년</td>
           </tr>
           {renderCellList({
             isAdmin,
@@ -103,7 +102,7 @@ class CellTable extends Component {
         </tbody>
         {isAdmin ? (
           <div>
-            <button className="btn btn-outline-dark networkName-box__button" onClick={() => this.handleAddLeader(null)}>네트워크 추가</button>
+            <button className="btn btn-outline-dark networkName-box__button--add-network" onClick={() => this.handleAddLeader(null)}>네트워크 추가</button>
           </div>) : null}
         {this.state.modalOpend ?
           <FortalModal>

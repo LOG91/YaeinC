@@ -1,4 +1,5 @@
 import React from 'react';
+import './DropDown.scss';
 
 export const CountDropDown = ({ handler, length, leaderInfo, option, leaderIndex }) => {
   const options = Array(length).fill(0).map((cv, idx) => {
@@ -11,9 +12,9 @@ export const CountDropDown = ({ handler, length, leaderInfo, option, leaderIndex
   });
 
   return (
-    <div className="dropdown">
+    <div className="dropdown-box">
       <button
-        className="btn btn-secondary dropdown-toggle selectBox"
+        className="btn btn-secondary dropdown-toggle dropdown-box__button"
         type="button"
         id="dropdownMenuButton"
         data-toggle="dropdown"

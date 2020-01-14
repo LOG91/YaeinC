@@ -4,8 +4,8 @@ import { CountDropDown } from '../DropDown';
 
 function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin }) {
   // if (!currentSection) return <div>아직 데이터가 없습니다😨</div>;
-  const f = currentSection.map(v=> v+1);
-  console.log(currentSection,f);
+  const f = currentSection.map(v => v + 1);
+  console.log(currentSection, f);
   const mappedByNetwork = currentSection.map((network, idx) => {
     if (!network) return;
     const networkName = network.length ? network[0].cellNameKr : '';
@@ -27,17 +27,17 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
     return (
       <Fragment key={idxForKey}>
         {idxForKey === 0 ? (
-          <tr className="networkName-box">
-            <td
+          <tr className="network-box">
+            <td className="network-box__td"
               rowSpan={all_members + 1}>
-              <p>{networkName}</p>
-              {isAdmin ? <button className="btn btn-outline-dark networkName-box__button" onClick={e => handleAddLeader(leader, idx)}>추가</button> : null}
+              <p className="network-box__p">{networkName}</p>
+              {isAdmin ? <button className="btn btn-outline-dark network-box__button" onClick={e => handleAddLeader(leader, idx)}>추가</button> : null}
             </td>
           </tr>
         ) : null}
         <tr className={evenClsName}>
-          <td rowSpan={MEMBER_CNT}>{leader.name}</td>
-          <td rowSpan={MEMBER_CNT}>
+          <td className="cell-table__td" rowSpan={MEMBER_CNT}>{leader.name}</td>
+          <td className="cell-table__td" rowSpan={MEMBER_CNT}>
             <CountDropDown
               handler={handleCount}
               length={6}
@@ -46,7 +46,7 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
               option={'dawn'}
             />
           </td>
-          <td rowSpan={MEMBER_CNT}>
+          <td className="cell-table__td" rowSpan={MEMBER_CNT}>
             <CountDropDown
               handler={handleCount}
               length={3}
@@ -55,26 +55,26 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
               option={'word'}
             />
           </td>
-          <td rowSpan={MEMBER_CNT}>
+          <td className="cell-table__td" rowSpan={MEMBER_CNT}>
             <CheckBox checkedValue={leader.cc} onCheck={() => handleCheck(leader._id, idx, 'cc')} />
           </td>
-          <td rowSpan={MEMBER_CNT}>
+          <td className="cell-table__td" rowSpan={MEMBER_CNT}>
             <CheckBox checkedValue={leader.mc} onCheck={() => handleCheck(leader._id, idx, 'mc')} />
           </td>
-          <td rowSpan={MEMBER_CNT}>
+          <td className="cell-table__td" rowSpan={MEMBER_CNT}>
             <CheckBox checkedValue={leader.yc} onCheck={() => handleCheck(leader._id, idx, 'yc')} />
           </td>
         </tr>
         {MEMBER_CNT !== 1 ? leader.members.map((member, i) => (
           <tr key={i}>
-            <td rowSpan="1" key={i} className={evenClsName}>{member.name}</td>
-            <td rowSpan="1" className={evenClsName}>
+            <td className="cell-table__td" rowSpan="1" key={i}>{member.name}</td>
+            <td className="cell-table__td" rowSpan="1">
               <CheckBox checkedValue={member.cc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'cc')} />
             </td>
-            <td rowSpan="1" className={evenClsName}>
+            <td className="cell-table__td" rowSpan="1">
               <CheckBox checkedValue={member.mc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'mc')} />
             </td>
-            <td rowSpan="1" className={evenClsName}>
+            <td className="cell-table__td" rowSpan="1">
               <CheckBox checkedValue={member.yc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'yc')} />
             </td>
           </tr>
