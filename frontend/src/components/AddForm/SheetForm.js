@@ -9,11 +9,7 @@ import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 class SheetForm extends Component {
 
   componentDidMount() {
-    // const { cellInfo } = this.props;
     this.handleChange('attached', this.props.attached);
-    // this.handleChange('section', this.props.section);
-    // if (!cellInfo) return;
-    // this.initInsertedMember({ info: cellInfo, wish: ['cellNameKr', 'cellName', 'section', 'gender'], fn: this.handleChange });
   };
 
   componentWillUnmount() {

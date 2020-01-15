@@ -28,6 +28,12 @@ const addLeader = ({ name, gender, age, attached, isNetworkLeader, isLeader,
   )
 };
 
+const addChurch = ({ name }) => {
+  return (
+    { name }
+  )
+};
+
 const addSheet = ({ name, section, attached, cells = [] }) => {
   return (
     {
@@ -59,13 +65,29 @@ router.post('/reset', (req, res) => {
   res.send({});
 });
 
+router.post('/church', (req, res) => {
+  const { name } = req.body;
+  const church = new Church(addChurch({ name }));
+  church.save((err, church) => {
+    if (err) console.error(err);
+    res.send(church);
+  })
+});
+
+router.get('/church/all', (req, res) => {
+  Church.find({}).then(church => {
+    console.log(church);
+    res.send(church);
+  });
+});
+
 router.get('/networkCell/:sheetId', (req, res) => {
   const sheetId = req.params.sheetId;
   NetworkCell.find({ sheetId }).then(networkCells => {
     console.log(networkCells, '네트워크셀');
     res.send(networkCells);
-  })
-})
+  });
+});
 
 router.post('/networkCell', (req, res) => {
   const { name, networkLeaderName, gender, attached, sheetId } = req.body;
@@ -87,9 +109,7 @@ router.post('/sheet', (req, res) => {
 
 router.get('/sheet/:attached', (req, res) => {
   const attached = req.params.attached;
-  console.log(attached);
   Sheet.find({ attached }).then(sheet => {
-    console.log(sheet);
     res.send(sheet);
   });
 });

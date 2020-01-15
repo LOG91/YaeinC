@@ -39,6 +39,7 @@ const initialState = {
   sheets: [],
   currentSheetId: '',
   networkCells: [],
+  currentChurches: [],
   insertedMember: {
     name: '',
     age: '',

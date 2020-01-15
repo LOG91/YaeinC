@@ -4,8 +4,8 @@ import Tab from '../components/Tab/Tab';
 import { attached, indexing, changeCurrentAttached, changeCurrentInfo, sheets, currentSheetId, networkCells } from '../store/modules/checker';
 import { connect } from 'react-redux';
 
-import FortalModal from '../components/Modal/FortalModal';
-import Modal from '../components/Modal/Modal';
+// import FortalModal from '../components/Modal/FortalModal';
+import { Modal, FortalModal} from '../components/Modal';
 import ConfirmModal from '../components/Modal/ConfirmModal';
 import SheetForm from '../components/AddForm/SheetForm';
 
@@ -27,14 +27,12 @@ class Home extends Component {
   shouldComponentUpdate() {
     const { match, changeCurrentInfo, sheets } = this.props;
     const { name: current, attached } = match.params;
-    console.log(match.path, attached);
     if (!current) {
       changeCurrentInfo('attached', attached);
       return true;
     }
     changeCurrentInfo('idx', current);
     sheets.length && changeCurrentInfo('currentSheetId', sheets.find(v => v.name === current)._id);
-    console.log('커런트1111')
     changeCurrentInfo('section', mapSectionByEnName(current));
 
     changeCurrentInfo('attached', attached);
@@ -49,7 +47,6 @@ class Home extends Component {
     }).then(res => res.json())
       .then();
     changeCurrentInfo('sheets', sheets);
-    console.log(current,'커런트');
     if (!current) {
       return;
     }
