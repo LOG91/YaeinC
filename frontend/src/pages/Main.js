@@ -6,6 +6,10 @@ import { insertMemberData, initMemberData, insertedMember, changeCurrentInfo } f
 import { Modal, FortalModal } from '../components/Modal'
 import ChurchForm from '../components/AddForm/ChurchForm';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+
+
 class Main extends PureComponent {
   state = {
     modalOpend: false
@@ -36,18 +40,19 @@ class Main extends PureComponent {
       <>
         {churchList.map(church => {
           return (
-            <div className="card" style={{ "width": "18rem" }}>
+            <div className="card card-box" style={{ "width": "18rem" }}>
               <div className="card-body">
-                <h5 className="card-title">{church}</h5>
-                <a href="#" className="btn btn-outline-dark">출석체크</a>
+                <h5 className="card-title card-box__title">{church}</h5>
+                <h5 className="card-title card-box__subtitle">청년부</h5>
+                {/* <a href="#" className="btn btn-outline-dark">출석체크</a> */}
               </div>
             </div>
           )
         })}
-        <div className="card" style={{ "width": "18rem" }}>
+        <div className="card card-box" style={{ "width": "18rem" }}>
           <div className="card-body">
-            <h5 className="card-title">페이지 추가</h5>
-            <a href="#" className="btn btn-outline-dark" onClick={this.handleToggleModal}>페이지 추가</a>
+            <div className="icon-plus blue w25" />
+            <div className="card-box__p" onClick={this.handleToggleModal}>페이지 추가</div>
           </div>
         </div>
       </>

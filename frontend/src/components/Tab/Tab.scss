@@ -14,8 +14,8 @@
       text-decoration: none;
       color: #5d5d5d;
       &.active {
-        border-bottom: 1px solid #9775fa;
-        color: #9775fa;
+        border-bottom: 1px solid #7b6ea2;
+        color: #7b6ea2;
       }
     }
     @include media(mobile) {
@@ -25,7 +25,7 @@
     }
     &:hover {
       a {
-        color: #9775fa;
+        color: #7b6ea2;
       }
     }
     
