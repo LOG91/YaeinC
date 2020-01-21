@@ -3,6 +3,7 @@
 .tab {
   display: flex;
   margin: 0;
+  margin-bottom: 10px;
   justify-content: center;
   font-size: 14px;
   .index {
@@ -12,10 +13,11 @@
       display: block;
       padding: 1rem 2rem;
       text-decoration: none;
-      color: #5d5d5d;
+      color: #fff;
       &.active {
-        border-bottom: 1px solid #7b6ea2;
-        color: #7b6ea2;
+        border-bottom: 2px solid #fff;
+        color: #444;
+        font-weight: 600;
       }
     }
     @include media(mobile) {
@@ -25,7 +27,8 @@
     }
     &:hover {
       a {
-        color: #7b6ea2;
+        color: #444;
+        border-bottom: 2px solid #fff;
       }
     }
     

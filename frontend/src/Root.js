@@ -8,11 +8,11 @@ const Root = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path="/admin" component={Admin}></Route>
-        <div>
+        {/* <Route exact path="/admin" component={Home}></Route> */}
+        <div className="main-container">
           <nav className="nav-box">
             <h1 className="logo-box">
-              <div className="logo-box__desc">Yaein Church</div><FontAwesomeIcon className="logo-box__logo" icon={faCross} />
+              <a href="/"><div className="logo-box__desc">Yaein Church</div></a><FontAwesomeIcon className="logo-box__logo" icon={faCross} />
             </h1>
             <ul className="nav-box__list">
               <li className="navbox__item">헬로</li>
@@ -23,8 +23,7 @@ const Root = () => {
               <img href="#" src="https://yt3.ggpht.com/a/AGF-l7-5PXRbQItsYW-hUDO1d7S2H6YSmlSYD7C47Q=s288-c-k-c0xffffffff-no-rj-mo" className="logo-box__image" />
             </div>
           </nav>
-          <h3 className="title"><a href="/">Yaein 출석부</a></h3>
-          <div className="container">
+          <div>
             <BrowserRouter>
               <Switch>
                 <Route exact path="/" component={Main} />

@@ -5,7 +5,7 @@ import { attached, indexing, changeCurrentAttached, changeCurrentInfo, sheets, c
 import { connect } from 'react-redux';
 
 // import FortalModal from '../components/Modal/FortalModal';
-import { Modal, FortalModal} from '../components/Modal';
+import { Modal, FortalModal } from '../components/Modal';
 import ConfirmModal from '../components/Modal/ConfirmModal';
 import SheetForm from '../components/AddForm/SheetForm';
 
@@ -106,14 +106,16 @@ class Home extends Component {
   }
 
   render() {
-    console.log('뭐가먼저일까 render');
-    const { match, attached } = this.props;
+    const { match, attached, sheets } = this.props;
     const isAdmin = match.url.match(/admin/g);
     return (
-      <div>
+      <>
+      <h3 className="title"><a href="/">Yaein 출석부</a>{isAdmin ? <div className="admin-title">admin</div> : null}</h3>
         {isAdmin ? (
           <div className="edit-box">
-            <div className="button-box"><button className="btn btn-outline-dark edit-box__button" onClick={this.handleAddSheet}>시트 추가</button></div>
+            <div className="button-box">
+              {sheets.length === 0 ? (<div className="button-box__button--add-notify">시트를 추가하세요</div>) : null}
+              <button className={`btn btn-outline-dark edit-box__button ${sheets.length===0 ? 'flashit':''}`} onClick={this.handleAddSheet}>시트 추가</button></div>
             <div className="button-box"><button className="btn btn-outline-dark edit-box__button" onClick={this.handlePrint}>프린트</button></div>
             <div className="button-box"><button className="btn btn-outline-dark edit-box__button" onClick={() => this.handleToggleModal({ action: 'init' })}>초기화</button></div>
           </div>
@@ -134,7 +136,7 @@ class Home extends Component {
             </Modal>
           </FortalModal> : null
         }
-      </div>
+      </>
     )
   }
 }

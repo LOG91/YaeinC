@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './CellTable.scss';
-import { indexing, changeCurrentSection, checkWorship, checkMemberWorship, countContent, currentSheetId } from '../../store/modules/checker';
+import { indexing, changeCurrentSection, checkWorship, checkMemberWorship, countContent, sheets } from '../../store/modules/checker';
 import { connect } from 'react-redux';
 
 import renderCellList from './CellListTable'
@@ -69,7 +69,7 @@ class CellTable extends Component {
 
 
   render() {
-    const { isAdmin, currentSection } = this.props;
+    const { isAdmin, currentSection, sheets } = this.props;
     const { clickedCellInfo, cellIndex } = this.state;
     return (
       <table className={isAdmin ? "print-area cell-table" : "cell-table"} border="1" cellPadding="10">
@@ -102,7 +102,9 @@ class CellTable extends Component {
         </tbody>
         {isAdmin ? (
           <div>
-            <button className="btn btn-outline-dark networkName-box__button--add-network" onClick={() => this.handleAddLeader(null)}>네트워크 추가</button>
+            {sheets.length > 0 ?
+              (<button className="btn btn-outline-dark networkName-box__button--add-network" onClick={() => this.handleAddLeader(null)}>네트워크 추가</button>)
+              : (<div>😰시트가 없습니다 시트를 먼저 추가하세요</div>)}
           </div>) : null}
         {this.state.modalOpend ?
           <FortalModal>
@@ -122,7 +124,7 @@ const mapStateToProps = (state) => {
     members: state.checker.members,
     idx: state.checker.idx,
     currentSection: state.checker.currentSection,
-    currentSheetId: state.checker.currentSheetId
+    sheets: state.checker.sheets
   })
 };
 

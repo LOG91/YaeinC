@@ -14,11 +14,13 @@ class Main extends PureComponent {
   state = {
     modalOpend: false
   };
+
   async componentDidMount() {
     const { changeCurrentInfo } = this.props;
     const churchList = await fetch('/api/church/all').then(res => res.json()).then();
     changeCurrentInfo('currentChurches', churchList);
   }
+
   addChurch = () => {
     const { insertedMember: { church } } = this.props;
     fetch('/api/church', {
@@ -35,17 +37,19 @@ class Main extends PureComponent {
     this.props.insertMemberData(key, value);
   }
 
-  spreadChurchList = (churchList) => {
+  spreadChurchList = ({ churches, isAdmin }) => {
     return (
       <>
-        {churchList.map(church => {
+        {churches.map(church => {
           return (
             <div className="card card-box" style={{ "width": "18rem" }}>
-              <div className="card-body">
-                <h5 className="card-title card-box__title">{church}</h5>
-                <h5 className="card-title card-box__subtitle">청년부</h5>
-                {/* <a href="#" className="btn btn-outline-dark">출석체크</a> */}
-              </div>
+              <a href={isAdmin ? `admin/${church}` : church}>
+                <div className="card-body">
+                  <h5 className="card-title card-box__title">{church}</h5>
+                  <h5 className="card-title card-box__subtitle">청년부</h5>
+                  {/* <a href="#" className="btn btn-outline-dark">출석체크</a> */}
+                </div>
+              </a>
             </div>
           )
         })}
@@ -64,10 +68,12 @@ class Main extends PureComponent {
 
   render() {
     const { match: { path }, currentChurches } = this.props;
+    const isAdmin = path.match(/admin/) ? true : false;
     return (
       <>
+        <h3 className="title"><a href="/">Yaein 출석부</a>{isAdmin ? <div className="admin-title">admin</div> : null}</h3>
         <div className="card-wrapper">
-          {this.spreadChurchList(currentChurches.map(v => v.name))}
+          {this.spreadChurchList({ churches: currentChurches.map(v => v.name), isAdmin })}
         </div>
         {this.state.modalOpend ?
           (<FortalModal>

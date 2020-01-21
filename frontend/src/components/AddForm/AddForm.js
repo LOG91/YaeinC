@@ -44,7 +44,6 @@ class AddForm extends Component {
         .then(res => res.json())
         .then(cells => {
 
-          // changeCurrentInfo('currentSection', cells);
         });
     });
 
@@ -65,10 +64,6 @@ class AddForm extends Component {
           fetch(`/api/cells/${JSON.stringify(networkCellsNames)}`)
             .then(res => res.json())
             .then(cell => {
-              console.log(cell);
-              // insertNetworkCell(cell);
-              console.log(networkCells);
-
               changeCurrentInfo('currentSection', cell);
             });
         });

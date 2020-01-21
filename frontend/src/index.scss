@@ -13,6 +13,7 @@ ul {
 .nav-box {
   display: flex;
   justify-content: space-between;
+  background-color: #fff;
   &__list {
     display: flex;
   }
@@ -24,33 +25,36 @@ ul {
   margin: 2px 11px;
   &__logo {
     font-size: 25px;
-    color: #fd8181;;
+    color: #fd8181;
   }
   &__image {
     padding: 5px;
-    width: 50px;
+    width: 45px;
   }
   &__desc {
     position: relative;
-    color: #545454;
-    font-size: 23px;
-    top: 11px;
+    color: #91919e;
+    font-size: 30px;
   }
 }
 .title {
-  background-image: url(https://www.warth-schroecken.at/media/anhangbild/friedenskreuz-am-simmel-1.jpg);
-  padding: 5rem;
+  padding: 2rem;
   font-size: 40px;
   text-align: center;
   background-size: 100% 100%;
   a {
     text-decoration: none;
-    color: #7b6ea2;
+    color: #fff;
   }
   a:hover {
     text-decoration: none;
-    color: #7b6ea2;
   }
+}
+.admin-title {
+  font-style: italic;
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffe9ce;
 }
 .root__description {
   text-align: center;
@@ -58,15 +62,16 @@ ul {
   font-weight: 300;
 }
 
-.container {
-  background-color: #f7f7f7;
+.main-container {
+  min-height: 1000px;
+  background-color: #91919e;
 }
 @include media(mobile) {
   .title {
     font-size: 25px;
     padding: 0.5rem;
   }
-  div.container {
+  div.main-container {
     max-width: none;
     padding: 0;
     margin: 0;

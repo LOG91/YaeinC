@@ -28,7 +28,6 @@ class SheetForm extends Component {
 
   addSheet = () => {
     const { onToggleModal, insertedMember: { name, attached, section } } = this.props;
-    console.log(name, attached, section);
     fetch('/api/sheet', {
       method: 'POST',
       headers: {
@@ -49,7 +48,7 @@ class SheetForm extends Component {
         <div>
           <div className="add-form__box">
             <div className="add-form__left">소속</div>
-            <div className="add-form__right">{attached === 'holy' ? 'HOLY 청년부' : '벧엘 청년부'}</div>
+            <div className="add-form__right">{attached}</div>
           </div>
           <div className="add-form__box">
             <div className="add-form__left">지역군</div>

@@ -5,7 +5,7 @@
 .card-box.card {
   border: 1px dashed #a0a0a0;
   margin: 5px;
-  background-color: #f5f5f5;;
+  background-color: #f5f5f5;
 }
 
 .card-box {
@@ -15,6 +15,7 @@
 
   &__title {
     color: #636363;
+    background-color: #ffeacd;
   }
   &__subtitle {
     font-size: 1rem;
@@ -63,6 +64,7 @@
 }
 
 .button-box {
+  position: relative;
   margin: 0.2rem;
   width: 4rem;
   height: 1.5rem;
@@ -73,23 +75,56 @@
     width: 60px;
     padding: 0;
   }
+  &__button--add-notify {
+    position: absolute;
+    font-size: 11px;
+    width: 100px;
+    top: -13px;
+    color: #fff;
+  }
 }
 
+.flashit {
+  -webkit-animation: flash linear 2s infinite;
+  animation: flash linear 2s infinite;
+}
+@-webkit-keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 
 .icon-plus {
   margin: 10px auto;
   width: 47px;
   height: 47px;
   background-color: #bbb;
-  
+
   &.w25 {
     width: 25px;
     height: 25px;
-    
+
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    
+
     &:after {
       width: 18px;
       height: 4px;
@@ -104,30 +139,30 @@
       top: 4px;
     }
   }
-  
+
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
-  
+
   position: relative;
 
-  
-  &:after, &:before {
+  &:after,
+  &:before {
     content: '';
     position: absolute;
-    background: #FFF;
+    background: #fff;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
   }
-  
+
   &:after {
     width: 25px;
     height: 6px;
     left: 11px;
     top: 20px;
   }
-  
+
   &:before {
     width: 6px;
     height: 25px;
