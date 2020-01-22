@@ -26,8 +26,8 @@ class Tab extends Component {
     return (
         <ul className="tab">
           {sheets.map((v, idx) =>{
-            return <li key={idx} className="index">
-              <Link to={`/${isAdmin ? 'admin/' : ''}${attached}/${v.name}`} onClick={() => this.handleClick(v.name)} className={this.props.idx === v.name ? "active" : ""}>{v.name}</Link>
+            return <li key={idx} className={this.props.idx === v.name ? "index active" : "index"}>
+              <Link to={`/${isAdmin ? 'admin/' : ''}${attached}/${v.name}`} onClick={() => this.handleClick(v.name)} >{v.name}</Link>
           </li>})}
         </ul>
     )

@@ -121,10 +121,10 @@ class Home extends Component {
           </div>
         ) : ''}
         <Tab idx={match.params.name} sheets={this.state.sheets} attached={attached} isAdmin={isAdmin ? true : null} />
-        {match.path !== '/holy' && match.path !== '/bethel' ?
+        {match.params.name ?
           <CellTable isAdmin={isAdmin} current={match.params.name} /> :
           <div>
-            <div className="root__description">{match.path.match(/holy/g) ? 'HOLY' : '벧엘'}청년부 출석체크 페이지 :)</div>
+            <div className="root__description">{attached} 출석체크 페이지 :)</div>
             <div className="root__description">🇮🇱🇰🇷🇪🇬🇸🇾🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
           </div>
         }

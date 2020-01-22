@@ -9,16 +9,19 @@
   .index {
     color: #5d5d5d;
     text-align: center;
+    border-bottom: 2px solid #fff;
     a {
       display: block;
       padding: 1rem 2rem;
       text-decoration: none;
       color: #fff;
-      &.active {
-        border-bottom: 2px solid #fff;
+    }
+    &.active {
+      border-bottom: 2px solid #676767;
+      a{
         color: #444;
-        font-weight: 600;
       }
+      font-weight: 600;
     }
     @include media(mobile) {
       a {
@@ -26,14 +29,12 @@
       }
     }
     &:hover {
-      a {
+      a{
         color: #444;
-        border-bottom: 2px solid #fff;
       }
+      border-bottom: 2px solid #676767;
     }
-    
   }
-  
 }
 @include media(mobile) {
   .tab {
