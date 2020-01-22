@@ -11,7 +11,7 @@
   }
   &__td {
     border: 1px dotted #eaeaea;
-  } 
+  }
 }
 
 .network-box {
@@ -52,6 +52,12 @@
     }
     .check__svg {
       width: 12px;
+    }
+  }
+  .networkName-box {
+    &__button.btn.btn-outline-dark {
+      font-size: 10px;
+      padding: 4px;
     }
   }
 }

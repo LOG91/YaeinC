@@ -115,9 +115,9 @@ class Home extends Component {
           <div className="edit-box">
             <div className="button-box">
               {sheets.length === 0 ? (<div className="button-box__button--add-notify">시트를 추가하세요</div>) : null}
-              <button className={`btn btn-outline-dark edit-box__button ${sheets.length === 0 ? 'flashit' : ''}`} onClick={this.handleAddSheet}>시트 추가</button></div>
-            <div className="button-box"><button className="btn btn-outline-dark edit-box__button" onClick={this.handlePrint}>프린트</button></div>
-            <div className="button-box"><button className="btn btn-outline-dark edit-box__button" onClick={() => this.handleToggleModal({ action: 'init' })}>초기화</button></div>
+              <button className={`btn btn-outline-dark button-box__button ${sheets.length === 0 ? 'flashit' : ''}`} onClick={this.handleAddSheet}>시트 추가</button></div>
+            <div className="button-box"><button className="btn btn-outline-dark button-box__button" onClick={this.handlePrint}>프린트</button></div>
+            <div className="button-box"><button className="btn btn-outline-dark button-box__button" onClick={() => this.handleToggleModal({ action: 'init' })}>초기화</button></div>
           </div>
         ) : ''}
         <Tab idx={match.params.name} sheets={this.state.sheets} attached={attached} isAdmin={isAdmin ? true : null} />

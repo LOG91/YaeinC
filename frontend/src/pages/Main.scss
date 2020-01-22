@@ -1,3 +1,5 @@
+@import '../custom';
+
 .card-wrapper {
   display: flex;
   justify-content: center;
@@ -69,7 +71,7 @@
   margin: 0.2rem;
   width: 4rem;
   height: 1.5rem;
-  .edit-box__button {
+  &__button.btn {
     margin: 0.2rem;
     cursor: pointer;
     font-size: 13px;
@@ -84,6 +86,19 @@
     color: #fff;
   }
 }
+
+@include media(mobile) {
+  .button-box {
+    margin: 0;
+    width: 60px;
+    &__button.btn {
+      font-size: 11px;
+      width: 50px;
+    }
+  }
+}
+
+
 
 .flashit {
   -webkit-animation: flash linear 2s infinite;

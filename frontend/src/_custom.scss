@@ -1,5 +1,14 @@
-// @import "custom";
-// @import "~bootstrap/scss/bootstrap";
+a:hover {
+  text-decoration: none;
+}
+p {
+  margin-bottom: 0;
+}
+ul {
+  list-style: none;
+  padding: 0;
+}
+
 $main-color: #91919e;
 
 $i-desktop: 1440px;
