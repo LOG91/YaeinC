@@ -110,12 +110,12 @@ class Home extends Component {
     const isAdmin = match.url.match(/admin/g);
     return (
       <>
-      <h3 className="title"><a href="/">Yaein 출석부</a>{isAdmin ? <div className="admin-title">admin</div> : null}</h3>
+        <h3 className="title"><a href={isAdmin ? '/admin' : '/'}>Yaein 출석부</a>{isAdmin ? <div className="admin-title">admin</div> : null}</h3>
         {isAdmin ? (
           <div className="edit-box">
             <div className="button-box">
               {sheets.length === 0 ? (<div className="button-box__button--add-notify">시트를 추가하세요</div>) : null}
-              <button className={`btn btn-outline-dark edit-box__button ${sheets.length===0 ? 'flashit':''}`} onClick={this.handleAddSheet}>시트 추가</button></div>
+              <button className={`btn btn-outline-dark edit-box__button ${sheets.length === 0 ? 'flashit' : ''}`} onClick={this.handleAddSheet}>시트 추가</button></div>
             <div className="button-box"><button className="btn btn-outline-dark edit-box__button" onClick={this.handlePrint}>프린트</button></div>
             <div className="button-box"><button className="btn btn-outline-dark edit-box__button" onClick={() => this.handleToggleModal({ action: 'init' })}>초기화</button></div>
           </div>

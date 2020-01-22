@@ -1,1 +1,1 @@
-export { CountDropDown, CellDropDown } from './DropDown';
+export { CountDropDown, BasicDropDown } from './DropDown';

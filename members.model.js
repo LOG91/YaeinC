@@ -57,6 +57,9 @@ let Leader = new Schema({
 let Church = new Schema({
     name: {
         type: String
+    },
+    attached: {
+        type: String
     }
 });
 

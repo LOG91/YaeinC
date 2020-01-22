@@ -28,9 +28,11 @@
     margin-top: 5px;
     padding: 0 8px;
     font-size: 12px;
-    &--add-network {
-      width: 100px;
-    }
+  }
+}
+.networkName-box {
+  &__button.btn.btn-outline-dark {
+    font-size: 13px;
   }
 }
 

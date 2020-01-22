@@ -2,12 +2,9 @@ import React, { PureComponent } from 'react';
 import './Main.scss'
 
 import { connect } from 'react-redux';
-import { insertMemberData, initMemberData, insertedMember, changeCurrentInfo } from '../store/modules/checker';
+import { insertMemberData, initMemberData, changeCurrentInfo, churches } from '../store/modules/checker';
 import { Modal, FortalModal } from '../components/Modal'
 import ChurchForm from '../components/AddForm/ChurchForm';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 
 class Main extends PureComponent {
@@ -18,19 +15,22 @@ class Main extends PureComponent {
   async componentDidMount() {
     const { changeCurrentInfo } = this.props;
     const churchList = await fetch('/api/church/all').then(res => res.json()).then();
-    changeCurrentInfo('currentChurches', churchList);
+    changeCurrentInfo('churches', churchList);
   }
 
   addChurch = () => {
-    const { insertedMember: { church } } = this.props;
+    const { changeCurrentInfo, insertedMember: { church, attached }, churches } = this.props;
     fetch('/api/church', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name: church })
+      body: JSON.stringify({ name: church, attached })
     }).then(res => {
-      console.log(res);
+      this.handleToggleModal();
+      return res.json()
+    }).then(res => {
+      changeCurrentInfo('churches', [...churches, res]);
     })
   }
   handleChange = (key, value) => {
@@ -40,25 +40,25 @@ class Main extends PureComponent {
   spreadChurchList = ({ churches, isAdmin }) => {
     return (
       <>
-        {churches.map(church => {
+        {churches.map(({ name, attached }) => {
           return (
-            <div className="card card-box" style={{ "width": "18rem" }}>
-              <a href={isAdmin ? `admin/${church}` : church}>
+            <div className="card card-box">
+              <a href={isAdmin ? `admin/${name}` : name}>
                 <div className="card-body">
-                  <h5 className="card-title card-box__title">{church}</h5>
-                  <h5 className="card-title card-box__subtitle">청년부</h5>
-                  {/* <a href="#" className="btn btn-outline-dark">출석체크</a> */}
+                  <h5 className="card-title card-box__title">{name}</h5>
+                  <h5 className="card-title card-box__subtitle">{attached}</h5>
                 </div>
               </a>
             </div>
           )
         })}
-        <div className="card card-box" style={{ "width": "18rem" }}>
+        {isAdmin ? (<div className="card card-box" onClick={this.handleToggleModal}>
           <div className="card-body">
             <div className="icon-plus blue w25" />
-            <div className="card-box__p" onClick={this.handleToggleModal}>페이지 추가</div>
+            <div className="card-box__p">페이지 추가</div>
           </div>
-        </div>
+        </div>) : null}
+
       </>
     );
   };
@@ -67,13 +67,13 @@ class Main extends PureComponent {
   }
 
   render() {
-    const { match: { path }, currentChurches } = this.props;
+    const { match: { path }, churches } = this.props;
     const isAdmin = path.match(/admin/) ? true : false;
     return (
       <>
-        <h3 className="title"><a href="/">Yaein 출석부</a>{isAdmin ? <div className="admin-title">admin</div> : null}</h3>
+        <h3 className="title"><a href={isAdmin ? '/admin' : '/'}>Yaein 출석부</a>{isAdmin ? <div className="admin-title">admin</div> : null}</h3>
         <div className="card-wrapper">
-          {this.spreadChurchList({ churches: currentChurches.map(v => v.name), isAdmin })}
+          {this.spreadChurchList({ churches, isAdmin })}
         </div>
         {this.state.modalOpend ?
           (<FortalModal>
@@ -89,7 +89,7 @@ class Main extends PureComponent {
 
 const mapStateToProps = state => ({
   insertedMember: state.checker.insertedMember,
-  currentChurches: state.checker.currentChurches
+  churches: state.checker.churches
 })
 
 const mapDispatchToProps = dispatch => ({

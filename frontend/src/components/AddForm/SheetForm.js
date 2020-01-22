@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import './AddForm.scss';
 import { connect } from 'react-redux';
-import { changeCurrentSection, insertMemberData, insertCellMember, removeCellMember, initMemberData, insertedMember } from '../../store/modules/checker';
+import { changeCurrentInfo, insertMemberData, insertCellMember, removeCellMember, initMemberData, insertedMember, sheets } from '../../store/modules/checker';
+
+import { BasicDropDown } from '../DropDown';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +11,7 @@ import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 class SheetForm extends Component {
 
   componentDidMount() {
-    this.handleChange('attached', this.props.attached);
+    this.initData();
   };
 
   componentWillUnmount() {
@@ -20,14 +22,13 @@ class SheetForm extends Component {
     this.props.insertMemberData(key, value);
   }
 
-  initInsertedMember = ({ info, wish, fn }) => {
-    wish.forEach(item => {
-      fn(item, info[item]);
-    })
-  };
+  initData() {
+    this.handleChange('attached', this.props.attached);
+    this.handleChange('section', '이스라엘');
+  }
 
   addSheet = () => {
-    const { onToggleModal, insertedMember: { name, attached, section } } = this.props;
+    const { onToggleModal, insertedMember: { name, attached, section }, changeCurrentInfo, sheets } = this.props;
     fetch('/api/sheet', {
       method: 'POST',
       headers: {
@@ -37,6 +38,8 @@ class SheetForm extends Component {
     }).then(res => {
       onToggleModal({ action: 'addSheet' });
       return res.json();
+    }).then(res => {
+      changeCurrentInfo('sheets', [...sheets, res]);
     });
   }
 
@@ -52,7 +55,7 @@ class SheetForm extends Component {
           </div>
           <div className="add-form__box">
             <div className="add-form__left">지역군</div>
-            <input className="add-form__right--input" name="section" onChange={({ target }) => this.handleChange(target.name, target.value)} />
+            <BasicDropDown kind="section" list={['이스라엘', '아랍', '아시아']} handler={this.handleChange} initialValue={insertedMember.section} />
           </div>
           <div className="add-form__box">
             <div className="add-form__left">시트 이름</div>
@@ -73,14 +76,15 @@ const mapStateToProps = state => ({
   insertedMember: state.checker.insertedMember,
   idx: state.checker.idx,
   attached: state.checker.attached,
-  section: state.checker.section
+  section: state.checker.section,
+  sheets: state.checker.sheets
 })
 
 const mapDispatchToProps = dispatch => ({
   insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),
   insertCellMember: (left, right, idx) => dispatch(insertCellMember(left, right, idx)),
   removeCellMember: (idx) => dispatch(removeCellMember(idx)),
-  changeCurrentSection: (section, enName) => dispatch(changeCurrentSection(section, enName)),
+  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
   initMemberData: () => dispatch(initMemberData())
 })
 

@@ -101,9 +101,9 @@ class CellTable extends Component {
           })}
         </tbody>
         {isAdmin ? (
-          <div>
+          <div className="networkName-box">
             {sheets.length > 0 ?
-              (<button className="btn btn-outline-dark networkName-box__button--add-network" onClick={() => this.handleAddLeader(null)}>네트워크 추가</button>)
+              (<button className="btn btn-outline-dark networkName-box__button" onClick={() => this.handleAddLeader(null)}>네트워크 추가</button>)
               : (<div>😰시트가 없습니다 시트를 먼저 추가하세요</div>)}
           </div>) : null}
         {this.state.modalOpend ?

@@ -28,9 +28,12 @@ const addLeader = ({ name, gender, age, attached, isNetworkLeader, isLeader,
   )
 };
 
-const addChurch = ({ name }) => {
+const addChurch = ({ name, attached }) => {
   return (
-    { name }
+    {
+      name,
+      attached
+    }
   )
 };
 
@@ -66,8 +69,8 @@ router.post('/reset', (req, res) => {
 });
 
 router.post('/church', (req, res) => {
-  const { name } = req.body;
-  const church = new Church(addChurch({ name }));
+  const { name, attached } = req.body;
+  const church = new Church(addChurch({ name, attached }));
   church.save((err, church) => {
     if (err) console.error(err);
     res.send(church);

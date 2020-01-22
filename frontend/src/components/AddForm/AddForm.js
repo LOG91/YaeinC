@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import './AddForm.scss';
 import { connect } from 'react-redux';
 import { insertMemberData, insertCellMember, removeCellMember, initMemberData, currentSheetId, networkCells, changeCurrentInfo, insertNetworkCell } from '../../store/modules/checker';
-import { cellData } from '../../data/cellData';
-import { CellDropDown } from '../DropDown';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
