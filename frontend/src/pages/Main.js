@@ -30,7 +30,7 @@ class Main extends PureComponent {
       this.handleToggleModal();
       return res.json()
     }).then(res => {
-      changeCurrentInfo('churches', [...churches, res]);
+      changeCurrentInfo('churches',[...churches, res]);
     })
   }
   handleChange = (key, value) => {

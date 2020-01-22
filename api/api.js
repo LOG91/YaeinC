@@ -78,8 +78,9 @@ router.post('/church', (req, res) => {
 });
 
 router.get('/church/all', (req, res) => {
+  console.log(req, '리퀘스트');
   Church.find({}).then(church => {
-    console.log(church);
+    console.log(church, '처치');
     res.send(church);
   });
 });
