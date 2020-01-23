@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './AddForm.scss';
 import { connect } from 'react-redux';
-import { insertMemberData, insertCellMember, removeCellMember, initMemberData, currentSheetId, networkCells, changeCurrentInfo, insertNetworkCell } from '../../store/modules/checker';
+import { insertMemberData, insertCellMember, removeCellMember, initMemberData, currentSheetId, networkCells, currentSection, changeCurrentInfo, insertNetworkCell } from '../../store/modules/checker';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +9,7 @@ import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 class AddForm extends Component {
 
   componentDidMount() {
-    const { cellInfo } = this.props;
+    const { cellInfo, cellIndex } = this.props;
     this.handleChange('attached', this.props.attached);
     this.handleChange('section', this.props.section);
     if (!cellInfo) return;
@@ -24,8 +24,9 @@ class AddForm extends Component {
       fn(item, info[item]);
     })
   }
-  addNetworkCell = async () => {
-    const { insertedMember, onToggleModal, currentSheetId, cellInfo, networkCells, changeCurrentInfo, insertNetworkCell } = this.props;
+  addNetworkCell = async ({ isAddNetwork }) => {
+    const { cellIndex, currentSection, insertedMember, onToggleModal, currentSheetId, cellInfo, networkCells, changeCurrentInfo, insertNetworkCell } = this.props;
+
     await fetch('/api/leader', {
       method: 'POST',
       headers: {
@@ -35,18 +36,18 @@ class AddForm extends Component {
     }).then(res => {
       onToggleModal();
       return res.json();
-    }).then(async res => {
-      const networkCellsNames = networkCells.map(v => v.name);
-      console.log(networkCellsNames, 19090);
-      fetch(`/api/cells/${JSON.stringify(networkCellsNames)}`)
-        .then(res => res.json())
-        .then(cells => {
-
-        });
+    }).then(async leader => {
+      if (!isAddNetwork) {
+        changeCurrentInfo('currentSection',
+          [...currentSection.slice(0, cellIndex),
+          [...currentSection[cellIndex], leader],
+          ...currentSection.slice(cellIndex + 1, currentSection.length)
+          ]
+        );
+      }
     });
 
-
-    if (!cellInfo) {
+    if (isAddNetwork) {
       await fetch('api/networkCell', {
         method: 'POST',
         headers: {
@@ -56,9 +57,7 @@ class AddForm extends Component {
       }).then(res => res.json())
         .then(cell => {
           insertNetworkCell(cell);
-          console.log(networkCells);
           const networkCellsNames = [...networkCells.map(v => v.name), cell.name];
-          console.log(networkCellsNames);
           fetch(`/api/cells/${JSON.stringify(networkCellsNames)}`)
             .then(res => res.json())
             .then(cell => {
@@ -110,7 +109,7 @@ class AddForm extends Component {
 
   render() {
     const { onToggleModal, attached, insertedMember, section, cellInfo } = this.props;
-    console.log('셀인포', cellInfo);
+
     return (
       <div className="add-form">
         <div className="add-form__icon"><FontAwesomeIcon icon={faAddressCard} /><h4>{cellInfo ? '리더 추가' : '네트워크 추가'}</h4></div>
@@ -152,7 +151,7 @@ class AddForm extends Component {
           {this.renderMembersList(this.props.insertedMember.members)}
           <button className="btn btn-outline-dark add-member" onClick={() => this.handleAddMember()}>셀원 추가</button>
           <div className="add-form__bottom">
-            <button className="btn btn-outline-dark add_member_btn add-form__btn--bottom" onClick={() => this.addNetworkCell()}>등록</button>
+            <button className="btn btn-outline-dark add_member_btn add-form__btn--bottom" onClick={() => this.addNetworkCell({ isAddNetwork: !cellInfo })}>등록</button>
             <button className="btn btn-outline-dark add-form__btn--bottom" onClick={onToggleModal}>닫기</button>
           </div>
         </div>
@@ -168,7 +167,8 @@ const mapStateToProps = state => ({
   attached: state.checker.attached,
   section: state.checker.section,
   currentSheetId: state.checker.currentSheetId,
-  networkCells: state.checker.networkCells
+  networkCells: state.checker.networkCells,
+  currentSection: state.checker.currentSection
 })
 
 const mapDispatchToProps = dispatch => ({

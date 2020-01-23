@@ -4,7 +4,6 @@ import Tab from '../components/Tab/Tab';
 import { attached, indexing, changeCurrentAttached, changeCurrentInfo, sheets, currentSheetId, networkCells } from '../store/modules/checker';
 import { connect } from 'react-redux';
 
-// import FortalModal from '../components/Modal/FortalModal';
 import { Modal, FortalModal } from '../components/Modal';
 import ConfirmModal from '../components/Modal/ConfirmModal';
 import SheetForm from '../components/AddForm/SheetForm';
@@ -61,7 +60,6 @@ class Home extends Component {
     fetch(`/api/cells/${JSON.stringify(mapped)}`)
       .then(res => res.json())
       .then(cells => {
-        console.log(cells);
         changeCurrentInfo('currentSection', cells);
       });
   }

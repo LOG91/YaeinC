@@ -3,9 +3,7 @@ import { CheckBox } from '../CheckBox';
 import { CountDropDown } from '../DropDown';
 
 function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin }) {
-  // if (!currentSection) return <div>아직 데이터가 없습니다😨</div>;
   const f = currentSection.map(v => v + 1);
-  console.log(currentSection, f);
   const mappedByNetwork = currentSection.map((network, idx) => {
     if (!network) return;
     const networkName = network.length ? network[0].cellNameKr : '';

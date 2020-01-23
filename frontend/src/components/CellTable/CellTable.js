@@ -57,7 +57,6 @@ class CellTable extends Component {
   }
 
   handleToggleModal = param => {
-    console.log(param);
     if (param) this.setState({ modalOpend: false });
     else this.setState({ modalOpend: !this.state.modalOpend })
   }
