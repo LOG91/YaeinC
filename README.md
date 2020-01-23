@@ -16,7 +16,7 @@
 
 
 - 어드민 페이지 (현재 로그인 없음)
-<a href="www.yaein.org:8080/admin" target="_blank">www.yaein.org:8080/admin</a>
+%md <a href="www.yaein.org:8080/admin" target="_blank">www.yaein.org:8080/admin</a>
 
 
 ### 🥅 앱의 목표
