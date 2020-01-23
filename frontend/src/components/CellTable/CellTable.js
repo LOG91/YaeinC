@@ -75,11 +75,11 @@ class CellTable extends Component {
       <table className={isAdmin ? "print-area cell-table" : "cell-table"} border="1" cellPadding="10">
         <tbody>
           <tr>
-            <th rowSpan="2" className="cell-table__th--section-name" onClick={() => this.re('israel')}>네트워크</th>
-            <th rowSpan="2" className="cell-table__th--leader-name" onClick={this.onPrint}>리더</th>
-            <th colSpan="5" className="cell-table__th--leader-check">리더 체크리스트</th>
+            <th rowSpan="2" className="cell-table__th cell-table__th--section-name" onClick={() => this.re('israel')}>네트워크</th>
+            <th rowSpan="2" className="cell-table__th cell-table__th--leader-name" onClick={this.onPrint}>리더</th>
+            <th colSpan="5" className="cell-table__th cell-table__th--leader-check">리더 체크리스트</th>
             <th rowSpan="2" className="cell-table__th cell_member_name_header">셀원</th>
-            <th colSpan="3" className="cell-table__th--member-check">셀원 체크리스트</th>
+            <th colSpan="3" className="cell-table__th cell-table__th--member-check">셀원 체크리스트</th>
           </tr>
           <tr>
             <td className="cell-table__td">새벽</td>
