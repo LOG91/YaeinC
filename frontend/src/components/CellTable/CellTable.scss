@@ -6,11 +6,19 @@
   background-color: #fff;
   width: 90%;
   text-align: center;
+  &__input {
+    width: 65px;
+  }
   &__th {
     border: 1px dotted #eaeaea;
   }
   &__td {
     border: 1px dotted #eaeaea;
+  }
+  &__td__button {
+    background-color: #fff;
+    border: 1px solid #91909e;
+    border-radius: 5px;
   }
 }
 
@@ -162,7 +170,7 @@ input:checked + .check svg polyline {
   transition-delay: 0.15s;
 }
 
-// ****************** 프린트용 ********************
+// ****************** 어드민용 ********************
 .print-area.cell-table {
   input[type='checkbox'] {
     /* Double-sized Checkboxes */
@@ -182,7 +190,10 @@ input:checked + .check svg polyline {
     border-right: 0;
     border-top: 0;
     &--leader-check {
-      width: 55%;
+      width: 35%;
+    }
+    &--leader-name, &--member-name {
+      width: 150px;
     }
     &--member-check {
       width: 20%;

@@ -129,7 +129,7 @@ class Home extends Component {
         {this.state.modalOpened ?
           <FortalModal>
             <Modal onToggleModal={this.handleToggleModal}>
-              {this.state.modalAction === 'init' ? (<ConfirmModal confirmAction={this.resetCheck} />) :
+              {this.state.modalAction === 'init' ? (<ConfirmModal message="출석정보를 초기화하시겠습니까?" confirmAction={this.resetCheck} />) :
                 (<SheetForm />)}
             </Modal>
           </FortalModal> : null

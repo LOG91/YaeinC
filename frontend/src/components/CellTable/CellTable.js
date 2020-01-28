@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './CellTable.scss';
-import { indexing, changeCurrentSection, checkWorship, checkMemberWorship, countContent, sheets } from '../../store/modules/checker';
+import { indexing, changeCurrentSection, checkWorship, checkMemberWorship, countContent, sheets, changeLeaderName } from '../../store/modules/checker';
 import { connect } from 'react-redux';
 
 import renderCellList from './CellListTable'
@@ -28,6 +28,22 @@ class CellTable extends Component {
         this.props.checkWorship(id, sectionIdx, kind);
       }
     });
+  };
+  handleModifyName = ({ id, sectionIdx, leaderIdx }) => {
+    const { currentSection } = this.props;
+    const changedName = currentSection[sectionIdx][leaderIdx].name;
+    fetch(`/api/change/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ changedName })
+    })
+    console.log(currentSection[sectionIdx][leaderIdx].name);
+  };
+  handleChangeName = (sectionIdx, leaderIdx, changedName)=> {
+    const { changeLeaderName } = this.props;
+    changeLeaderName(sectionIdx, leaderIdx, changedName)
   }
 
   handleCheckMember = async (leaderId, id, memberIdx, sectionIdx, kind) => {
@@ -77,7 +93,7 @@ class CellTable extends Component {
             <th rowSpan="2" className="cell-table__th cell-table__th--section-name" onClick={() => this.re('israel')}>네트워크</th>
             <th rowSpan="2" className="cell-table__th cell-table__th--leader-name" onClick={this.onPrint}>리더</th>
             <th colSpan="5" className="cell-table__th cell-table__th--leader-check">리더 체크리스트</th>
-            <th rowSpan="2" className="cell-table__th cell_member_name_header">셀원</th>
+            <th rowSpan="2" className="cell-table__th cell-table__th--member-name">셀원</th>
             <th colSpan="3" className="cell-table__th cell-table__th--member-check">셀원 체크리스트</th>
           </tr>
           <tr>
@@ -97,6 +113,8 @@ class CellTable extends Component {
             handleCount: this.handleCount,
             handleCheckMember: this.handleCheckMember,
             handleAddLeader: this.handleAddLeader,
+            handleModifyName: this.handleModifyName,
+            handleChangeName: this.handleChangeName
           })}
         </tbody>
         {isAdmin ? (
@@ -132,7 +150,8 @@ const mapDispatchToProps = dispatch => ({
   checkWorship: (name, sectionIdx, left) => dispatch(checkWorship(name, sectionIdx, left)),
   checkMemberWorship: (leaderId, id, sec, sectionIdx, left) => dispatch(checkMemberWorship(leaderId, id, sec, sectionIdx, left)),
   countContent: (name, sectionIdx, left, count) => dispatch(countContent(name, sectionIdx, left, count)),
-  changeCurrentSection: section => dispatch(changeCurrentSection(section))
+  changeCurrentSection: section => dispatch(changeCurrentSection(section)),
+  changeLeaderName: (sectionIdx, leaderIdx, changedName) => dispatch(changeLeaderName(sectionIdx, leaderIdx, changedName))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CellTable);

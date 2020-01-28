@@ -2,18 +2,18 @@ import React, { Fragment } from 'react';
 import { CheckBox } from '../CheckBox';
 import { CountDropDown } from '../DropDown';
 
-function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin }) {
+function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, isAdmin }) {
   const f = currentSection.map(v => v + 1);
   const mappedByNetwork = currentSection.map((network, idx) => {
     if (!network) return;
     const networkName = network.length ? network[0].cellNameKr : '';
-    const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, isAdmin });
+    const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName,isAdmin });
     return tmp;
   });
   return mappedByNetwork;
 };
 
-const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, }) => {
+const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName }) => {
   const all_members = network.reduce((ac, cv) => {
     ac += cv.members.length;
     return ac;
@@ -34,7 +34,10 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
           </tr>
         ) : null}
         <tr className={evenClsName}>
-          <td className="cell-table__td" rowSpan={MEMBER_CNT}>{leader.name}</td>
+          <td className="cell-table__td" rowSpan={MEMBER_CNT}>
+            <input className="cell-table__input" name="name" onChange={(e) => handleChangeName(idx, idxForKey, e.target.value)} value={leader.name} />
+            <button className="cell-table__td__button" onClick={() => handleModifyName({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey })}>저장</button>
+          </td>
           <td className="cell-table__td" rowSpan={MEMBER_CNT}>
             <CountDropDown
               handler={handleCount}
@@ -65,7 +68,10 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
         </tr>
         {MEMBER_CNT !== 1 ? leader.members.map((member, i) => (
           <tr key={i}>
-            <td className="cell-table__td" rowSpan="1" key={i}>{member.name}</td>
+            <td className="cell-table__td" rowSpan="1" key={i}>
+              <input className="cell-table__input" name="name" onChange={e => { console.log(idx, idxForKey, e.target.name, e.target.value) }} value={member.name} />
+              <button className="cell-table__td__button" onClick={() => handleModifyName({ id: member._id })}>저장</button>
+            </td>
             <td className="cell-table__td" rowSpan="1">
               <CheckBox checkedValue={member.cc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'cc')} />
             </td>

@@ -63,10 +63,17 @@ const addNetworkCell = ({ name, networkLeaderName, gender, attached, sheetId }) 
 const addYouthAtt = () => ({ att: { empty: 'no' } });
 
 router.post('/reset', (req, res) => {
-  Leader.updateMany({}, { $set: { mc: false, cc: false, yc: false } }, () => {
+  Leader.updateMany({}, { $set: { dawn: 0, word: 0, mc: false, cc: false, yc: false } }, () => {
   })
   res.send({});
 });
+
+router.post('/change/:id', (req, res) => {
+  const { changedName } = req.body;
+  Leader.update({_id: req.params.id}, { $set: {name: changedName}}, () => {
+  })
+  res.send({});
+})
 
 router.post('/church', (req, res) => {
   const { name, attached } = req.body;

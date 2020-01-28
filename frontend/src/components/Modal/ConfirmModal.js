@@ -1,15 +1,15 @@
 import React from 'react';
 
 
-const ConfirmModal = ({ confirmAction, onToggleModal }) => {
+const ConfirmModal = ({ message, confirmAction, onToggleModal }) => {
 
   return (
     <div className="confirmModal-container">
-      <div>Confirm</div>
-      <div className="confirmModal-container__message">초기화 하시겠습니까?</div>
-      <div className="confirmModal-container__button-box">
-        <button className="btn btn-outline-dark" onClick={confirmAction}>예</button>
-        <button className="btn btn-outline-dark" onClick={onToggleModal}>취소</button>
+      <div className="confirmModal-container__header">Confirm</div>
+      <div className="confirmModal-container__message">{message}</div>
+      <div className="button-box">
+        <button className="btn btn-outline-dark button-box__button" onClick={confirmAction}>예</button>
+        <button className="btn btn-outline-dark button-box__button" onClick={onToggleModal}>취소</button>
       </div>
     </div>
   );
