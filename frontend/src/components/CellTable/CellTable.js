@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import './CellTable.scss';
-import { indexing, changeCurrentSection, checkWorship, checkMemberWorship, countContent, sheets, changeLeaderName } from '../../store/modules/checker';
+import { indexing, changeCurrentSection, checkWorship, checkMemberWorship, countContent, sheets, changeLeaderName, changeMemberName } from '../../store/modules/checker';
 import { connect } from 'react-redux';
 
 import renderCellList from './CellListTable'
@@ -8,13 +8,13 @@ import FortalModal from '../Modal/FortalModal';
 import Modal from '../Modal/Modal';
 import AddForm from '../AddForm/AddForm';
 
-class CellTable extends Component {
+class CellTable extends PureComponent {
 
   state = {
     modalOpend: false,
     clickedCellInfo: {},
     cellIndex: null
-  }
+  };
 
   handleCheck = (id, sectionIdx, kind) => {
     fetch(`/api/check/leader/${id}`, {
@@ -29,22 +29,31 @@ class CellTable extends Component {
       }
     });
   };
-  handleModifyName = ({ id, sectionIdx, leaderIdx }) => {
+
+  handleModifyName = ({ id, sectionIdx, leaderIdx, target, memberIdx }) => {
     const { currentSection } = this.props;
-    const changedName = currentSection[sectionIdx][leaderIdx].name;
+    const changedName = typeof memberIdx !== 'undefined' ?
+      currentSection[sectionIdx][leaderIdx].members[memberIdx].name :
+      currentSection[sectionIdx][leaderIdx].name;
     fetch(`/api/change/${id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ changedName })
-    })
-    console.log(currentSection[sectionIdx][leaderIdx].name);
+    });
+    target.classList.remove('active');
   };
-  handleChangeName = (sectionIdx, leaderIdx, changedName)=> {
-    const { changeLeaderName } = this.props;
-    changeLeaderName(sectionIdx, leaderIdx, changedName)
-  }
+
+  handleChangeName = ({ sectionIdx, leaderIdx, changedName, nextNode, memberIdx }) => {
+    const { changeLeaderName, changeMemberName } = this.props;
+    nextNode.classList.add('active');
+    if (typeof memberIdx !== 'undefined') {
+      changeMemberName(sectionIdx, leaderIdx, memberIdx, changedName)
+    } else {
+      changeLeaderName(sectionIdx, leaderIdx, changedName);
+    }
+  };
 
   handleCheckMember = async (leaderId, id, memberIdx, sectionIdx, kind) => {
     const responsedData = await fetch(`/api/check/leader/${id}`, {
@@ -70,17 +79,17 @@ class CellTable extends Component {
     if (responsedData.status === 200) {
       this.props.countContent(id, sectionIdx, kind, Number(count));
     }
-  }
+  };
 
   handleToggleModal = param => {
     if (param) this.setState({ modalOpend: false });
     else this.setState({ modalOpend: !this.state.modalOpend })
-  }
+  };
 
   handleAddLeader = (memberInfo, idx) => {
     this.handleToggleModal();
     this.setState({ clickedCellInfo: memberInfo, cellIndex: idx })
-  }
+  };
 
 
   render() {
@@ -151,7 +160,8 @@ const mapDispatchToProps = dispatch => ({
   checkMemberWorship: (leaderId, id, sec, sectionIdx, left) => dispatch(checkMemberWorship(leaderId, id, sec, sectionIdx, left)),
   countContent: (name, sectionIdx, left, count) => dispatch(countContent(name, sectionIdx, left, count)),
   changeCurrentSection: section => dispatch(changeCurrentSection(section)),
-  changeLeaderName: (sectionIdx, leaderIdx, changedName) => dispatch(changeLeaderName(sectionIdx, leaderIdx, changedName))
+  changeLeaderName: (sectionIdx, leaderIdx, changedName) => dispatch(changeLeaderName(sectionIdx, leaderIdx, changedName)),
+  changeMemberName: (sectionIdx, leaderIdx, memberIdx, changedName) => dispatch(changeMemberName(sectionIdx, leaderIdx, memberIdx, changedName))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CellTable);

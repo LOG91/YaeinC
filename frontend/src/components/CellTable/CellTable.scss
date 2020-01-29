@@ -16,9 +16,11 @@
     border: 1px dotted #eaeaea;
   }
   &__td__button {
-    background-color: #fff;
-    border: 1px solid #91909e;
-    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 4px;
+    &.active {
+      color: #ccc;
+    }
   }
 }
 

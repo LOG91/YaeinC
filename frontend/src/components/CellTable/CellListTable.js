@@ -1,13 +1,15 @@
 import React, { Fragment } from 'react';
 import { CheckBox } from '../CheckBox';
 import { CountDropDown } from '../DropDown';
+import NameInput from './NameInput';
+
 
 function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, isAdmin }) {
   const f = currentSection.map(v => v + 1);
   const mappedByNetwork = currentSection.map((network, idx) => {
     if (!network) return;
     const networkName = network.length ? network[0].cellNameKr : '';
-    const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName,isAdmin });
+    const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, isAdmin });
     return tmp;
   });
   return mappedByNetwork;
@@ -35,8 +37,11 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
         ) : null}
         <tr className={evenClsName}>
           <td className="cell-table__td" rowSpan={MEMBER_CNT}>
-            <input className="cell-table__input" name="name" onChange={(e) => handleChangeName(idx, idxForKey, e.target.value)} value={leader.name} />
-            <button className="cell-table__td__button" onClick={() => handleModifyName({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey })}>저장</button>
+            <NameInput
+              value={leader.name}
+              handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling })}
+              handleModifyName={(e) => handleModifyName({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.parentNode })}
+            />
           </td>
           <td className="cell-table__td" rowSpan={MEMBER_CNT}>
             <CountDropDown
@@ -69,8 +74,11 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
         {MEMBER_CNT !== 1 ? leader.members.map((member, i) => (
           <tr key={i}>
             <td className="cell-table__td" rowSpan="1" key={i}>
-              <input className="cell-table__input" name="name" onChange={e => { console.log(idx, idxForKey, e.target.name, e.target.value) }} value={member.name} />
-              <button className="cell-table__td__button" onClick={() => handleModifyName({ id: member._id })}>저장</button>
+              <NameInput
+                value={member.name}
+                handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling, memberIdx: i })}
+                handleModifyName={(e) => handleModifyName({ id: member._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.parentNode, memberIdx: i })}
+              />
             </td>
             <td className="cell-table__td" rowSpan="1">
               <CheckBox checkedValue={member.cc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'cc')} />
