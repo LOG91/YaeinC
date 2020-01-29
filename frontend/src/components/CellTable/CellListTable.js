@@ -37,11 +37,12 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
         ) : null}
         <tr className={evenClsName}>
           <td className="cell-table__td" rowSpan={MEMBER_CNT}>
-            <NameInput
-              value={leader.name}
-              handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling })}
-              handleModifyName={(e) => handleModifyName({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.parentNode })}
-            />
+            {isAdmin ?
+              (<NameInput
+                value={leader.name}
+                handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling })}
+                handleModifyName={(e) => handleModifyName({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.parentNode })}
+              />) : leader.name}
           </td>
           <td className="cell-table__td" rowSpan={MEMBER_CNT}>
             <CountDropDown
@@ -74,11 +75,12 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
         {MEMBER_CNT !== 1 ? leader.members.map((member, i) => (
           <tr key={i}>
             <td className="cell-table__td" rowSpan="1" key={i}>
-              <NameInput
-                value={member.name}
-                handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling, memberIdx: i })}
-                handleModifyName={(e) => handleModifyName({ id: member._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.parentNode, memberIdx: i })}
-              />
+              {isAdmin ?
+                (<NameInput
+                  value={member.name}
+                  handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling, memberIdx: i })}
+                  handleModifyName={(e) => handleModifyName({ id: member._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.parentNode, memberIdx: i })}
+                />) : member.name}
             </td>
             <td className="cell-table__td" rowSpan="1">
               <CheckBox checkedValue={member.cc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'cc')} />
