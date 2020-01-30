@@ -7,9 +7,13 @@ class Modal extends React.Component {
   }
   componentDidMount() {
     const { onToggleModal } = this.props;
-    console.log(onToggleModal);
     window.onkeyup = e => {
       if (e.keyCode === 27) onToggleModal({ offOption: true });
+    }
+  }
+  componentWillUnmount() {
+    window.onkeyup = e => {
+      if (e.keyCode === 27) null;
     }
   }
 

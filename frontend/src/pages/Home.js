@@ -20,7 +20,8 @@ const mapSectionByEnName = (enName) => {
 class Home extends Component {
   state = {
     modalOpened: false,
-    modalAction: ''
+    modalAction: '',
+    currentModal: null
   }
 
   shouldComponentUpdate() {
@@ -94,13 +95,10 @@ class Home extends Component {
     tabDiv.style.display = 'flex';
   }
 
-  handleToggleModal = ({ action }) => {
-    this.setState({ modalAction: action });
-    this.setState({ modalOpened: !this.state.modalOpened })
-  }
-
-  handleAddSheet = () => {
-    this.handleToggleModal({ action: 'addSheet' });
+  handleToggleModal = ({ inner }) => {
+    const { changeCurrentInfo, modalOpend } = this.props;
+    changeCurrentInfo('currentModal', !modalOpend ? inner : null);
+    changeCurrentInfo('modalOpend', !modalOpend);
   }
 
   render() {
@@ -113,9 +111,23 @@ class Home extends Component {
           <div className="edit-box">
             <div className="button-box">
               {sheets.length === 0 ? (<div className="button-box__button--add-notify">시트를 추가하세요</div>) : null}
-              <button className={`btn btn-outline-dark button-box__button ${sheets.length === 0 ? 'flashit' : ''}`} onClick={this.handleAddSheet}>시트 추가</button></div>
-            <div className="button-box"><button className="btn btn-outline-dark button-box__button" onClick={this.handlePrint}>프린트</button></div>
-            <div className="button-box"><button className="btn btn-outline-dark button-box__button" onClick={() => this.handleToggleModal({ action: 'init' })}>초기화</button></div>
+              <button
+                className={`btn btn-outline-dark button-box__button ${sheets.length === 0 ? 'flashit' : ''}`}
+                onClick={() => this.handleToggleModal({ inner: <Modal onToggleModal={this.handleToggleModal}><SheetForm /></Modal> })}>시트 추가</button></div>
+            <div className="button-box">
+              <button
+                className="btn btn-outline-dark button-box__button"
+                onClick={this.handlePrint}>
+                프린트
+                </button>
+            </div>
+            <div className="button-box">
+              <button
+                className="btn btn-outline-dark button-box__button"
+                onClick={() => this.handleToggleModal({ inner: <Modal onToggleModal={this.handleToggleModal}><ConfirmModal message="출석정보를 초기화하시겠습니까?" confirmAction={this.resetCheck} /></Modal> })}>
+                초기화
+                </button>
+            </div>
           </div>
         ) : ''}
         <Tab idx={match.params.name} sheets={this.state.sheets} attached={attached} isAdmin={isAdmin ? true : null} />
@@ -126,14 +138,6 @@ class Home extends Component {
             <div className="root__description">🇮🇱🇰🇷🇪🇬🇸🇾🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
           </div>
         }
-        {this.state.modalOpened ?
-          <FortalModal>
-            <Modal onToggleModal={this.handleToggleModal}>
-              {this.state.modalAction === 'init' ? (<ConfirmModal confirmAction={this.resetCheck} />) :
-                (<SheetForm />)}
-            </Modal>
-          </FortalModal> : null
-        }
       </>
     )
   }
@@ -142,7 +146,8 @@ const mapStateToProps = (state) => ({
   currentSection: state.checker.currentSection,
   attached: state.checker.attached,
   sheets: state.checker.sheets,
-  networkCells: state.checker.networkCells
+  networkCells: state.checker.networkCells,
+  modalOpend: state.checker.modalOpend
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -34,16 +34,17 @@ class AddForm extends Component {
       },
       body: JSON.stringify(insertedMember),
     }).then(res => {
-      onToggleModal();
+      onToggleModal({});
       return res.json();
     }).then(async leader => {
       if (!isAddNetwork) {
-        changeCurrentInfo('currentSection',
-          [...currentSection.slice(0, cellIndex),
-          [...currentSection[cellIndex], leader],
-          ...currentSection.slice(cellIndex + 1, currentSection.length)
-          ]
-        );
+        window.location.href = window.location.href;
+        // changeCurrentInfo('currentSection',
+        //   [...currentSection.slice(0, cellIndex),
+        //   [...currentSection[cellIndex], leader],
+        //   ...currentSection.slice(cellIndex + 1, currentSection.length)
+        //   ]
+        // );
       }
     });
 
@@ -108,8 +109,8 @@ class AddForm extends Component {
   }
 
   render() {
-    const { onToggleModal, attached, insertedMember, section, cellInfo } = this.props;
-
+    const { onToggleModal, attached, insertedMember, section, cellInfo, isAddNetwork } = this.props;
+    console.log(isAddNetwork);
     return (
       <div className="add-form">
         <div className="add-form__icon"><FontAwesomeIcon icon={faAddressCard} /><h4>{cellInfo ? '리더 추가' : '네트워크 추가'}</h4></div>
@@ -124,13 +125,13 @@ class AddForm extends Component {
           </div>
           <div className="add-form__box">
             <div className="add-form__left">셀</div>
-            {cellInfo ?
+            {!isAddNetwork ?
               (<div className="add-form__right">{insertedMember.cellNameKr}</div>)
               : (<input className="add-form__right--input" name="cellNameKr" onChange={({ target }) => this.handleChange(target.name, target.value)} />)}
           </div>
           <div className="add-form__box">
             <div className="add-form__left">성별</div>
-            {cellInfo ?
+            {!isAddNetwork ?
               (<div className="add-form__right">{insertedMember.gender === 'male' ? '남' : '여'}</div>)
               : (<div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-secondary select__btn--gender">
@@ -141,7 +142,7 @@ class AddForm extends Component {
             }
           </div>
           <div className="add-form__box">
-            <div className="add-form__left">{cellInfo ? '리더' : '네트워크리더'}</div>
+            <div className="add-form__left">{!isAddNetwork ? '리더' : '네트워크리더'}</div>
             <input className="add-form__right--input" name="name" onChange={({ target }) => this.handleChange(target.name, target.value)} />
           </div>
           <div className="add-form__box">
@@ -151,7 +152,7 @@ class AddForm extends Component {
           {this.renderMembersList(this.props.insertedMember.members)}
           <button className="btn btn-outline-dark add-member" onClick={() => this.handleAddMember()}>셀원 추가</button>
           <div className="add-form__bottom">
-            <button className="btn btn-outline-dark add_member_btn add-form__btn--bottom" onClick={() => this.addNetworkCell({ isAddNetwork: !cellInfo })}>등록</button>
+            <button className="btn btn-outline-dark add_member_btn add-form__btn--bottom" onClick={() => this.addNetworkCell({ isAddNetwork })}>등록</button>
             <button className="btn btn-outline-dark add-form__btn--bottom" onClick={onToggleModal}>닫기</button>
           </div>
         </div>

@@ -15,7 +15,9 @@
   margin: 5px;
   width: 250px;
   cursor: pointer;
-
+  &:hover {
+    opacity: 0.9;
+  }
   &__title {
     color: #636363;
     background-color: #ffeacd;
@@ -64,26 +66,25 @@
 .edit-box {
   justify-content: flex-end;
   display: flex;
-}
-
-.button-box {
-  position: relative;
-  margin: 0.2rem;
-  width: 4rem;
-  height: 1.5rem;
-  &__button.btn {
+  .button-box {
+    position: relative;
     margin: 0.2rem;
-    cursor: pointer;
-    font-size: 13px;
-    width: 60px;
-    padding: 0;
-  }
-  &__button--add-notify {
-    position: absolute;
-    font-size: 11px;
-    width: 100px;
-    top: -13px;
-    color: #fff;
+    width: 4rem;
+    height: 1.5rem;
+    &__button.btn {
+      margin: 0.2rem;
+      cursor: pointer;
+      font-size: 13px;
+      width: 60px;
+      padding: 0;
+    }
+    &__button--add-notify {
+      position: absolute;
+      font-size: 11px;
+      width: 100px;
+      top: -13px;
+      color: #fff;
+    }
   }
 }
 
@@ -97,8 +98,6 @@
     }
   }
 }
-
-
 
 .flashit {
   -webkit-animation: flash linear 2s infinite;
