@@ -70,10 +70,18 @@ router.post('/reset', (req, res) => {
 
 router.post('/change/:id', (req, res) => {
   const { changedName } = req.body;
-  Leader.update({_id: req.params.id}, { $set: {name: changedName}}, () => {
+  Leader.update({ _id: req.params.id }, { $set: { name: changedName } }, () => {
   })
   res.send({});
-})
+});
+
+router.delete('/member/:id', (req, res) => {
+  const { id } = req.params;
+  Leader.deleteOne({ _id: id }).then(deleted => {
+    console.log(deleted);
+    res.send(deleted);
+  })
+});
 
 router.post('/church', (req, res) => {
   const { name, attached } = req.body;

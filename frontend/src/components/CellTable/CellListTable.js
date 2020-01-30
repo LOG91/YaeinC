@@ -2,20 +2,22 @@ import React, { Fragment } from 'react';
 import { CheckBox } from '../CheckBox';
 import { CountDropDown } from '../DropDown';
 import NameInput from './NameInput';
+import { Modal } from '../Modal';
+import AddForm from '../AddForm/AddForm';
 
 
-function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, isAdmin }) {
+function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, handleRemoveMember, isAdmin }) {
   const f = currentSection.map(v => v + 1);
   const mappedByNetwork = currentSection.map((network, idx) => {
     if (!network) return;
     const networkName = network.length ? network[0].cellNameKr : '';
-    const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, isAdmin });
+    const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, handleRemoveMember, isAdmin });
     return tmp;
   });
   return mappedByNetwork;
 };
 
-const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName }) => {
+const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, handleRemoveMember }) => {
   const all_members = network.reduce((ac, cv) => {
     ac += cv.members.length;
     return ac;
@@ -31,7 +33,13 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
             <td className="network-box__td"
               rowSpan={all_members + 1}>
               <p className="network-box__p">{networkName}</p>
-              {isAdmin ? <button className="btn btn-outline-dark network-box__button" onClick={e => handleAddLeader(leader, idx)}>추가</button> : null}
+              {isAdmin ?
+                <button
+                  className="btn btn-outline-dark network-box__button"
+                  onClick={e => handleAddLeader({ inner: <Modal onToggleModal={handleAddLeader}><AddForm cellInfo={leader} cellIndex={idx} /></Modal>, leader, idx })}>
+                  추가
+                </button> :
+                null}
             </td>
           </tr>
         ) : null}
@@ -40,8 +48,9 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
             {isAdmin ?
               (<NameInput
                 value={leader.name}
+                handleRemoveMember={(e) => handleRemoveMember({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey })}
                 handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling })}
-                handleModifyName={(e) => handleModifyName({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.parentNode })}
+                handleModifyName={(e) => handleModifyName({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.closest('svg') })}
               />) : leader.name}
           </td>
           <td className="cell-table__td" rowSpan={MEMBER_CNT}>
@@ -78,6 +87,7 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
               {isAdmin ?
                 (<NameInput
                   value={member.name}
+                  handleRemoveMember={(e) => handleRemoveMember({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey, memberIdx: i })}
                   handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling, memberIdx: i })}
                   handleModifyName={(e) => handleModifyName({ id: member._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.parentNode, memberIdx: i })}
                 />) : member.name}

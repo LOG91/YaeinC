@@ -8,6 +8,8 @@ const INSERT_NETWORKCELL = 'checker/INSERT_NETWORKCELL';
 
 const CHANGE_LEADER_NAME = 'checker/CHANGE_LEADER_NAME';
 const CHANGE_MEMBER_NAME = 'checker/CHANGE_MEMBER_NAME';
+const REMOVE_LEADER = 'checker/REMOVE_READER';
+const REMOVE_MEMBER = 'checker/REMOVE_MEMBER';
 const CHECK_WORSHIP = 'checker/CHECK_WORSHIP';
 const CHECK_MEMBER_WORSHIP = 'checker/CHECK_MEMBER_WORSHIP';
 const COUNT_CONTENT = 'checker/COUNT_CONTENT';
@@ -27,6 +29,8 @@ export const insertNetworkCell = (addedNetworkCell) => ({ type: INSERT_NETWORKCE
 
 export const changeLeaderName = (sectionIdx, leaderIdx, changedName) => ({ type: CHANGE_LEADER_NAME, sectionIdx, leaderIdx, changedName });
 export const changeMemberName = (sectionIdx, leaderIdx, memberIdx, changedName) => ({ type: CHANGE_MEMBER_NAME, sectionIdx, leaderIdx, memberIdx, changedName });
+export const removeLeader = (sectionIdx, leaderIdx) => ({ type: REMOVE_LEADER, sectionIdx, leaderIdx });
+export const removeMember = (sectionIdx, leaderIdx, memberIdx) => ({ type: REMOVE_MEMBER, sectionIdx, leaderIdx, memberIdx });
 export const checkWorship = (id, sectionIdx, left) => ({ type: CHECK_WORSHIP, id, sectionIdx, left });
 export const checkMemberWorship = (leaderId, id, sec, sectionIdx, left) => ({ type: CHECK_MEMBER_WORSHIP, leaderId, id, sec, sectionIdx, left });
 export const countContent = (id, sectionIdx, left, count) => ({ type: COUNT_CONTENT, id, sectionIdx, left, count });
@@ -55,7 +59,9 @@ const initialState = {
     cellNameKr: '',
     members: []
   },
-  currentSection: []
+  currentSection: [],
+  currentModal: null,
+  modalOpend: null
 }
 
 export default function checker(state = initialState, action) {
@@ -107,6 +113,30 @@ export default function checker(state = initialState, action) {
           { ...state.currentSection[action.sectionIdx][action.leaderIdx].members[action.memberIdx], name: action.changedName },
           ...state.currentSection[action.sectionIdx][action.leaderIdx].members.slice(action.memberIdx + 1, state.currentSection[action.sectionIdx][action.leaderIdx].members.length)
           ]
+        },
+        ...state.currentSection[action.sectionIdx].slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
+        ],
+        ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
+        ]
+      }
+    case REMOVE_LEADER:
+      return {
+        ...state,
+        currentSection: [...state.currentSection.slice(0, action.sectionIdx),
+        [...state.currentSection[action.sectionIdx].slice(0, action.leaderIdx),
+        ...state.currentSection[action.sectionIdx].slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
+        ],
+        ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
+        ]
+      }
+    case REMOVE_MEMBER:
+      return {
+        ...state,
+        currentSection: [...state.currentSection.slice(0, action.sectionIdx),
+        [...state.currentSection[action.sectionIdx].slice(0, action.leaderIdx),
+        {
+          ...state.currentSection[action.sectionIdx][action.leaderIdx],
+          members: state.currentSection[action.sectionIdx][action.leaderIdx].members.filter((val, idx) => idx !== action.memberIdx)
         },
         ...state.currentSection[action.sectionIdx].slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
         ],

@@ -17,7 +17,11 @@
   }
   &__td__button {
     cursor: pointer;
-    margin-left: 4px;
+    font-size: 13px;
+    margin-left: 10px;
+    &:hover {
+      color: #999;
+    }
     &.active {
       color: #ccc;
     }
