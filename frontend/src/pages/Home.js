@@ -42,7 +42,7 @@ class Home extends Component {
     const { match, changeCurrentInfo } = this.props;
     const { name: current, attached } = match.params;
     changeCurrentInfo('attached', attached);
-    const sheets = await fetch(`/api/sheet/${attached}`).then(res => {
+    const sheets = await fetch(`http://localhost:7000/api/sheet/${attached}`).then(res => {
       return res;
     }).then(res => res.json())
       .then();
@@ -55,10 +55,10 @@ class Home extends Component {
     changeCurrentInfo('attached', attached);
     const currentSheetId = sheets.length && sheets.find(v => v.name === current)._id;
     changeCurrentInfo('currentSheetId', currentSheetId);
-    const networkCells = await fetch(`api/networkCell/${currentSheetId}`).then(res => res.json()).then();
+    const networkCells = await fetch(`http://localhost:7000/api/networkCell/${currentSheetId}`).then(res => res.json()).then();
     const mapped = networkCells.map(v => v.name);
     changeCurrentInfo('networkCells', networkCells);
-    fetch(`/api/cells/${JSON.stringify(mapped)}`)
+    fetch(`http://localhost:7000/api/cells/${JSON.stringify(mapped)}`)
       .then(res => res.json())
       .then(cells => {
         changeCurrentInfo('currentSection', cells);
@@ -67,7 +67,7 @@ class Home extends Component {
 
   async resetCheck() {
     const currentLocation = window.location.href;
-    await fetch('/api/reset', {
+    await fetch('http://localhost:7000/api/reset', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -7,7 +7,7 @@ const FileStore = require('session-file-store')(session);
 const MongoStore = require('connect-mongo')(session);
 const cors = require('cors');
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 7000;
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/members', { useNewUrlParser: true });

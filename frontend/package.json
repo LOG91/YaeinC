@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --config ./config/webpack.config.dev --host 0.0.0.0 --port 8080 --hot",
-    "build": "webpack --config ./config/webpack.config.prod"
+    "start": "webpack-dev-server --config ./config/webpack.config.dev --host 0.0.0.0 --port 5000 --hot",
+    "build": "webpack --config ./config/webpack.config.prod",
+    "deploy": "cd build && serve"
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:7000",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LOG91/YaeinC.git"
@@ -50,6 +51,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.11.1",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "jquery": "^3.4.1",
+    "lite-server": "^2.5.4",
     "popper.js": "^1.15.0",
     "query-string": "^6.7.0",
     "react-redux": "^7.0.3",

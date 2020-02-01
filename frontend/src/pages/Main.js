@@ -14,13 +14,13 @@ class Main extends PureComponent {
 
   async componentDidMount() {
     const { changeCurrentInfo } = this.props;
-    const churchList = await fetch('/api/church/all').then(res => res.json()).then();
+    const churchList = await fetch('http://localhost:7000/api/church/all').then(res => res.json()).then();
     changeCurrentInfo('churches', churchList);
   }
 
   addChurch = () => {
     const { changeCurrentInfo, insertedMember: { church, attached }, churches } = this.props;
-    fetch('/api/church', {
+    fetch('http://localhost:7000/api/church', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
