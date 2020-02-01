@@ -29,7 +29,7 @@ class SheetForm extends Component {
 
   addSheet = () => {
     const { onToggleModal, insertedMember: { name, attached, section }, changeCurrentInfo, sheets } = this.props;
-    fetch('/api/sheet', {
+    fetch('http://localhost:7000/api/sheet', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

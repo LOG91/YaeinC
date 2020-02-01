@@ -19,8 +19,8 @@ class Youth extends React.Component {
   async fetchInfo() {
     const { changeCurrentSection, changeCurrentInfo, match: { params: { attached } } } = this.props;
     const tempCells = ['이스라엘(가)', '연해주', '안디옥'];
-    const info = await fetch(`/api/cells/${JSON.stringify(tempCells)}`).then(res => res.json()).then();
-    const tt = await fetch('/api/gender/male').then(res => res.json()).then();
+    const info = await fetch(`http://localhost:7000/api/cells/${JSON.stringify(tempCells)}`).then(res => res.json()).then();
+    const tt = await fetch('http://localhost:7000/api/gender/male').then(res => res.json()).then();
     changeCurrentInfo('attached', attached);
     changeCurrentInfo('currentSection', info);
     console.log(tt);
@@ -28,7 +28,7 @@ class Youth extends React.Component {
 
   handleYouthCheck = async ({ sectionIdx, leaderIdx, leaderId, youthId, date, memberIdx = null }) => {
     const { checkYouth, checkMemberYouth } = this.props;
-    const temp = await fetch(`/api/youth/${youthId}`, {
+    const temp = await fetch(`http://localhost:7000/api/youth/${youthId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
