@@ -4,9 +4,11 @@ import Tab from '../components/Tab/Tab';
 import { attached, indexing, changeCurrentAttached, changeCurrentInfo, sheets, currentSheetId, networkCells } from '../store/modules/checker';
 import { connect } from 'react-redux';
 
-import { Modal, FortalModal } from '../components/Modal';
+import { Modal } from '../components/Modal';
 import ConfirmModal from '../components/Modal/ConfirmModal';
 import SheetForm from '../components/AddForm/SheetForm';
+
+import { printTargetNode } from '../fn/fn';
 
 const mapSectionByEnName = (enName) => {
   const section =
@@ -79,20 +81,11 @@ class Home extends Component {
   }
 
   handlePrint() {
-    const html = document.querySelector('html');
-    const tabDiv = document.querySelector('.tab');
-    tabDiv.style.display = 'none';
-    const printContents = document.querySelector('.container').innerHTML;
-    const printDiv = document.createElement("DIV");
-    printDiv.className = "print-div";
-
-    html.appendChild(printDiv);
-    printDiv.innerHTML = printContents;
-    document.body.style.display = 'none';
-    window.print();
-    document.body.style.display = 'block';
-    printDiv.style.display = 'none';
-    tabDiv.style.display = 'flex';
+    printTargetNode({
+      targetSelector: '.admin-table',
+      nonDisplaySelector: ['.networkName-box'],
+      nonDisplaySelectorAll: ['.cell-table__td__button', '.network-box__button']
+    })
   }
 
   handleToggleModal = ({ inner }) => {
@@ -132,7 +125,7 @@ class Home extends Component {
         ) : ''}
         <Tab idx={match.params.name} sheets={this.state.sheets} attached={attached} isAdmin={isAdmin ? true : null} />
         {match.params.name ?
-          <CellTable isAdmin={isAdmin} current={match.params.name} /> :
+          <div className="admin-table"><CellTable isAdmin={isAdmin} current={match.params.name} /></div> :
           <div>
             <div className="root__description">{attached} 출석체크 페이지 :)</div>
             <div className="root__description">🇮🇱🇰🇷🇪🇬🇸🇾🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>

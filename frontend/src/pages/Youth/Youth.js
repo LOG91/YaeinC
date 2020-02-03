@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { indexing, changeCurrentSection, checkYouth, checkMemberYouth, attached, changeCurrentInfo } from '../../store/modules/checker';
+import { indexing, checkYouth, checkMemberYouth, attached, changeCurrentInfo } from '../../store/modules/checker';
 import Tab from '../../components/Tab/Tab';
 import './Youth.scss';
 
@@ -10,14 +10,9 @@ class Youth extends React.Component {
     indexing(path.slice(1));
     this.fetchInfo();
   }
-  // shouldComponentUpdate() {
-  //   const { indexing, match: { path } } = this.props;
-  //   indexing(path.slice(1));
-  //   this.fetchInfo();
-  //   return true;
-  // }
+
   async fetchInfo() {
-    const { changeCurrentSection, changeCurrentInfo, match: { params: { attached } } } = this.props;
+    const { changeCurrentInfo, match: { params: { attached } } } = this.props;
     const tempCells = ['이스라엘(가)', '연해주', '안디옥'];
     const info = await fetch(`http://localhost:7000/api/cells/${JSON.stringify(tempCells)}`).then(res => res.json()).then();
     const tt = await fetch('http://localhost:7000/api/gender/male').then(res => res.json()).then();
@@ -161,7 +156,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  changeCurrentSection: section => dispatch(changeCurrentSection(section)),
   changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
   indexing: idx => dispatch(indexing(idx)),
   checkYouth: (sectionIdx, leaderIdx, leaderId, date) => dispatch(checkYouth(sectionIdx, leaderIdx, leaderId, date)),
