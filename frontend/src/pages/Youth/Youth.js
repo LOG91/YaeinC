@@ -1,13 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { indexing, checkYouth, checkMemberYouth, attached, changeCurrentInfo } from '../../store/modules/checker';
+import { checkYouth, checkMemberYouth, attached, changeCurrentInfo } from '../../store/modules/checker';
 import Tab from '../../components/Tab/Tab';
 import './Youth.scss';
 
 class Youth extends React.Component {
   componentDidMount() {
-    const { indexing, match: { path } } = this.props;
-    indexing(path.slice(1));
+    const { match: { path } } = this.props;
     this.fetchInfo();
   }
 
@@ -157,7 +156,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
   changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
-  indexing: idx => dispatch(indexing(idx)),
   checkYouth: (sectionIdx, leaderIdx, leaderId, date) => dispatch(checkYouth(sectionIdx, leaderIdx, leaderId, date)),
   checkMemberYouth: ({ sectionIdx, leaderIdx, memberIdx, date }) => dispatch(checkMemberYouth({ sectionIdx, leaderIdx, memberIdx, date }))
 });

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { changeCurrentSection, insertMemberData, insertCellMember, removeCellMember, initMemberData, insertedMember } from '../../store/modules/checker';
+import { insertMemberData, insertCellMember, removeCellMember, initMemberData, insertedMember } from '../../store/modules/checker';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons';
@@ -47,7 +47,6 @@ class ChurchForm extends Component {
 
 const mapStateToProps = state => ({
   insertedMember: state.checker.insertedMember,
-  idx: state.checker.idx,
   attached: state.checker.attached,
   section: state.checker.section
 })
@@ -56,7 +55,6 @@ const mapDispatchToProps = dispatch => ({
   insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),
   insertCellMember: (left, right, idx) => dispatch(insertCellMember(left, right, idx)),
   removeCellMember: (idx) => dispatch(removeCellMember(idx)),
-  changeCurrentSection: (section, enName) => dispatch(changeCurrentSection(section, enName)),
   initMemberData: () => dispatch(initMemberData())
 })
 

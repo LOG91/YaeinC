@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { indexing, changeCurrentInfo, sheets } from '../../store/modules/checker';
+import { changeCurrentInfo, sheets } from '../../store/modules/checker';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './Tab.scss';
@@ -7,8 +7,7 @@ import './Tab.scss';
 class Tab extends Component {
   
   handleClick = async (sheetName) => {
-    const { indexing, changeCurrentInfo, sheets } = this.props;
-    indexing(sheetName);
+    const { changeCurrentInfo, sheets } = this.props;
     const currentSheetId = sheets.length && sheets.find(v => v.name === sheetName)._id;
     changeCurrentInfo('currentSheetId', currentSheetId);
     const networkCells = await fetch(`http://localhost:7000/api/networkCell/${currentSheetId}`).then(res => res.json()).then();
@@ -43,7 +42,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
   increment: () => dispatch(increment()),
-  indexing: idx => dispatch(indexing(idx)),
   changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right))
 });
 

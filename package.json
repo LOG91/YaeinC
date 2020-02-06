@@ -33,6 +33,10 @@
   "devDependencies": {
     "autoprefixer": "^9.7.3",
     "bulma": "^0.7.5",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-react": "^7.18.3",
     "http-proxy-middleware": "^0.20.0"
   },
   "scripts": {

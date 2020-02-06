@@ -74,7 +74,6 @@ class SheetForm extends Component {
 
 const mapStateToProps = state => ({
   insertedMember: state.checker.insertedMember,
-  idx: state.checker.idx,
   attached: state.checker.attached,
   section: state.checker.section,
   sheets: state.checker.sheets

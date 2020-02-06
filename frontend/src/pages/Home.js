@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { CellTable } from '../components/CellTable';
 import Tab from '../components/Tab/Tab';
-import { attached, indexing, changeCurrentAttached, changeCurrentInfo, sheets, currentSheetId, networkCells } from '../store/modules/checker';
+import { attached, changeCurrentInfo, sheets, currentSheetId, networkCells } from '../store/modules/checker';
 import { connect } from 'react-redux';
 
 import { Modal } from '../components/Modal';
@@ -144,9 +144,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  indexing: idx => dispatch(indexing(idx)),
   changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
-  changeCurrentAttached: attached => dispatch(changeCurrentAttached(attached))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
