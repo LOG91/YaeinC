@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './AddForm.scss';
 import { connect } from 'react-redux';
-import { currentSheetId, networkCells, changeCurrentInfo, insertNetworkCell } from '../../store/modules/checker';
+import { changeCurrentInfo, insertNetworkCell } from '../../store/modules/checker';
 import { insertMemberData, insertCellMember, initMemberData, removeCellMember } from '../../store/modules/inserted';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

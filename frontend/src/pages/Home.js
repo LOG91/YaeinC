@@ -19,6 +19,77 @@ const mapSectionByEnName = (enName) => {
 
   return section;
 }
+
+const Home2 = (props) => {
+  const { match, attached, sheets } = props;
+  const isAdmin = match.url.match(/admin/g);
+  const resetCheck = () => {
+    const currentLocation = window.location.href;
+    fetch('http://localhost:7000/api/reset', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ currentLocation })
+    }).then(() => {
+      window.location.href = window.location.href;
+    });
+  }
+
+  const handlePrint = () => {
+    printTargetNode({
+      targetSelector: '.admin-table',
+      nonDisplaySelector: ['.networkName-box'],
+      nonDisplaySelectorAll: ['.cell-table__td__button', '.network-box__button']
+    })
+  }
+
+  const handleToggleModal = ({ inner }) => {
+    const { changeCurrentInfo, modalOpend } =props;
+    console.log(modalOpend, inner);
+    changeCurrentInfo('currentModal', !modalOpend ? inner : null);
+    changeCurrentInfo('modalOpend', !modalOpend);
+  }
+
+
+  return (
+    <>
+      <h3 className="title"><a href={isAdmin ? '/admin' : '/'}>Yaein 출석부</a>{isAdmin ? <div className="admin-title">admin</div> : null}</h3>
+      {isAdmin ? (
+        <div className="edit-box">
+          <div className="button-box">
+            {sheets.length === 0 ? (<div className="button-box__button--add-notify">시트를 추가하세요</div>) : null}
+            <button
+              className={`btn btn-outline-dark button-box__button ${sheets.length === 0 ? 'flashit' : ''}`}
+              onClick={() => handleToggleModal({ inner: <Modal onToggleModal={handleToggleModal}><SheetForm /></Modal> })}>시트 추가</button></div>
+          <div className="button-box">
+            <button
+              className="btn btn-outline-dark button-box__button"
+              onClick={handlePrint}>
+              프린트
+                </button>
+          </div>
+          <div className="button-box">
+            <button
+              className="btn btn-outline-dark button-box__button"
+              onClick={() => handleToggleModal({ inner: <Modal onToggleModal={handleToggleModal}><ConfirmModal message="출석정보를 초기화하시겠습니까?" cancelAction={handleToggleModal} confirmAction={resetCheck} /></Modal> })}>
+              초기화
+                </button>
+          </div>
+        </div>
+      ) : ''}
+      <Tab idx={match.params.name} sheets={sheets} attached={attached} isAdmin={isAdmin ? true : null} />
+      {match.params.name ?
+        <div className="admin-table"><CellTable isAdmin={isAdmin} current={match.params.name} /></div> :
+        <div>
+          <div className="root__description">{attached} 출석체크 페이지 :)</div>
+          <div className="root__description">🇮🇱🇰🇷🇪🇬🇸🇾🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
+        </div>
+      }
+    </>
+  )
+
+}
 class Home extends Component {
   state = {
     modalOpened: false,
@@ -147,4 +218,4 @@ const mapDispatchToProps = dispatch => ({
   changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home2);
