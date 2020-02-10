@@ -130,6 +130,16 @@
 }
 
 @include media(mobile) {
+  .nav-box {
+    padding: 0;
+    &__item {
+      margin-right: 20px;
+      font-size: 13px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
   .logo-box {
     display: flex;
     margin: 2px 5px;
@@ -150,7 +160,7 @@
     }
     &__desc {
       position: relative;
-      color: #91919e;
+      top: 3px;
       font-size: 15px;
     }
   }
@@ -169,5 +179,26 @@
     max-width: none;
     padding: 0;
     margin: 0;
+  }
+
+  .footer {
+    padding: 0 20px;
+    .footer-main {
+      &__logo {
+        font-size: 20px;
+      }
+      &__logo--sns {
+        font-size: 20px;
+      }
+      &__item {
+        margin-right: 10px;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+      &__description {
+        font-size: 12px;
+      }
+    }
   }
 }
