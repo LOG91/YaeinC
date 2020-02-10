@@ -1,28 +1,27 @@
 const express = require('express');
-const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const FileStore = require('session-file-store')(session);
 const MongoStore = require('connect-mongo')(session);
 const cors = require('cors');
+
 const app = express();
 const port = process.env.PORT || 7000;
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/members', { useNewUrlParser: true });
-const connection = mongoose.connection;
 
-connection.once('open', function () {
-  console.log("MongoDB database connection established successfully");
+mongoose.connect('mongodb://127.0.0.1:27017/members', { useNewUrlParser: true });
+const { connection } = mongoose;
+
+connection.once('open', () => {
+  console.log('MongoDB database connection established successfully');
 });
 const UserSchema = mongoose.Schema({
   user_id: String,
-  password: String
+  password: String,
 });
 const User = mongoose.model('user', UserSchema);
 const url = require('url');
-
 
 
 app.use(cors());
@@ -39,10 +38,9 @@ app.use(session({
   saveUninitialized: true,
   store: new MongoStore({
     url: 'mongodb://localhost/members',
-    collection: 'sessions'
-  })
+    collection: 'sessions',
+  }),
 }));
-
 
 
 app.use('/api', require('./api/api'));

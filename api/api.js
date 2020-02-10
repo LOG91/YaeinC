@@ -1,32 +1,38 @@
 const express = require('express');
+
 const router = express.Router();
 
-const { Leader, YouthAtt, Church, Sheet, NetworkCell } = require('../members.model');
+const {
+  Leader,
+  YouthAtt,
+  Church,
+  Sheet,
+  NetworkCell,
+} = require('../model');
 
-
-const addLeader = ({ name, gender, age, attached, isNetworkLeader, isLeader,
-  section, cellName, cellNameKr, dawn = 0, word = 0, cc = false, mc = false, yc = false, youth
-}) => {
-  return (
-    {
-      name,
-      age,
-      gender,
-      attached,
-      isNetworkLeader,
-      isLeader,
-      section,
-      cellName,
-      cellNameKr,
-      dawn,
-      word,
-      cc,
-      mc,
-      yc,
-      youth
-    }
-  )
-};
+console.log(Leader, '리더');
+const addLeader = (
+  {
+    name, gender, age, attached, isNetworkLeader, isLeader,
+    section, cellName, cellNameKr, dawn = 0, word = 0, cc = false, mc = false, yc = false, youth,
+  },
+) => ({
+  name,
+  age,
+  gender,
+  attached,
+  isNetworkLeader,
+  isLeader,
+  section,
+  cellName,
+  cellNameKr,
+  dawn,
+  word,
+  cc,
+  mc,
+  yc,
+  youth,
+});
 
 const addChurch = ({ name, attached }) => {
   return (
@@ -203,6 +209,7 @@ router.get('/gender/:gender', (req, res) => {
 router.post('/leader', (req, res, next) => {
   const { name, age, gender, attached, cellName, cellNameKr, section, members } = req.body;
   const youth = new YouthAtt(addYouthAtt());
+  console.log(req.body, '알이큐바디');
   youth.save((err, y) => {
     if (err) return console.error(err);
   })

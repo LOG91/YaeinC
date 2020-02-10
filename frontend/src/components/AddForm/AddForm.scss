@@ -1,4 +1,7 @@
+@import '../../custom';
+
 .add-form {
+  font-family: $main-font;
   .add-form__box {
     display: flex;
     margin-bottom: 7px;

@@ -1,13 +1,95 @@
-import React, { PureComponent } from 'react';
-import './Main.scss'
-
+import React, { useEffect, PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { insertMemberData, initMemberData, changeCurrentInfo, churches } from '../store/modules/checker';
+
+import { changeCurrentInfo, modalOpend } from '../store/modules/checker';
+import { insertMemberData, initMemberData } from '../store/modules/inserted';
+
 import { Modal, FortalModal } from '../components/Modal'
 import ChurchForm from '../components/AddForm/ChurchForm';
 
+const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange }) => {
+  return (
+    <>
+      {churches.map(({ name, attached }) => {
+        return (
+          <div className="card card-box">
+            <a href={isAdmin ? `admin/${name}` : name}>
+              <div className="card-body">
+                <h5 className="card-title card-box__title">{name}</h5>
+                <h5 className="card-title card-box__subtitle">{attached}</h5>
+              </div>
+            </a>
+          </div>
+        )
+      })}
+      {isAdmin ? (
+        <div
+          className="card card-box"
+          onClick={() => handleToggleModal({
+            inner: (
+              <Modal onToggleModal={handleToggleModal}>
+                <ChurchForm handleChange={handleChange} confirmAction={() => addChurch()} />
+              </Modal>)
+          })}>
+          <div className="card-body">
+            <div className="icon-plus blue w25" />
+            <div className="card-box__p">페이지 추가</div>
+          </div>
+        </div>) : null}
 
-class Main extends PureComponent {
+    </>
+  );
+};
+
+const Main = (props) => {
+  const { match: { path }, modalOpend, insertedMember: { church, attached }, churches, changeCurrentInfo } = props
+  useEffect(() => {
+    fetch('http://localhost:7000/api/church/all')
+      .then(res => res.json())
+      .then(res => changeCurrentInfo('churches', res));
+  }, []);
+
+  const isAdmin = path.match(/admin/) ? true : false;
+  const handleChange = (key, value) => {
+    changeCurrentInfo(key, value);
+  }
+  const handleToggleModal = ({ inner }) => {
+    console.log('wfwefhwoefewi');
+    console.log(props);
+    console.log(modalOpend, inner);
+    changeCurrentInfo('currentModal', !modalOpend ? inner : null);
+    changeCurrentInfo('modalOpend', !modalOpend);
+    // changeCurrentInfo('currentModal', !modalOpend ? inner : null);
+    // this.setState({ modalOpend: !this.state.modalOpend });
+  }
+
+  const addChurch = () => {
+    // const { changeCurrentInfo, insertedMember: { church, attached }, churches } = this.props;
+    fetch('http://localhost:7000/api/church', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name: church, attached })
+    }).then(res => {
+      handleToggleModal();
+      return res.json()
+    }).then(res => {
+      changeCurrentInfo('churches', [...churches, res]);
+    })
+  }
+
+  return (
+    <>
+      <h3 className="title"><a href={isAdmin ? '/admin' : '/'}>Yaein 출석부</a>{isAdmin ? <div className="admin-title">admin</div> : null}</h3>
+      <div className="card-wrapper">
+        {spreadChurchList({ churches, isAdmin, handleToggleModal, handleChange })}
+      </div>
+    </>
+  );
+}
+
+class Main2 extends PureComponent {
   state = {
     modalOpend: false
   };
@@ -30,11 +112,11 @@ class Main extends PureComponent {
       this.handleToggleModal();
       return res.json()
     }).then(res => {
-      changeCurrentInfo('churches',[...churches, res]);
+      changeCurrentInfo('churches', [...churches, res]);
     })
   }
   handleChange = (key, value) => {
-    this.props.insertMemberData(key, value);
+    this.props.changeCurrentInfo(key, value);
   }
 
   spreadChurchList = ({ churches, isAdmin }) => {
@@ -88,8 +170,9 @@ class Main extends PureComponent {
 };
 
 const mapStateToProps = state => ({
-  insertedMember: state.checker.insertedMember,
-  churches: state.checker.churches
+  insertedMember: state.inserted.insertedMember,
+  churches: state.checker.churches,
+  modalOpend: state.checker.modalOpend
 })
 
 const mapDispatchToProps = dispatch => ({

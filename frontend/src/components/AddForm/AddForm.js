@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './AddForm.scss';
 import { connect } from 'react-redux';
-import { insertMemberData, insertCellMember, removeCellMember, initMemberData, currentSheetId, networkCells, currentSection, changeCurrentInfo, insertNetworkCell } from '../../store/modules/checker';
+import { changeCurrentInfo, insertNetworkCell } from '../../store/modules/checker';
+import { insertMemberData, insertCellMember, initMemberData, removeCellMember } from '../../store/modules/inserted';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +10,7 @@ import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 class AddForm extends Component {
 
   componentDidMount() {
-    const { cellInfo, cellIndex } = this.props;
+    const { cellInfo } = this.props;
     this.handleChange('attached', this.props.attached);
     this.handleChange('section', this.props.section);
     if (!cellInfo) return;
@@ -25,9 +26,9 @@ class AddForm extends Component {
     })
   }
   addNetworkCell = async ({ isAddNetwork }) => {
-    const { cellIndex, currentSection, insertedMember, onToggleModal, currentSheetId, cellInfo, networkCells, changeCurrentInfo, insertNetworkCell } = this.props;
-
-    await fetch('/api/leader', {
+    const { insertedMember, onToggleModal, currentSheetId, networkCells, changeCurrentInfo, insertNetworkCell } = this.props;
+    console.log(insertedMember, 'insertedMember')
+    await fetch('http://localhost:7000/api/leader', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -39,17 +40,11 @@ class AddForm extends Component {
     }).then(async leader => {
       if (!isAddNetwork) {
         window.location.href = window.location.href;
-        // changeCurrentInfo('currentSection',
-        //   [...currentSection.slice(0, cellIndex),
-        //   [...currentSection[cellIndex], leader],
-        //   ...currentSection.slice(cellIndex + 1, currentSection.length)
-        //   ]
-        // );
       }
     });
 
     if (isAddNetwork) {
-      await fetch('api/networkCell', {
+      await fetch('http://localhost:7000/api/networkCell', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +54,7 @@ class AddForm extends Component {
         .then(cell => {
           insertNetworkCell(cell);
           const networkCellsNames = [...networkCells.map(v => v.name), cell.name];
-          fetch(`/api/cells/${JSON.stringify(networkCellsNames)}`)
+          fetch(`http://localhost:7000/api/cells/${JSON.stringify(networkCellsNames)}`)
             .then(res => res.json())
             .then(cell => {
               changeCurrentInfo('currentSection', cell);
@@ -89,15 +84,15 @@ class AddForm extends Component {
               className="cellMember add-form__right--member"
               name="members"
               onChange={evt => this.handleChangeMember('age', evt, i)} />
-            <button className="btn btn-outline-dark add-form__btn--cell" onClick={evt => this.handleRemoveMember(evt, i)}>삭제</button>
+            <button className="btn btn-outline-dark add-form__btn--cell" onClick={this.handleRemoveMember(i)}>삭제</button>
           </div>
         </div>
       )
     })
   }
 
-  handleRemoveMember = (evt, idx) => {
-    this.props.removeCellMember(idx)
+  handleRemoveMember = idx => e => {
+    this.props.removeCellMember(idx);
   }
 
   handleChangeMember = (key, evt, idx) => {
@@ -163,13 +158,11 @@ class AddForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  insertedMember: state.checker.insertedMember,
-  idx: state.checker.idx,
+  insertedMember: state.inserted.insertedMember,
   attached: state.checker.attached,
   section: state.checker.section,
   currentSheetId: state.checker.currentSheetId,
   networkCells: state.checker.networkCells,
-  currentSection: state.checker.currentSection
 })
 
 const mapDispatchToProps = dispatch => ({

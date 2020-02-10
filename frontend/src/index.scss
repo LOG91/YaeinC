@@ -2,16 +2,44 @@
 
 .nav-box {
   display: flex;
+  padding: 15px 200px;
   justify-content: space-between;
   background-color: #fff;
+  &__flex {
+    position: relative;
+    display: flex;
+    width: 65%;
+  }
   &__list {
     display: flex;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    margin-bottom: 0px;
+  }
+  &__item {
+    margin-right: 30px;
+    font-family: $main-font;
+    font-size: 18px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  &__a {
+    color: inherit;
+    &:hover {
+      color: #91909e;
+    }
   }
 }
 
 .logo-box {
   display: flex;
+  font-family: $main-font;
   margin: 2px 11px;
+  &__a {
+    color: inherit;
+  }
   &__logo {
     font-size: 25px;
     color: #fd8181;
@@ -29,11 +57,14 @@
   }
   &__desc {
     position: relative;
-    color: #91919e;
     font-size: 30px;
+    &:hover {
+      color: $main-color;
+    }
   }
 }
 .title {
+  font-family: $main-font;
   padding: 2rem;
   font-size: 40px;
   text-align: center;
@@ -50,17 +81,52 @@
   font-style: italic;
   font-size: 24px;
   font-weight: 600;
-  color: #ffe9ce;
 }
 .root__description {
   text-align: center;
   font-size: 30px;
   font-weight: 300;
+  font-family: $main-font;
 }
 
 .main-container {
   min-height: 1000px;
   background-color: #91919e;
+}
+.footer {
+  font-family: $main-font;
+  padding: 50px 200px;
+  .footer-main {
+    display: flex;
+    justify-content: space-between;
+    &__logo {
+      font-size: 30px;
+    }
+    &__a {
+      color: inherit;
+      &:hover {
+        color: $main-color;
+      }
+    }
+    &__logo--sns {
+      position: relative;
+      top: 1px;
+      font-size: 30px;
+      cursor: pointer;
+    }
+    &__list {
+      display: flex;
+      position: absolute;
+      top: 50%;
+      transform: translate(-100%, -50%);
+    }
+    &__item {
+      margin-right: 20px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
 }
 
 @include media(mobile) {

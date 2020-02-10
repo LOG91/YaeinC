@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
 import './CellTable.scss';
-import { indexing, changeCurrentInfo, checkWorship, checkMemberWorship, countContent, sheets, changeLeaderName, changeMemberName, removeLeader, removeMember, modalOpend } from '../../store/modules/checker';
+import { changeCurrentInfo, checkWorship, checkMemberWorship, countContent, sheets, changeLeaderName, changeMemberName, removeLeader, removeMember, modalOpend } from '../../store/modules/checker';
 import { connect } from 'react-redux';
 
-import renderCellList from './CellListTable'
-import FortalModal from '../Modal/FortalModal';
+import renderCellList from './CellListTable';
 import Modal from '../Modal/Modal';
 import AddForm from '../AddForm/AddForm';
 
@@ -104,7 +103,8 @@ class CellTable extends PureComponent {
 
 
   render() {
-    const { isAdmin, currentSection, sheets } = this.props;
+    const { isAdmin, currentSection, sheets, current } = this.props;
+    console.log(current, '커런트');
     return (
       <table className={isAdmin ? "print-area cell-table" : "cell-table"} border="1" cellPadding="10">
         <tbody>
@@ -154,7 +154,6 @@ class CellTable extends PureComponent {
 const mapStateToProps = (state) => {
   return ({
     members: state.checker.members,
-    idx: state.checker.idx,
     currentSection: state.checker.currentSection,
     sheets: state.checker.sheets,
     modalOpend: state.checker.modalOpend
@@ -162,7 +161,6 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  indexing: idx => dispatch(indexing(idx)),
   checkWorship: (name, sectionIdx, left) => dispatch(checkWorship(name, sectionIdx, left)),
   checkMemberWorship: (leaderId, id, sec, sectionIdx, left) => dispatch(checkMemberWorship(leaderId, id, sec, sectionIdx, left)),
   countContent: (name, sectionIdx, left, count) => dispatch(countContent(name, sectionIdx, left, count)),
