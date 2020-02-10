@@ -21,11 +21,11 @@ class Tab extends Component {
   }
 
   render() {
-    const { isAdmin, attached, sheets } = this.props;
+    const { isAdmin, attached, sheets, currentSheet } = this.props;
     return (
         <ul className="tab">
           {sheets.map((v, idx) =>{
-            return <li key={idx} className={this.props.idx === v.name ? "index active" : "index"}>
+            return <li key={idx} className={currentSheet === v.name ? "index active" : "index"}>
               <Link to={`/${isAdmin ? 'admin/' : ''}${attached}/${v.name}`} onClick={() => this.handleClick(v.name)} >{v.name}</Link>
           </li>})}
         </ul>

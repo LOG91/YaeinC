@@ -1,6 +1,5 @@
 import React, { useEffect, PureComponent } from 'react';
 import { connect } from 'react-redux';
-import './Main.scss';
 
 import { changeCurrentInfo, modalOpend } from '../store/modules/checker';
 import { insertMemberData, initMemberData } from '../store/modules/inserted';

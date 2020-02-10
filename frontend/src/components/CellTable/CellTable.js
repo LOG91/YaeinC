@@ -103,7 +103,8 @@ class CellTable extends PureComponent {
 
 
   render() {
-    const { isAdmin, currentSection, sheets } = this.props;
+    const { isAdmin, currentSection, sheets, current } = this.props;
+    console.log(current, '커런트');
     return (
       <table className={isAdmin ? "print-area cell-table" : "cell-table"} border="1" cellPadding="10">
         <tbody>
