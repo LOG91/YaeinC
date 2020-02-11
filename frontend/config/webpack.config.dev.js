@@ -23,16 +23,16 @@ module.exports = {
         secure: false,
         changeOrigin: true
       },
-      // '/hello': {
-      //   target: 'http://localhost:5000',
-      //   secure: false,
-      //   changeOrigin: true
-      // },
-      // '/todos': {
-      //   target: 'http://localhost:5000',
-      //   secure: false,
-      //   changeOrigin: true
-      // }
+      '/hello': {
+        target: 'http://localhost:7000',
+        secure: false,
+        changeOrigin: true
+      },
+      '/todos': {
+        target: 'http://localhost:7000',
+        secure: false,
+        changeOrigin: true
+      }
     }
   },
   devtool: "source-map",
