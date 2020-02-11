@@ -57,7 +57,7 @@ const Home = (props) => {
   useEffect(() => {
     console.log(attached);
     changeCurrentInfo('attached', attached);
-    fetch(`http://localhost:7000/api/sheet/${attached}`).then(res => {
+    fetch(`/api/sheet/${attached}`).then(res => {
       return res;
     }).then(res => res.json())
       .then(sheets => {
@@ -71,12 +71,12 @@ const Home = (props) => {
         changeCurrentInfo('attached', attached);
         const currentSheetId = sheets.length && sheets.find(v => v.name === current)._id;
         changeCurrentInfo('currentSheetId', currentSheetId);
-        fetch(`http://localhost:7000/api/networkCell/${currentSheetId}`)
+        fetch(`/api/networkCell/${currentSheetId}`)
           .then(res => res.json())
           .then(networkCells => {
             const mapped = networkCells.map(v => v.name);
             changeCurrentInfo('networkCells', networkCells);
-            fetch(`http://localhost:7000/api/cells/${JSON.stringify(mapped)}`)
+            fetch(`/api/cells/${JSON.stringify(mapped)}`)
               .then(res => res.json())
               .then(cells => {
                 changeCurrentInfo('currentSection', cells);
@@ -89,7 +89,7 @@ const Home = (props) => {
   
   const resetCheck = () => {
     const currentLocation = window.location.href;
-    fetch('http://localhost:7000/api/reset', {
+    fetch('/api/reset', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

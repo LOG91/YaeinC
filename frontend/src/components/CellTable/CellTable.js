@@ -10,7 +10,7 @@ import AddForm from '../AddForm/AddForm';
 class CellTable extends PureComponent {
 
   handleCheck = (id, sectionIdx, kind) => {
-    fetch(`http://localhost:7000/api/check/leader/${id}`, {
+    fetch(`/api/check/leader/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ class CellTable extends PureComponent {
     const changedName = typeof memberIdx !== 'undefined' ?
       currentSection[sectionIdx][leaderIdx].members[memberIdx].name :
       currentSection[sectionIdx][leaderIdx].name;
-    fetch(`http://localhost:7000/api/change/${id}`, {
+    fetch(`/api/change/${id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ class CellTable extends PureComponent {
 
   handleRemoveMember = ({ id, sectionIdx, leaderIdx, memberIdx }) => {
     const { removeLeader, removeMember, changeCurrentInfo, modalOpend } = this.props;
-    fetch(`http://localhost:7000/api/member/${id}`, {
+    fetch(`/api/member/${id}`, {
       method: 'DELETE'
     }).then(res => res.json())
       .then(res => {
@@ -64,7 +64,7 @@ class CellTable extends PureComponent {
   }
 
   handleCheckMember = async (leaderId, id, memberIdx, sectionIdx, kind) => {
-    const responsedData = await fetch(`http://localhost:7000/api/check/leader/${id}`, {
+    const responsedData = await fetch(`/api/check/leader/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ class CellTable extends PureComponent {
   }
 
   handleCount = async (id, sectionIdx, kind, count) => {
-    const responsedData = await fetch(`http://localhost:7000/api/count/${id}`, {
+    const responsedData = await fetch(`/api/count/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

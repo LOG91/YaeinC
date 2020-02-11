@@ -10,10 +10,10 @@ class Tab extends Component {
     const { changeCurrentInfo, sheets } = this.props;
     const currentSheetId = sheets.length && sheets.find(v => v.name === sheetName)._id;
     changeCurrentInfo('currentSheetId', currentSheetId);
-    const networkCells = await fetch(`http://localhost:7000/api/networkCell/${currentSheetId}`).then(res => res.json()).then();
+    const networkCells = await fetch(`/api/networkCell/${currentSheetId}`).then(res => res.json()).then();
     const mapped = networkCells.map(v => v.name);
     changeCurrentInfo('networkCells', networkCells);
-    fetch(`http://localhost:7000/api/cells/${JSON.stringify(mapped)}`)
+    fetch(`/api/cells/${JSON.stringify(mapped)}`)
       .then(res => res.json())
       .then(cells => {
         changeCurrentInfo('currentSection', cells);
