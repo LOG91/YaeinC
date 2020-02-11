@@ -16,23 +16,23 @@ module.exports = {
     index: "index.html",
     disableHostCheck: true,
     historyApiFallback: true,
-    port: 8080,
+    port: 5000,
     proxy: {
       '/api': {
         target: 'http://localhost:7000',
         secure: false,
         changeOrigin: true
       },
-      '/hello': {
-        target: 'http://localhost:5000',
-        secure: false,
-        changeOrigin: true
-      },
-      '/todos': {
-        target: 'http://localhost:5000',
-        secure: false,
-        changeOrigin: true
-      }
+      // '/hello': {
+      //   target: 'http://localhost:5000',
+      //   secure: false,
+      //   changeOrigin: true
+      // },
+      // '/todos': {
+      //   target: 'http://localhost:5000',
+      //   secure: false,
+      //   changeOrigin: true
+      // }
     }
   },
   devtool: "source-map",
