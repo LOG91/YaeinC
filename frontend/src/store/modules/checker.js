@@ -36,6 +36,7 @@ export const removeCellMember = (idx) => ({ type: REMOVE_CELL_MEMBER, idx });
 
 const initialState = {
   attached: '',
+  church: '',
   section: '',
   sheets: [],
   currentSheetId: '',

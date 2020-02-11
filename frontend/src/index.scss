@@ -71,7 +71,7 @@
   background-size: 100% 100%;
   a {
     text-decoration: none;
-    color: #fff;
+    color: #000;
   }
   a:hover {
     text-decoration: none;
@@ -91,12 +91,14 @@
 
 .main-container {
   min-height: 1000px;
-  background-color: #91919e;
+  background-color: #ececec;
 }
 .footer {
   font-family: $main-font;
+  background-color: #2f3142;
   padding: 50px 200px;
   .footer-main {
+    color: #fff;
     display: flex;
     justify-content: space-between;
     &__logo {
@@ -125,6 +127,9 @@
       &:last-child {
         margin-right: 0;
       }
+    }
+    &__description {
+      color: #fff;
     }
   }
 }
