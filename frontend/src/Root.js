@@ -17,7 +17,7 @@ const Root = ({ currentModal, modalOpend }) => {
         <div className="root-container">
           <nav className="nav-box">
             <h1 className="logo-box">
-              <a className="logo-box__a" href="/"><div className="logo-box__desc">Yaein</div></a>
+              <a className="logo-box__a" href="/admin"><div className="logo-box__desc">Yaein</div></a>
             </h1>
             <div className="nav-box__flex">
               <ul className="nav-box__list">
