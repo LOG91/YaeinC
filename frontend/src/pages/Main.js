@@ -46,7 +46,7 @@ const Main = (props) => {
   const { match: { path }, modalOpend, church, attached, churches, changeCurrentInfo } = props
   
   useEffect(() => {
-    fetch('http://localhost:7000/api/church/all')
+    fetch('/api/church/all')
       .then(res => res.json())
       .then(res => changeCurrentInfo('churches', res));
   }, []);
@@ -63,7 +63,7 @@ const Main = (props) => {
   const addChurch = ({church, attached, churches}) => {
     console.log(church);
     // const { church, attached, churches } = props;
-    fetch('http://localhost:7000/api/church', {
+    fetch('/api/church', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -80,7 +80,6 @@ const Main = (props) => {
   return (
     <>
       <h3 className="title"><a href={isAdmin ? '/admin' : '/'}>Yaein 출석부</a>{isAdmin ? <div className="admin-title">admin</div> : null}</h3>
-      {church}
       <div className="card-wrapper">
         {spreadChurchList({ churches, isAdmin, handleToggleModal, handleChange, addChurch, church, attached })}
       </div>
@@ -95,13 +94,13 @@ const Main = (props) => {
 
 //   async componentDidMount() {
 //     const { changeCurrentInfo } = this.props;
-//     const churchList = await fetch('http://localhost:7000/api/church/all').then(res => res.json()).then();
+//     const churchList = await fetch('/api/church/all').then(res => res.json()).then();
 //     changeCurrentInfo('churches', churchList);
 //   }
 
 //   addChurch = () => {
 //     const { changeCurrentInfo, insertedMember: { church, attached }, churches } = this.props;
-//     fetch('http://localhost:7000/api/church', {
+//     fetch('/api/church', {
 //       method: 'POST',
 //       headers: {
 //         'Content-Type': 'application/json'

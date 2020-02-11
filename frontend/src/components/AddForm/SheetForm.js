@@ -17,7 +17,7 @@ const SheetForm = ({ onToggleModal, attached, insertedMember: {name, section}, i
   }, []);
 
   const addSheet = () => {
-    fetch('http://localhost:7000/api/sheet', {
+    fetch('/api/sheet', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

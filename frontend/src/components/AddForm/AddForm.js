@@ -28,7 +28,7 @@ class AddForm extends Component {
   addNetworkCell = async ({ isAddNetwork }) => {
     const { insertedMember, onToggleModal, currentSheetId, networkCells, changeCurrentInfo, insertNetworkCell } = this.props;
     console.log(insertedMember, 'insertedMember')
-    await fetch('http://localhost:7000/api/leader', {
+    await fetch('/api/leader', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ class AddForm extends Component {
     });
 
     if (isAddNetwork) {
-      await fetch('http://localhost:7000/api/networkCell', {
+      await fetch('/api/networkCell', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ class AddForm extends Component {
         .then(cell => {
           insertNetworkCell(cell);
           const networkCellsNames = [...networkCells.map(v => v.name), cell.name];
-          fetch(`http://localhost:7000/api/cells/${JSON.stringify(networkCellsNames)}`)
+          fetch(`/api/cells/${JSON.stringify(networkCellsNames)}`)
             .then(res => res.json())
             .then(cell => {
               changeCurrentInfo('currentSection', cell);
