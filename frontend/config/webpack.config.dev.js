@@ -11,7 +11,7 @@ module.exports = {
   },
   mode: "development",
   devServer: {
-    // host: '0,0,0,0',
+    host: '0,0,0,0',
     contentBase: path.resolve(__dirname, "../build"),
     index: "index.html",
     disableHostCheck: true,
