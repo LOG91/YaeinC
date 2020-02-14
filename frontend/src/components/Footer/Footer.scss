@@ -1,0 +1,65 @@
+@import '../../custom';
+
+.footer {
+  font-family: $main-font;
+  background-color: #2f3142;
+  padding: 50px 200px;
+  .footer-main {
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    &__logo {
+      font-size: 30px;
+    }
+    &__a {
+      color: inherit;
+      &:hover {
+        color: $main-color;
+      }
+    }
+    &__logo--sns {
+      position: relative;
+      top: 1px;
+      font-size: 30px;
+      cursor: pointer;
+    }
+    &__list {
+      display: flex;
+      position: absolute;
+      top: 50%;
+      transform: translate(-100%, -50%);
+    }
+    &__item {
+      margin-right: 20px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+    &__description {
+      color: #fff;
+    }
+  }
+}
+
+@include media(mobile) {
+  .footer {
+    padding: 0 20px;
+    .footer-main {
+      &__logo {
+        font-size: 20px;
+      }
+      &__logo--sns {
+        font-size: 20px;
+      }
+      &__item {
+        margin-right: 10px;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+      &__description {
+        font-size: 12px;
+      }
+    }
+  }
+}
