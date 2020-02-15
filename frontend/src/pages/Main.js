@@ -44,6 +44,7 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
 
 const Main = (props) => {
   const { match: { path }, modalOpend, church, attached, churches, changeCurrentInfo } = props
+  console.log(props);
   
   useEffect(() => {
     fetch('/api/church/all')

@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Header.scss';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 
 const Header = (props) => {
-
+  const [onSticky, setOnSticky] = useState(false);
+  useEffect(() => {
+    registerHeaderSticky({ stickySize: 70 })
+  })
+  const registerHeaderSticky = ({ stickySize }) => {
+    window.onscroll = () => {
+      if (window.pageYOffset > stickySize) {
+        setOnSticky(true);
+      } else {
+        setOnSticky(false);
+      }
+    }
+  }
   return (
-    <nav className="nav-box">
+    <nav className={onSticky ? "nav-box sticky" : "nav-box"}>
       <h1 className="logo-box">
         <a className="logo-box__a" href="/admin"><div className="logo-box__desc">Yaein</div></a>
       </h1>
