@@ -2,17 +2,16 @@ import React, { useEffect, PureComponent } from 'react';
 import { connect, useStore } from 'react-redux';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import { changeCurrentInfo, modalOpend } from '../store/modules/checker';
-import { insertMemberData, initMemberData } from '../store/modules/inserted';
+import { changeCurrentInfo, modalOpend } from '../../store/modules/checker';
+import { insertMemberData, initMemberData } from '../../store/modules/inserted';
 
-import { Modal, FortalModal } from '../components/Modal'
-import ChurchForm from '../components/AddForm/ChurchForm';
+import { Modal, FortalModal } from '../Modal'
+import ChurchForm from '../AddForm/ChurchForm';
 
-import { Layout } from '../pages/Layout';
-import { Footer } from '../components/Footer';
-import { Header, AdminHeader } from '../components/Header';
-import { Home, Youth } from '../pages';
-import { ChurchList } from '../components/ChurchList';
+import { Layout } from '../../pages/Layout';
+import { Footer } from '../Footer';
+import { Header, AdminHeader } from '../Header';
+import { Home, Youth } from '../../pages';
 
 const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, addChurch }) => {
 
@@ -49,7 +48,7 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
   );
 };
 
-const Main = (props) => {
+const ChurchList = (props) => {
   const { match: { path }, modalOpend, church, attached, churches, changeCurrentInfo } = props
   console.log(props);
 
@@ -87,17 +86,10 @@ const Main = (props) => {
 
   return (
     <>
-      <BrowserRouter>
-        <Layout Header={Header} Footer={Footer}>
-          <div className="main-container">
-            <Switch>
-              <Route exact path="/" component={ChurchList} />
-              <Route exact path="/:attached" component={Home} />
-              <Route path="/:attached/:name" component={Home} />
-            </Switch>
-          </div>
-        </Layout>
-      </BrowserRouter>
+      <h3 className="title"><a href={isAdmin ? '/admin' : '/'}>교회 목록</a></h3>
+      <div className="card-wrapper">
+        {spreadChurchList({ churches, isAdmin, handleToggleModal, handleChange, addChurch, church, attached })}
+      </div>
     </>
   );
 }
@@ -116,4 +108,4 @@ const mapDispatchToProps = dispatch => ({
   changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(ChurchList);

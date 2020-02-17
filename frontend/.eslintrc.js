@@ -1,10 +1,11 @@
 // module.exports = {
 //     "env": {
 //         "browser": true,
-//         "node": true,
 //         "es6": true
 //     },
-//     "extends": "airbnb-base",
+//     "extends": [
+//         "airbnb-base",
+//     ],
 //     "globals": {
 //         "Atomics": "readonly",
 //         "SharedArrayBuffer": "readonly"
@@ -13,11 +14,11 @@
 //         "ecmaFeatures": {
 //             "jsx": true
 //         },
-//         "sourceType": "module",
-//         "ecmaVersion": 2018
+//         "ecmaVersion": 2018,
+//         "sourceType": "module"
 //     },
 //     "plugins": [
-//         "react",
+//         "react"
 //     ],
 //     "rules": {
 //     }

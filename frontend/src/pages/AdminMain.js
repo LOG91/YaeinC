@@ -88,12 +88,12 @@ const Main = (props) => {
   return (
     <>
       <BrowserRouter>
-        <Layout Header={Header} Footer={Footer}>
+        <Layout Header={AdminHeader} Footer={Footer}>
           <div className="main-container">
             <Switch>
-              <Route exact path="/" component={ChurchList} />
-              <Route exact path="/:attached" component={Home} />
-              <Route path="/:attached/:name" component={Home} />
+              <Route exact path="/admin" component={ChurchList} />
+              <Route exact path="/admin/:attached" component={Home} />
+              <Route path="/admin/:attached/:name" component={Home} />
             </Switch>
           </div>
         </Layout>

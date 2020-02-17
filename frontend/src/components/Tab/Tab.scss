@@ -1,4 +1,5 @@
 @import '../../_custom.scss';
+$active-color: #7226e5;
 
 .tab {
   font-family: $main-font;
@@ -15,30 +16,28 @@
       display: block;
       padding: 1rem 2rem;
       text-decoration: none;
-      color: #fff;
+      color: #000;
     }
     &.active {
-      border-bottom: 2px solid #676767;
-      a{
-        color: #444;
+      border-bottom: 2px solid $active-color;
+      a {
+        color: $active-color;
       }
       font-weight: 600;
     }
-    @include media(mobile) {
-      a {
-        padding: 5px;
-      }
-    }
     &:hover {
-      a{
-        color: #444;
+      a {
+        color: $active-color;
       }
-      border-bottom: 2px solid #676767;
+      border-bottom: 2px solid $active-color;
     }
   }
 }
 @include media(mobile) {
   .tab {
     font-size: 9px;
+  }
+  a {
+    padding: 5px;
   }
 }

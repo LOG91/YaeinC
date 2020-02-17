@@ -25,22 +25,7 @@ const Home = (props) => {
   const { name: current, attached } = match.params;
   const { modalOpend } = useSelector(state => state.checker);
   const isAdmin = match.url.match(/admin/g);
-  const dispatch = useDispatch();
-
-  //   shouldComponentUpdate() {
-  //   const { match, changeCurrentInfo, sheets } = this.props;
-  //   const { name: current, attached } = match.params;
-  //   if (!current) {
-  //     changeCurrentInfo('attached', attached);
-  //     return true;
-  //   }
-  //   changeCurrentInfo('idx', current);
-  //   sheets.length && changeCurrentInfo('currentSheetId', sheets.find(v => v.name === current)._id);
-  //   changeCurrentInfo('section', mapSectionByEnName(current));
-
-  //   changeCurrentInfo('attached', attached);
-  //   return true;
-  // }
+  
   useEffect(() => {
     console.log('shouldComponentUpdate');
     console.log(current);
@@ -54,6 +39,7 @@ const Home = (props) => {
 
     changeCurrentInfo('attached', attached);
   }, [current, attached]);
+  
   useEffect(() => {
     console.log(attached);
     changeCurrentInfo('attached', attached);
@@ -117,7 +103,7 @@ const Home = (props) => {
 
   return (
     <>
-      <h3 className="title"><a href={isAdmin ? '/admin' : '/'}>Yaein 출석부</a>{isAdmin ? <div className="admin-title">admin</div> : null}</h3>
+      <h3 className="title"><a href={isAdmin ? '/admin' : '/'}>출석체크</a></h3>
       {isAdmin ? (
         <div className="edit-box">
           <div className="button-box">

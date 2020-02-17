@@ -4,11 +4,13 @@ import './Header.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 
-const Header = (props) => {
+const Header = () => {
   const [onSticky, setOnSticky] = useState(false);
+
   useEffect(() => {
-    registerHeaderSticky({ stickySize: 70 })
-  })
+    registerHeaderSticky({ stickySize: 70 });
+  });
+
   const registerHeaderSticky = ({ stickySize }) => {
     window.onscroll = () => {
       if (window.pageYOffset > stickySize) {
@@ -16,8 +18,9 @@ const Header = (props) => {
       } else {
         setOnSticky(false);
       }
-    }
-  }
+    };
+  };
+
   return (
     <nav className={onSticky ? "nav-box sticky" : "nav-box"}>
       <h1 className="logo-box">
@@ -35,7 +38,7 @@ const Header = (props) => {
         <a><FontAwesomeIcon className="logo-box__logo--user" icon={faUserCircle} /></a>
       </div>
     </nav>
-  )
-}
+  );
+};
 
 export default Header;

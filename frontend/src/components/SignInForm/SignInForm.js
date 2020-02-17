@@ -20,7 +20,7 @@ const SignInForm = ({ authenticated, signin, location }) => {
   if (authenticated) return <Redirect to={from} />;
 
   return (
-    <div className="signin-box">
+    <form className="signin-box" onSubmit={handleClick}>
       <h1 className="signin-box__heading">로그인</h1>
       <div>아이디: yaein<br />비번: 1234</div>
       <input
@@ -35,8 +35,8 @@ const SignInForm = ({ authenticated, signin, location }) => {
         type="password"
         placeholder="password"
       />
-      <button onClick={handleClick}>로그인</button>
-    </div>
+      <button type="submit">로그인</button>
+    </form>
   );
 }
 

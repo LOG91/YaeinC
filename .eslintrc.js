@@ -1,10 +1,13 @@
 module.exports = {
     "env": {
         "browser": true,
-        "node": true,
         "es6": true
     },
-    "extends": "airbnb",
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        // "airbnb-base",
+    ],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
@@ -13,12 +16,13 @@ module.exports = {
         "ecmaFeatures": {
             "jsx": true
         },
-        "sourceType": "module",
-        "ecmaVersion": 2018
+        "ecmaVersion": 2018,
+        "sourceType": "module"
     },
     "plugins": [
         "react"
     ],
     "rules": {
+        "semi": ["error"]
     }
 };
