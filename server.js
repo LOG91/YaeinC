@@ -46,31 +46,32 @@ app.use(session({
 app.use('/api', require('./api/api'));
 
 
-app.get('/hello', (req, res, next) => {
-  if (req.session.logined) {
-    res.render('logout', { id: req.session.user_id });
-  } else {
-    res.render('login');
-  }
-});
+// app.get('/signin', (req, res, next) => {
+//   if (req.session.logined) {
+//     res.render('logout', { id: req.session.user_id });
+//   } else {
+//     res.render('login');
+//   }
+// });
 
-app.get('/hello/register', (req, res) => {
+app.get('/api/signin/register', (req, res) => {
   res.render('register');
 });
 
-app.post('/hello/register', (req, res) => {
+app.post('/api/signin/register', (req, res) => {
   let uid = req.body.user_id;
   let upwd = req.body.password;
-  duplicate(req, res, uid, upwd);
+  duplicate({ req, res, uid, upwd });
 });
 
-app.post('/hello', (req, res) => {      // 2
-  console.log(req.body);
+app.post('/api/signin', (req, res) => {      // 2
+  console.log('Hello!!!');
   let uid = req.body.id;
   let upwd = req.body.pwd;
   duplicate({ req, res, uid, upwd });
+  console.log(1234234);
 });
-app.post('/hello/logout', (req, res) => {      // 3
+app.post('/api/signin/logout', (req, res) => {      // 3
   req.session.destroy();
   res.redirect('/hello');
 });
@@ -79,17 +80,19 @@ app.listen(port, () => console.log(`Listening on port ${1000000}`));
 
 
 function duplicate({ req, res, uid, upwd }) {
+  // console.log('유알엘', url);
+  // console.log('알이큐', req);
   let parseUrl = url.parse(req.url);
   let resource = parseUrl.pathname;
   console.log(`리소스 = ${resource}`);
-  if (resource == '/hello/register') {
+  if (resource == '/api/signin/register') {
     User.findOne({ "user_id": uid }, (err, user) => {
       if (err) return res.json(err);
 
       if (user) {
         console.log('user id duplicate');
         res.send(`
-                  <a href="/">Back</a>
+                  <a href="/signin">Back</a>
                   <h1>User id duplicate</h1>
               `);
       } else {
@@ -113,20 +116,20 @@ function duplicate({ req, res, uid, upwd }) {
             if (!user) {
               console.log('different password');
               res.send(`
-                      <a href="/">Back</a>
+                      <a href="/signin">Back</a>
                       <h1>Different password</h1>
                   `);
             } else {
-              console.log('Welcome');
+              console.log('Welcome 21');
               req.session.user_id = uid;
               req.session.logined = true;
-              res.redirect('/admin');
+              res.send({ ok: true, uid });
             }
           })
       } else {
         console.log('Cannot find user');
         res.send(`
-                  <a href="/">Back</a>
+                  <a href="/signin">Back</a>
                   <h1>Cannot find user</h1>
               `);
       }

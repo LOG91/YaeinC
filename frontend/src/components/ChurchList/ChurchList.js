@@ -1,17 +1,12 @@
-import React, { useEffect, PureComponent } from 'react';
-import { connect, useStore } from 'react-redux';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+/*eslint-disable */
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 
-import { changeCurrentInfo, modalOpend } from '../../store/modules/checker';
+import { changeCurrentInfo } from '../../store/modules/checker';
 import { insertMemberData, initMemberData } from '../../store/modules/inserted';
 
-import { Modal, FortalModal } from '../Modal'
+import { Modal } from '../Modal'
 import ChurchForm from '../AddForm/ChurchForm';
-
-import { Layout } from '../../pages/Layout';
-import { Footer } from '../Footer';
-import { Header, AdminHeader } from '../Header';
-import { Home, Youth } from '../../pages';
 
 const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, addChurch }) => {
 
@@ -19,7 +14,7 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
     <>
       {churches.map(({ name, attached }) => {
         return (
-          <div className="card card-box">
+          <div key={name} className="card card-box">
             <a href={isAdmin ? `admin/${name}` : name}>
               <div className="card-body">
                 <h5 className="card-title card-box__title">{name}</h5>
@@ -27,7 +22,7 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
               </div>
             </a>
           </div>
-        )
+        );
       })}
       {isAdmin ? (
         <div
@@ -68,8 +63,6 @@ const ChurchList = (props) => {
   }
 
   const addChurch = ({ church, attached, churches }) => {
-    console.log(church);
-    // const { church, attached, churches } = props;
     fetch('/api/church', {
       method: 'POST',
       headers: {
@@ -81,8 +74,8 @@ const ChurchList = (props) => {
       return res.json()
     }).then(res => {
       changeCurrentInfo('churches', [...churches, res]);
-    })
-  }
+    });
+  };
 
   return (
     <>
@@ -92,7 +85,7 @@ const ChurchList = (props) => {
       </div>
     </>
   );
-}
+};
 
 const mapStateToProps = state => ({
   insertedMember: state.inserted.insertedMember,
@@ -100,12 +93,13 @@ const mapStateToProps = state => ({
   modalOpend: state.checker.modalOpend,
   church: state.checker.church,
   attached: state.checker.attached
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),
   initMemberData: () => initMemberData(),
   changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right))
-})
+});
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChurchList);

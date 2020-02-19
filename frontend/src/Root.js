@@ -6,7 +6,7 @@ import { Home, Youth, Main, AdminMain } from './pages';
 import { Layout } from './pages/Layout'
 import { Footer } from './components/Footer';
 import { Header, AdminHeader } from './components/Header';
-import { SignInForm } from './components/SignInForm';
+import { SignInForm, RegisterForm } from './components/SignIn';
 import { AuthRoute } from './components/AuthRoute';
 import { FortalModal } from './components/Modal';
 
@@ -41,6 +41,13 @@ const Root = (props) => {
             exact
             render={props => (
               <SignInForm authenticated={authenticated} signin={signin} {...props} />
+            )}
+          />
+          <Route
+            path="/register"
+            exact
+            render={props => (
+              <RegisterForm authenticated={authenticated} signin={signin} {...props} />
             )}
           />
           <Route path="/admin/:attached/:name" component={AdminMain} />
