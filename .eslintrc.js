@@ -17,7 +17,7 @@ module.exports = {
             "jsx": true
         },
         "ecmaVersion": 2018,
-        "sourceType": "module"
+        "sourceType": ["module", "require"]
     },
     "plugins": [
         "react"

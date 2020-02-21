@@ -31,7 +31,7 @@ const Root = (props) => {
         <Switch>
           <Route exact path="/" component={Main} />
           <AuthRoute
-            authenticated={authenticated}
+            // authenticated={authenticated}
             exact
             path="/admin"
             render={props => <AdminMain user={user} {...props} />}

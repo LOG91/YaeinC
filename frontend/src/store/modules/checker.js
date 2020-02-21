@@ -53,8 +53,9 @@ const initialState = {
   },
   currentSection: [],
   currentModal: null,
-  modalOpend: null
-}
+  modalOpend: null,
+  authenticated: false
+};
 
 export default function checker(state = initialState, action) {
   switch (action.type) {
@@ -62,13 +63,13 @@ export default function checker(state = initialState, action) {
       return {
         ...state,
         [action.left]: action.right
-      }
-      
+      };
+
     case INSERT_NETWORKCELL:
       return {
         ...state,
         networkCells: [...state.networkCells, action.addedNetworkCell]
-      }
+      };
     case CHANGE_LEADER_NAME:
       return {
         ...state,
@@ -79,7 +80,7 @@ export default function checker(state = initialState, action) {
         ],
         ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
-      }
+      };
     case CHANGE_MEMBER_NAME:
       return {
         ...state,
@@ -96,7 +97,7 @@ export default function checker(state = initialState, action) {
         ],
         ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
-      }
+      };
     case REMOVE_LEADER:
       return {
         ...state,
@@ -106,7 +107,7 @@ export default function checker(state = initialState, action) {
         ],
         ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
-      }
+      };
     case REMOVE_MEMBER:
       return {
         ...state,
@@ -120,7 +121,7 @@ export default function checker(state = initialState, action) {
         ],
         ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
-      }
+      };
     case CHECK_WORSHIP:
       return {
         ...state,
@@ -128,13 +129,13 @@ export default function checker(state = initialState, action) {
           ...state.currentSection.slice(0, action.sectionIdx),
           state.currentSection[action.sectionIdx].map(member => {
             if (member._id === action.id) {
-              return { ...member, [action.left]: !member[action.left] }
+              return { ...member, [action.left]: !member[action.left] };
             }
             return member;
           }),
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ],
-      }
+      };
     case CHECK_MEMBER_WORSHIP:
       return {
         ...state,
@@ -147,13 +148,13 @@ export default function checker(state = initialState, action) {
                 members: [...member.members.slice(0, action.sec),
                 { ...member.members[action.sec], [action.left]: !member.members[action.sec][action.left] },
                 ...member.members.slice(action.sec + 1, member.members.length)]
-              }
+              };
             }
             return member;
           }),
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ],
-      }
+      };
     case COUNT_CONTENT:
       return {
         ...state,
@@ -161,13 +162,13 @@ export default function checker(state = initialState, action) {
           ...state.currentSection.slice(0, action.sectionIdx),
           state.currentSection[action.sectionIdx].map(member => {
             if (member._id === action.id) {
-              return { ...member, [action.left]: action.count }
+              return { ...member, [action.left]: action.count };
             }
             return member;
           }),
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ],
-      }
+      };
     case CHECK_YOUTH:
       return {
         ...state,
@@ -184,13 +185,13 @@ export default function checker(state = initialState, action) {
                     [action.date]: !leader.youth.att[action.date]
                   }
                 }
-              }
+              };
             }
             return leader;
           }),
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
-      }
+      };
     case CHECK_MEMBER_YOUTH:
       return {
         ...state,
@@ -219,7 +220,7 @@ export default function checker(state = initialState, action) {
           ],
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
-      }
+      };
 
     case INIT_MEMBER_DATA:
       return {
@@ -233,7 +234,7 @@ export default function checker(state = initialState, action) {
           cellNameKr: '',
           members: []
         }
-      }
+      };
     case INSERT_MEMBER_DATA:
       return {
         ...state,
@@ -241,7 +242,7 @@ export default function checker(state = initialState, action) {
           ...state.insertedMember,
           [action.left]: action.value
         }
-      }
+      };
     case INSERT_CELL_MEMBER:
       return {
         ...state,
@@ -252,7 +253,7 @@ export default function checker(state = initialState, action) {
             { ...state.insertedMember.members[action.idx], [action.left]: action.right },
             ...state.insertedMember.members.slice(action.idx + 1, state.insertedMember.members.length)]
         }
-      }
+      };
     case REMOVE_CELL_MEMBER:
       return {
         ...state,
@@ -260,7 +261,7 @@ export default function checker(state = initialState, action) {
           ...state.insertedMember,
           members: state.insertedMember.members.filter((v, idx) => idx !== action.idx)
         }
-      }
+      };
 
 
     default:

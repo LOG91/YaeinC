@@ -59,29 +59,38 @@ app.get('/api/signin/register', (req, res) => {
 });
 
 app.post('/api/signin/register', (req, res) => {
-  let uid = req.body.user_id;
+  let uid = req.body.username;
   let upwd = req.body.password;
   duplicate({ req, res, uid, upwd });
 });
 
 app.post('/api/signin', (req, res) => {      // 2
-  console.log('Hello!!!');
-  let uid = req.body.id;
-  let upwd = req.body.pwd;
+  console.log('Hello!!!', req.body.username, req.body.password);
+  let uid = req.body.username;
+  let upwd = req.body.password;
   duplicate({ req, res, uid, upwd });
-  console.log(1234234);
 });
 app.post('/api/signin/logout', (req, res) => {      // 3
   req.session.destroy();
   res.redirect('/hello');
 });
 
+app.get('/getinfo', (req, res) => {
+  if(typeof req.session.loginInfo === "undefined") {
+      return res.status(401).json({
+          error: "THERE IS NO LOGIN DATA",
+          code: 1
+      });
+  }
+
+  res.json({ info: req.session.loginInfo });
+});
+
+
 app.listen(port, () => console.log(`Listening on port ${1000000}`));
 
 
 function duplicate({ req, res, uid, upwd }) {
-  // console.log('유알엘', url);
-  // console.log('알이큐', req);
   let parseUrl = url.parse(req.url);
   let resource = parseUrl.pathname;
   console.log(`리소스 = ${resource}`);
@@ -100,13 +109,19 @@ function duplicate({ req, res, uid, upwd }) {
           if (err) return res.json(err);
           console.log('Success');
           res.redirect('/admin');
-        })
+        });
       }
-    })
+    });
   } else {
     User.findOne({ "user_id": uid }, (err, user) => {
       console.log(err, user, uid);
       if (err) return res.json(err);
+      if (!user) {
+        return res.status(401).json({
+          error: "THERE IS NO USER",
+          code: 2
+        });
+      }
 
       if (user) {
         User.findOne({ "password": upwd })
@@ -120,10 +135,14 @@ function duplicate({ req, res, uid, upwd }) {
                       <h1>Different password</h1>
                   `);
             } else {
-              console.log('Welcome 21');
-              req.session.user_id = uid;
-              req.session.logined = true;
-              res.send({ ok: true, uid });
+              console.log('Welcome');
+              req.session.loginInfo = {
+                _id: user._id,
+                username: user.username
+              }
+              // req.session.user_id = uid;
+              // req.session.logined = true;
+              res.json({ success: true });
             }
           })
       } else {
