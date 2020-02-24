@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
@@ -21,15 +21,17 @@ const Root = (props) => {
   const signin = ({ email, password }) => setUser(signIn({ email, password }));
   const signout = () => setUser(null);
 
-  console.log(props);
-
+  // console.log(props);
+  useEffect(() => {
+    fetch('/api/getinfo').then(res => res.json()).then(res => console.log(res));
+  }, []);
 
   return (
     <>
-
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={Main} />
+          {/* <Route path="/" component={AuthRoute} /> */}
           <AuthRoute
             // authenticated={authenticated}
             exact

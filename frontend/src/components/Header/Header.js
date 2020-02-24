@@ -9,7 +9,7 @@ const Header = () => {
 
   useEffect(() => {
     registerHeaderSticky({ stickySize: 70 });
-  });
+  }, []);
 
   const registerHeaderSticky = ({ stickySize }) => {
     window.onscroll = () => {

@@ -2,9 +2,18 @@ const AUTH_LOGIN = 'AUTH_LOGIN';
 const AUTH_LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS';
 const AUTH_LOGIN_FAILURE = 'AUTH_LOGIN_FAILURE';
 
+const AUTH_GET_STATUS = 'AUTH_GET_STATUS';
+const AUTH_GET_STATUS_SUCCESS = 'AUTH_GET_STATUS_SUCCESS';
+const AUTH_GET_STATUS_FAILURE = 'AUTH_GET_STATUS_FAILURE';
+
 export const login = () => ({ type: AUTH_LOGIN });
 export const loginSuccess = (username) => ({ type: AUTH_LOGIN_SUCCESS, username });
 export const loginFailure = () => ({ type: AUTH_LOGIN_FAILURE });
+
+export const getStatus = () => ({ type: AUTH_GET_STATUS });
+export const getStatusSuccess = (username) => ({ type: AUTH_GET_STATUS_SUCCESS, username });
+export const getStatusFailure = () => ({ type: AUTH_GET_STATUS_FAILURE });
+
 
 export const loginRequest = (username, password) => {
   return (dispatch) => {
@@ -24,6 +33,21 @@ export const loginRequest = (username, password) => {
     });
   };
 };
+export const getStatusRequest = () => {
+  return (dispatch) => {
+    dispatch(getStatus());
+
+    return fetch('/api/getinfo')
+      .then((res) => {
+        dispatch(getStatusSuccess(res.data.info.username));
+      })
+      .catch((err) => {
+        dispatch(getStatusFailure());
+      });
+  };
+};
+
+
 const initialState = {
   login: { status: null },
   status: null
@@ -55,6 +79,32 @@ export default function signin(state = initialState, action) {
         ...state,
         login: {
           status: "FAILURE"
+        }
+      };
+    case AUTH_GET_STATUS:
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          isLoggedIn: true
+        }
+      };
+    case AUTH_GET_STATUS_SUCCESS:
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          valid: true,
+          currentUser: action.username
+        }
+      };
+    case AUTH_GET_STATUS_FAILURE:
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          valid: false,
+          isLoggedIn: false
         }
       };
     default:

@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Switch, Route, withRouter } from 'react-router-dom';
 
 import { Layout } from '../pages/Layout';
 import { Footer } from '../components/Footer';
@@ -9,7 +9,7 @@ import { ChurchList } from '../components/ChurchList';
 
 
 const Main = () => {
-
+  
   return (
     <>
       <BrowserRouter>

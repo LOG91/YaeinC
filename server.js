@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const cors = require('cors');
+const hasher = require('node-hasher');
 
 const app = express();
 const port = process.env.PORT || 7000;
@@ -75,12 +76,12 @@ app.post('/api/signin/logout', (req, res) => {      // 3
   res.redirect('/hello');
 });
 
-app.get('/getinfo', (req, res) => {
-  if(typeof req.session.loginInfo === "undefined") {
-      return res.status(401).json({
-          error: "THERE IS NO LOGIN DATA",
-          code: 1
-      });
+app.get('/api/getinfo', (req, res) => {
+  if (typeof req.session.loginInfo === "undefined") {
+    return res.status(401).json({
+      error: "THERE IS NO LOGIN DATA",
+      code: 1
+    });
   }
 
   res.json({ info: req.session.loginInfo });
@@ -138,7 +139,7 @@ function duplicate({ req, res, uid, upwd }) {
               console.log('Welcome');
               req.session.loginInfo = {
                 _id: user._id,
-                username: user.username
+                username: user.user_id
               }
               // req.session.user_id = uid;
               // req.session.logined = true;

@@ -36,6 +36,12 @@ class SignInForm extends Component {
         }
       });
   };
+  handleKeyPress = (e) => {
+    if (e.charCode == 13) {
+      this.handleLogin(e);
+    }
+  }
+
   handleLogin = e => {
     const { authenticated, signin, location, changeCurrentInfo, history, loginRequest, status, login } = this.props;
     e.preventDefault();
@@ -44,7 +50,7 @@ class SignInForm extends Component {
         console.log(this.props.status, this.props);
         if (this.props.status === 'SUCCESS') {
           console.log('삼성다니그든')
-          
+
           let loginData = {
             isLoggedIn: true,
             username: this.state.id
@@ -70,13 +76,13 @@ class SignInForm extends Component {
         <div>아이디: yaein<br />비번: 1234</div>
         <input
           value={this.state.id}
-          onChange={({ target: { value } }) => this.setState({id: value})}
+          onChange={({ target: { value } }) => this.setState({ id: value })}
           type="text"
           placeholder="id"
         />
         <input
           value={this.state.password}
-          onChange={({ target: { value } }) => this.setState({password: value})}
+          onChange={({ target: { value } }) => this.setState({ password: value })}
           type="password"
           placeholder="password"
         />
