@@ -12,12 +12,6 @@ class SignInForm extends Component {
       password: ''
     };
   }
-  componentDidMount() {
-    console.log(document.cookie);
-  }
-
-  // const[id, setId] = useState('');
-  // const[password, setPassword] = useState('');
 
   handleClick = e => {
     const { authenticated, signin, location, changeCurrentInfo, history, loginRequest, status, login } = this.props;
@@ -47,9 +41,7 @@ class SignInForm extends Component {
     e.preventDefault();
     return loginRequest(this.state.id, this.state.password).then(
       () => {
-        console.log(this.props.status, this.props);
         if (this.props.status === 'SUCCESS') {
-          console.log('삼성다니그든')
 
           let loginData = {
             isLoggedIn: true,
@@ -67,8 +59,6 @@ class SignInForm extends Component {
     )
   }
 
-  // const { from } = location.state || { from: { pathname: "/" } };
-  // if (authenticated) return <Redirect to={from} />;
   render() {
     return (
       <form className="signin-box" onSubmit={this.handleLogin}>

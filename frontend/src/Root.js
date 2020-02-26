@@ -2,28 +2,43 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import { Home, Youth, Main, AdminMain } from './pages';
-import { Layout } from './pages/Layout'
-import { Footer } from './components/Footer';
-import { Header, AdminHeader } from './components/Header';
+import { Main, AdminMain } from './pages';
 import { SignInForm, RegisterForm } from './components/SignIn';
-import { AuthRoute } from './components/AuthRoute';
 import { FortalModal } from './components/Modal';
 
 import { signIn } from './temp/auth'
+import { getStatusRequest } from './store/modules/signin';
 
 
 const Root = (props) => {
-  const { currentModal, modalOpend } = props;
+  const { currentModal, modalOpend, history } = props;
   const [user, setUser] = useState(null);
   const authenticated = user != null;
 
   const signin = ({ email, password }) => setUser(signIn({ email, password }));
   const signout = () => setUser(null);
 
-  // console.log(props);
   useEffect(() => {
-    fetch('/api/getinfo').then(res => res.json()).then(res => console.log(res));
+    const getCookie = (name) => {
+      let value = '; ' + document.cookie;
+      let parts = value.split('; ' + name + '=');
+      if (parts.length === 2) return parts.pop();
+    };
+
+    let loginData = getCookie('key');
+    if (typeof loginData === 'undefined') return;
+    loginData = JSON.parse(atob(loginData));
+    if (!loginData.isLoggedIn) return;
+    props.getStatusRequest().then(
+      (res) => {
+        if (!props.status.valid) {
+          loginData = {
+            isLoggedIn: false,
+            username: ''
+          };
+        }
+      }
+    );
   }, []);
 
   return (
@@ -31,12 +46,10 @@ const Root = (props) => {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={Main} />
-          {/* <Route path="/" component={AuthRoute} /> */}
-          <AuthRoute
-            // authenticated={authenticated}
+          <Route
             exact
             path="/admin"
-            render={props => <AdminMain user={user} {...props} />}
+            render={prop => <AdminMain prop={prop} authenticated={props.status} />}
           />
           <Route
             path="/signin"
@@ -74,12 +87,17 @@ const Root = (props) => {
           null
       }
     </>
-  )
-}
+  );
+};
 
 const mapStateToProps = (state) => ({
   currentModal: state.checker.currentModal,
-  modalOpend: state.checker.modalOpend
+  modalOpend: state.checker.modalOpend,
+  status: state.signin.status
 });
 
-export default connect(mapStateToProps)(Root);
+const mapStateToDispatch = (dispatch) => ({
+  getStatusRequest: () => dispatch(getStatusRequest())
+});
+
+export default connect(mapStateToProps, mapStateToDispatch)(Root);

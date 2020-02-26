@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import { Layout } from '../pages/Layout';
@@ -8,7 +8,10 @@ import { Home } from '../pages';
 import { ChurchList } from '../components/ChurchList';
 
 
-const AdminMain = () => {
+const AdminMain = (props) => {
+  useEffect(() => {
+    const { prop, history, authenticated } = props;
+  }, []);
 
   return (
     <>

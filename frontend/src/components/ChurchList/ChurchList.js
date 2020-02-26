@@ -12,9 +12,9 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
 
   return (
     <>
-      {churches.map(({ name, attached }) => {
+      {churches.map(({ name, attached }, idx) => {
         return (
-          <div key={name} className="card card-box">
+          <div key={attached + idx} className="card card-box">
             <a href={isAdmin ? `admin/${name}` : name}>
               <div className="card-body">
                 <h5 className="card-title card-box__title">{name}</h5>
@@ -45,7 +45,6 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
 
 const ChurchList = (props) => {
   const { match: { path }, modalOpend, church, attached, churches, changeCurrentInfo } = props
-  console.log(props);
 
   useEffect(() => {
     fetch('/api/church/all')

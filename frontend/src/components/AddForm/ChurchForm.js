@@ -11,7 +11,7 @@ const ChurchForm = ({ church, churches, attached, onToggleModal, handleChange, c
 
   const initData = () => {
     handleChange('attached', ATTACHED_LIST[0]);
-  }
+  };
   useEffect(() => {
     initData();
     return () => initMemberData();
@@ -36,8 +36,8 @@ const ChurchForm = ({ church, churches, attached, onToggleModal, handleChange, c
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 
 const mapStateToProps = state => ({
@@ -46,7 +46,7 @@ const mapStateToProps = state => ({
   section: state.checker.section,
   church: state.checker.church,
   churches: state.checker.churches
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),
@@ -54,6 +54,6 @@ const mapDispatchToProps = dispatch => ({
   removeCellMember: (idx) => dispatch(removeCellMember(idx)),
   initMemberData: () => dispatch(initMemberData()),
   changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right))
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChurchForm);

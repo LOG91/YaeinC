@@ -26,7 +26,6 @@ export const loginRequest = (username, password) => {
       },
       body: JSON.stringify({ username, password })
     }).then(res => {
-      console.log(res, '알이에스', username);
       dispatch(loginSuccess(username));
     }).catch(error => {
       dispatch(loginFailure());
@@ -38,8 +37,9 @@ export const getStatusRequest = () => {
     dispatch(getStatus());
 
     return fetch('/api/getinfo')
-      .then((res) => {
-        dispatch(getStatusSuccess(res.data.info.username));
+      .then((res) => res.json())
+      .then(res => {
+        dispatch(getStatusSuccess(res.info.username));
       })
       .catch((err) => {
         dispatch(getStatusFailure());
@@ -50,7 +50,10 @@ export const getStatusRequest = () => {
 
 const initialState = {
   login: { status: null },
-  status: null
+  status: {
+    isLoggedIn: false,
+    valid: false
+  }
 };
 
 export default function signin(state = initialState, action) {
