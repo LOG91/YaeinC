@@ -1,6 +1,8 @@
 /*eslint-disable */
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import './ChurchList.scss';
 
 import { changeCurrentInfo } from '../../store/modules/checker';
 import { insertMemberData, initMemberData } from '../../store/modules/inserted';
@@ -15,12 +17,12 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
       {churches.map(({ name, attached }, idx) => {
         return (
           <div key={attached + idx} className="card card-box">
-            <a href={isAdmin ? `admin/${name}` : name}>
+            <Link to={isAdmin ? `admin/${name}` : name}>
               <div className="card-body">
                 <h5 className="card-title card-box__title">{name}</h5>
                 <h5 className="card-title card-box__subtitle">{attached}</h5>
               </div>
-            </a>
+            </Link>
           </div>
         );
       })}

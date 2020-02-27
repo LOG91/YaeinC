@@ -3,7 +3,8 @@ $active-color: #7226e5;
 
 .tab {
   font-family: $main-font;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(10, auto);
   margin: 0;
   margin-bottom: 10px;
   justify-content: center;

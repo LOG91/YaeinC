@@ -9,14 +9,14 @@ const AdminHeader = (props) => {
   return (
     <nav className="nav-box">
       <h1 className="logo-box">
-        <a className="logo-box__a" href="/admin"><div className="logo-box__desc">Yaein</div></a>
+        <Link className="logo-box__a" to="/admin"><div className="logo-box__desc">Yaein</div></Link>
         <div className="logo-box__admin">admin</div>
       </h1>
       <div className="nav-box__flex">
         <ul className="nav-box__list">
           <li className="nav-box__item"><Link to="/admin" className="nav-box__a">교회관리</Link></li>
-          <li className="nav-box__item"><a href="#" className="nav-box__a">시트상세</a></li>
-          <li className="nav-box__item"><a href="#" className="nav-box__a">시트관리</a></li>
+          <li className="nav-box__item"><Link to="/admin/sheets" className="nav-box__a">시트상세</Link></li>
+          <li className="nav-box__item"><Link to="/admin/members" className="nav-box__a">멤버관리</Link></li>
         </ul>
       </div>
       <div className="logo-box">

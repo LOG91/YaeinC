@@ -49,8 +49,9 @@
     color: inherit;
   }
   &__admin {
+    cursor: pointer;
     font-size: 15px;
-    color: #7227e6
+    color: #7227e6;
   }
   &__logo {
     font-size: 25px;
@@ -70,9 +71,7 @@
   &__desc {
     position: relative;
     font-size: 30px;
-    &:hover {
-      color: $main-color;
-    }
+    color: #000;
   }
 }
 
@@ -109,6 +108,9 @@
       position: relative;
       top: 3px;
       font-size: 15px;
+    }
+    &__admin {
+      font-size: 9px;
     }
   }
 }

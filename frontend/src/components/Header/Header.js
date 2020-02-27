@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Header.scss';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -24,14 +25,14 @@ const Header = () => {
   return (
     <nav className={onSticky ? "nav-box sticky" : "nav-box"}>
       <h1 className="logo-box">
-        <a className="logo-box__a" href="/admin"><div className="logo-box__desc">Yaein</div></a>
+        <Link className="logo-box__a" to="/"><div className="logo-box__desc">Yaein</div></Link>
       </h1>
       <div className="nav-box__flex">
         <ul className="nav-box__list">
-          <li className="nav-box__item"><a href="/" className="nav-box__a">출석체크</a></li>
-          <li className="nav-box__item"><a href="#" className="nav-box__a">교회소식</a></li>
-          <li className="nav-box__item"><a href="#" className="nav-box__a">소식과 나눔</a></li>
-          <li className="nav-box__item"><a href="#" className="nav-box__a">교회학교</a></li>
+          <li className="nav-box__item"><Link to="/" className="nav-box__a">출석체크</Link></li>
+          <li className="nav-box__item"><Link to="#" className="nav-box__a">교회소식</Link></li>
+          <li className="nav-box__item"><Link to="#" className="nav-box__a">소식과 나눔</Link></li>
+          <li className="nav-box__item"><Link to="#" className="nav-box__a">교회학교</Link></li>
         </ul>
       </div>
       <div className="logo-box">
