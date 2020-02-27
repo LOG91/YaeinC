@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { CellTable } from '../components/CellTable';
 import Tab from '../components/Tab/Tab';
-import { attached, changeCurrentInfo, sheets, currentSheetId, networkCells } from '../store/modules/checker';
-import { connect, useSelector, useDispatch } from 'react-redux';
+import { changeCurrentInfo } from '../store/modules/checker';
+import { connect, useSelector } from 'react-redux';
 
 import { Modal } from '../components/Modal';
 import ConfirmModal from '../components/Modal/ConfirmModal';
@@ -18,14 +21,14 @@ const mapSectionByEnName = (enName) => {
           : null;
 
   return section;
-}
+};
 
 const Home = (props) => {
   const { match, sheets, changeCurrentInfo } = props;
   const { name: current, attached } = match.params;
   const { modalOpend } = useSelector(state => state.checker);
   const isAdmin = match.url.match(/admin/g);
-  
+
   useEffect(() => {
     console.log('shouldComponentUpdate');
     console.log(current);
@@ -39,7 +42,7 @@ const Home = (props) => {
 
     changeCurrentInfo('attached', attached);
   }, [current, attached]);
-  
+
   useEffect(() => {
     console.log(attached);
     changeCurrentInfo('attached', attached);
@@ -72,7 +75,7 @@ const Home = (props) => {
       });
 
   }, [])
-  
+
   const resetCheck = () => {
     const currentLocation = window.location.href;
     fetch('/api/reset', {
@@ -84,15 +87,15 @@ const Home = (props) => {
     }).then(() => {
       window.location.href = window.location.href;
     });
-  }
+  };
 
   const handlePrint = () => {
     printTargetNode({
       targetSelector: '.admin-table',
       nonDisplaySelector: ['.networkName-box'],
       nonDisplaySelectorAll: ['.cell-table__td__button', '.network-box__button']
-    })
-  }
+    });
+  };
 
   const handleToggleModal = ({ inner }) => {
     const { changeCurrentInfo } = props;
@@ -107,9 +110,8 @@ const Home = (props) => {
       {isAdmin ? (
         <div className="edit-box">
           <div className="button-box">
-            {sheets.length === 0 ? (<div className="button-box__button--add-notify">시트를 추가하세요</div>) : null}
             <button
-              className={`btn btn-outline-dark button-box__button ${sheets.length === 0 ? 'flashit' : ''}`}
+              className={"btn btn-outline-dark button-box__button"}
               onClick={() => handleToggleModal({ inner: <Modal><SheetForm /></Modal> })}>시트 추가</button></div>
           <div className="button-box">
             <button
@@ -133,6 +135,10 @@ const Home = (props) => {
         <div>
           <div className="root__description">{attached} 출석체크 페이지 :)</div>
           <div className="root__description">🇮🇱🇰🇷🇪🇬🇸🇾🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
+          {sheets.length === 0 ? (<div className="sheet-container" onClick={() => handleToggleModal({ inner: <Modal><SheetForm /></Modal> })}>
+            <div className="sheet-container__description">시트가 없습니다 추가해보세요</div>
+            <div className="sheet-container__icon"><FontAwesomeIcon icon={faPlusCircle} /></div>
+          </div>) : null}
         </div>
       }
     </>

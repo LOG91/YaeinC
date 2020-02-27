@@ -55,10 +55,6 @@
   }
 }
 
-.flashit {
-  -webkit-animation: flash linear 2s infinite;
-  animation: flash linear 2s infinite;
-}
 @-webkit-keyframes flash {
   0% {
     opacity: 1;

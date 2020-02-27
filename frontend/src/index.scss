@@ -25,6 +25,26 @@
   font-weight: 300;
   font-family: $main-font;
 }
+.sheet-container {
+  width: 220px;
+  margin: 0 auto;
+  border: 1px solid #e08989;
+  padding: 7px;
+  cursor: pointer;
+  &__description {
+    @extend .root__description;
+    color: #e08989;
+    font-size: 16px;
+  }
+  &__icon {
+    display: flex;
+    justify-content: center;
+    color: #e08989;
+  }
+  &:hover {
+    opacity: 0.8;
+  }
+}
 
 .main-container {
   min-height: 1000px;
@@ -34,7 +54,7 @@
 .edit-box {
   justify-content: flex-end;
   display: flex;
-  font-family: $main-font;;
+  font-family: $main-font;
   .button-box {
     position: relative;
     margin: 0.2rem;
@@ -57,7 +77,6 @@
   }
 }
 
-
 @include media(mobile) {
   .title {
     font-size: 20px;
@@ -72,4 +91,9 @@
     padding: 0;
     margin: 0;
   }
+}
+
+.flashit {
+  -webkit-animation: flash linear 3s infinite;
+  animation: flash linear 3s infinite;
 }
