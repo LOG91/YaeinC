@@ -6,8 +6,9 @@ import { Main, AdminMain } from './pages';
 import { SignInForm, RegisterForm } from './components/SignIn';
 import { FortalModal } from './components/Modal';
 
-import { signIn } from './temp/auth'
+import { signIn } from './temp/auth';
 import { getStatusRequest } from './store/modules/signin';
+import { MemberList } from './components/MemberList';
 
 
 const Root = (props) => {

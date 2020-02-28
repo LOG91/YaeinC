@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react';
+import { connect, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { CellTable } from '../components/CellTable';
 import Tab from '../components/Tab/Tab';
 import { changeCurrentInfo } from '../store/modules/checker';
-import { connect, useSelector } from 'react-redux';
+
 
 import { Modal } from '../components/Modal';
 import ConfirmModal from '../components/Modal/ConfirmModal';
@@ -31,7 +33,6 @@ const Home = (props) => {
 
   useEffect(() => {
     console.log('shouldComponentUpdate');
-    console.log(current);
     if (!current) {
       changeCurrentInfo('attached', attached);
       return;
@@ -44,14 +45,12 @@ const Home = (props) => {
   }, [current, attached]);
 
   useEffect(() => {
-    console.log(attached);
     changeCurrentInfo('attached', attached);
     fetch(`/api/sheet/${attached}`).then(res => {
       return res;
     }).then(res => res.json())
       .then(sheets => {
         changeCurrentInfo('sheets', sheets);
-        console.log(current);
         if (!current) {
           return;
         }
@@ -101,12 +100,12 @@ const Home = (props) => {
     const { changeCurrentInfo } = props;
     changeCurrentInfo('currentModal', !modalOpend ? inner : null);
     changeCurrentInfo('modalOpend', !modalOpend);
-  }
+  };
 
 
   return (
     <>
-      <h3 className="title"><a href={isAdmin ? '/admin' : '/'}>출석체크</a></h3>
+      <h3 className="title"><Link to={isAdmin ? '/admin' : '/'}>출석체크</Link></h3>
       {isAdmin ? (
         <div className="edit-box">
           <div className="button-box">
@@ -142,9 +141,9 @@ const Home = (props) => {
         </div>
       }
     </>
-  )
+  );
 
-}
+};
 const mapStateToProps = (state) => ({
   currentSection: state.checker.currentSection,
   attached: state.checker.attached,

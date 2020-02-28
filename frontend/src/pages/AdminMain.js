@@ -6,13 +6,11 @@ import { Footer } from '../components/Footer';
 import { AdminHeader } from '../components/Header';
 import { Home } from '../pages';
 import { ChurchList } from '../components/ChurchList';
+import { MemberList } from '../components/MemberList';
 
 
 const AdminMain = (props) => {
-  useEffect(() => {
-    const { prop, history, authenticated } = props;
-  }, []);
-
+  
   return (
     <>
       <BrowserRouter>
@@ -20,6 +18,7 @@ const AdminMain = (props) => {
           <div className="main-container">
             <Switch>
               <Route exact path="/admin" component={ChurchList} />
+              <Route exact path="/admin/members" component={MemberList}/>
               <Route exact path="/admin/:attached" component={Home} />
               <Route path="/admin/:attached/:name" component={Home} />
             </Switch>

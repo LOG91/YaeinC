@@ -280,4 +280,16 @@ router.put('/count/:id', (req, res) => {
   });
 })
 
+router.get('/members', (req, res) => {
+  Leader.find({})
+    .populate('youth')
+    .exec((err, leader) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(leader);
+      }
+    })
+})
+
 module.exports = router;
