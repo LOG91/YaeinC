@@ -1,7 +1,8 @@
 /*eslint-disable */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Sortable from 'sortablejs';
 import './ChurchList.scss';
 
 import { changeCurrentInfo } from '../../store/modules/checker';
@@ -16,7 +17,7 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
     <>
       {churches.map(({ name, attached }, idx) => {
         return (
-          <div key={attached + idx} className="card card-box">
+          <div key={attached + idx} className={`card card-box ${isAdmin && "card-box--admin"}`}>
             <Link to={isAdmin ? `admin/${name}` : name}>
               <div className="card-body">
                 <h5 className="card-title card-box__title">{name}</h5>
@@ -26,20 +27,6 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
           </div>
         );
       })}
-      {isAdmin ? (
-        <div
-          className="card card-box"
-          onClick={() => handleToggleModal({
-            inner: (
-              <Modal>
-                <ChurchForm handleChange={handleChange} confirmAction={addChurch} />
-              </Modal>)
-          })}>
-          <div className="card-body">
-            <div className="icon-plus blue w25" />
-            <div className="card-box__p">페이지 추가</div>
-          </div>
-        </div>) : null}
 
     </>
   );
@@ -48,13 +35,36 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
 const ChurchList = (props) => {
   const { match: { path }, modalOpend, church, attached, churches, changeCurrentInfo } = props
 
+  const [isAdmin, setIsAdmin] = useState(false);
+  const cardWrapper = useRef(null);
+
   useEffect(() => {
+    const _isAdmin = path.match(/admin/);
+    setIsAdmin(_isAdmin);
+    if (_isAdmin) {
+      const el = document.querySelector('.card-wrapper');
+      const sortable = new Sortable(
+        el,
+        {
+          sort: true,
+          delay: 0,
+          animation: 150,
+          onStart: function (/**Event*/evt) {
+            cardWrapper.current.classList.add("sortabling");
+            console.log(evt);
+          },
+          onEnd: (evt) => {
+            cardWrapper.current.classList.remove("sortabling");
+            console.log(evt)
+          },
+        });
+    }
+
     fetch('/api/church/all')
       .then(res => res.json())
       .then(res => changeCurrentInfo('churches', res));
   }, []);
 
-  const isAdmin = path.match(/admin/) ? true : false;
   const handleChange = (key, value) => {
     changeCurrentInfo(key, value);
   }
@@ -81,9 +91,23 @@ const ChurchList = (props) => {
   return (
     <>
       <h3 className="title"><a href={isAdmin ? '/admin' : '/'}>교회 목록</a></h3>
-      <div className="card-wrapper">
+      <div className="card-wrapper" ref={cardWrapper}>
         {spreadChurchList({ churches, isAdmin, handleToggleModal, handleChange, addChurch, church, attached })}
       </div>
+      {isAdmin ? (
+        <div
+          className={`card card-box card-box--add`}
+          onClick={() => handleToggleModal({
+            inner: (
+              <Modal>
+                <ChurchForm handleChange={handleChange} confirmAction={addChurch} />
+              </Modal>)
+          })}>
+          <div className="card-body">
+            <div className="icon-plus blue w25" />
+            <div className="card-box__p">페이지 추가</div>
+          </div>
+        </div>) : null}
     </>
   );
 };

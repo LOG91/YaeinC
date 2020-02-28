@@ -11,6 +11,10 @@
   &__wrap {
     min-height: 600px;
   }
+  &__row {
+    // border: 1px dotted #7228e6;
+    // cursor: pointer;
+  }
   .col {
     border: 1px solid #ccc;
     padding: 7px;
@@ -21,4 +25,8 @@
   display: flex;
   justify-content: center;
   color: black;
+}
+
+.fa-user-minus {
+  cursor: pointer;
 }

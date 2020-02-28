@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserMinus } from '@fortawesome/free-solid-svg-icons';
 import './MemberList.scss';
+
+import Sortable from 'sortablejs';
 
 const MemberList = (props) => {
   console.log(props);
@@ -20,6 +24,10 @@ const MemberList = (props) => {
         setMembers(members);
         setAllPagesCount(Math.ceil(members.length / viewPageCount));
       });
+
+    const el = document.querySelector('.members-container__wrap');
+    // const sortable = Sortable.create(el);
+    const sortable = new Sortable(el, { sort: true, delay: 0 });
   }, []);
 
   useEffect(() => {
@@ -78,6 +86,7 @@ const MemberList = (props) => {
           <div className="col members-container__col">{member.cellNameKr}</div>
           <div className="col members-container__col">{member.isLeader ? 'O' : null}</div>
           <div className="col members-container__col">{member.isNetworkLeader ? 'O' : null}</div>
+          <div className="col members-container__col"><FontAwesomeIcon icon={faUserMinus} /></div>
         </div>
       </>
     );
@@ -87,18 +96,19 @@ const MemberList = (props) => {
     <>
       <h3 className="title"><Link to="/admin/members">멤버관리</Link></h3>
       <div className="container members-container">
+        <div className="row">
+          <div className="col">번호</div>
+          <div className="col">이름</div>
+          <div className="col">나이</div>
+          <div className="col">성별</div>
+          <div className="col">소속</div>
+          <div className="col">지역군</div>
+          <div className="col">셀이름</div>
+          <div className="col">리더</div>
+          <div className="col">네트워크리더</div>
+          <div className="col">삭제</div>
+        </div>
         <div className="members-container__wrap">
-          <div className="row members-container__row">
-            <div className="col">번호</div>
-            <div className="col">이름</div>
-            <div className="col">나이</div>
-            <div className="col">성별</div>
-            <div className="col">소속</div>
-            <div className="col">지역군</div>
-            <div className="col">셀이름</div>
-            <div className="col">리더</div>
-            <div className="col">네트워크리더</div>
-          </div>
           {members.length ? members.slice(pageMinCount - 1, pageMaxCount).map((member, idx) => renderMemberColumn(member, idx)) : null}
         </div>
         <div className="pagination-container">
