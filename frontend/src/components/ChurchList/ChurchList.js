@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Sortable from 'sortablejs';
 import './ChurchList.scss';
 
-import { changeCurrentInfo } from '../../store/modules/checker';
+import { changeCurrentInfo, sequenceChurch } from '../../store/modules/checker';
 import { insertMemberData, initMemberData } from '../../store/modules/inserted';
 
 import { Modal } from '../Modal'
@@ -33,41 +33,80 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
 };
 
 const ChurchList = (props) => {
-  const { match: { path }, modalOpend, church, attached, churches, changeCurrentInfo } = props
+  const { match: { path }, modalOpend, church, attached, churches, changeCurrentInfo, sequenceChurch } = props
 
   const [isAdmin, setIsAdmin] = useState(false);
   const cardWrapper = useRef(null);
+  const _isAdmin = path.match(/admin/);
 
   useEffect(() => {
-    const _isAdmin = path.match(/admin/);
     setIsAdmin(_isAdmin);
-    if (_isAdmin) {
-      const el = document.querySelector('.card-wrapper');
-      const sortable = new Sortable(
-        el,
-        {
-          sort: true,
-          delay: 0,
-          animation: 150,
-          onStart: function (/**Event*/evt) {
-            cardWrapper.current.classList.add("sortabling");
-            console.log(evt);
-          },
-          onEnd: (evt) => {
-            cardWrapper.current.classList.remove("sortabling");
-            console.log(evt)
-          },
-        });
-    }
 
     fetch('/api/church/all')
       .then(res => res.json())
-      .then(res => changeCurrentInfo('churches', res));
+      .then(res => {
+        changeCurrentInfo('churches', res);
+        return res;
+      })
+      .then((church) => {
+        const churches = props.churches.length !== 0 ? props.churches : church;
+        if (_isAdmin) {
+          const el = document.querySelector('.card-wrapper');
+          const sortable = new Sortable(
+            el,
+            {
+              sort: true,
+              delay: 0,
+              animation: 150,
+              onStart: function (/**Event*/evt) {
+                cardWrapper.current.classList.add("sortabling");
+                console.log(evt);
+              },
+              onEnd: function (evt) {
+                console.log(churches);
+                cardWrapper.current.classList.remove("sortabling");
+                const { oldIndex, newIndex } = evt;
+                const prev = churches[oldIndex];
+                const now = churches[newIndex];
+                fetch('/api/church/seq', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    _id: prev._id,
+                    seq: now.seq
+                  })
+                }).then(res => res.json())
+                  .then(res => {
+                    console.log(res)
+                    sequenceChurch(oldIndex, res.seq);
+                    fetch('/api/church/seq', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                        _id: now._id,
+                        seq: prev.seq
+                      })
+                    }).then(res => res.json())
+                      .then(res => sequenceChurch(newIndex, res.seq));
+                  });
+
+              },
+            });
+        }
+      });
+
   }, []);
+
+
 
   const handleChange = (key, value) => {
     changeCurrentInfo(key, value);
   }
+
   const handleToggleModal = ({ inner }) => {
     changeCurrentInfo('currentModal', !modalOpend ? inner : null);
     changeCurrentInfo('modalOpend', !modalOpend);
@@ -116,14 +155,14 @@ const mapStateToProps = state => ({
   insertedMember: state.inserted.insertedMember,
   churches: state.checker.churches,
   modalOpend: state.checker.modalOpend,
-  church: state.checker.church,
   attached: state.checker.attached
 });
 
 const mapDispatchToProps = dispatch => ({
   insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),
   initMemberData: () => initMemberData(),
-  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right))
+  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
+  sequenceChurch: (idx, seq) => dispatch(sequenceChurch(idx, seq))
 });
 
 

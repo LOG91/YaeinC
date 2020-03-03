@@ -7,11 +7,11 @@ const Layout = (props) => {
   return (
     <>
       <Header />
-        {children}
+      {children}
       <Footer />
     </>
-  )
-}
+  );
+};
 
 
 export default withRouter(Layout);

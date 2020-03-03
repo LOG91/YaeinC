@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const Leader = new Schema({
+  seq: {
+    type: Number,
+  },
   name: {
     type: String,
   },
@@ -56,6 +59,9 @@ const Leader = new Schema({
 });
 
 const Church = new Schema({
+  seq: {
+    type: Number,
+  },
   name: {
     type: String,
   },
@@ -106,10 +112,20 @@ const YouthAtt = new Schema({
   },
 }, { minimize: false });
 
+const Counters = new Schema({
+  _id: {
+    type: String,    
+  },
+  seq: {
+    type: Number
+  }
+});
+
 module.exports = {
   Leader: mongoose.model('Leader', Leader),
   YouthAtt: mongoose.model('YouthAtt', YouthAtt),
   Church: mongoose.model('Church', Church),
   Sheet: mongoose.model('Sheet', Sheet),
   NetworkCell: mongoose.model('NetworkCell', NetworkCell),
+  Counters: mongoose.model('Counters', Counters),
 };

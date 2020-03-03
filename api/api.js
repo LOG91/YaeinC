@@ -8,15 +8,16 @@ const {
   Church,
   Sheet,
   NetworkCell,
+  Counters
 } = require('../model');
 
-console.log(Leader, '리더');
 const addLeader = (
   {
-    name, gender, age, attached, isNetworkLeader, isLeader,
+    seq, name, gender, age, attached, isNetworkLeader, isLeader,
     section, cellName, cellNameKr, dawn = 0, word = 0, cc = false, mc = false, yc = false, youth,
   },
 ) => ({
+  seq,
   name,
   age,
   gender,
@@ -34,9 +35,10 @@ const addLeader = (
   youth,
 });
 
-const addChurch = ({ name, attached }) => {
+const addChurch = ({ seq, name, attached }) => {
   return (
     {
+      seq,
       name,
       attached
     }
@@ -89,9 +91,10 @@ router.delete('/member/:id', (req, res) => {
   })
 });
 
-router.post('/church', (req, res) => {
+router.post('/church', async (req, res) => {
   const { name, attached } = req.body;
-  const church = new Church(addChurch({ name, attached }));
+  const { seq } = await Counters.findOneAndUpdate({ "_id": 'churches' }, { $inc: { seq: 1 } }).then();
+  const church = new Church(addChurch({ seq, name, attached }));
   church.save((err, church) => {
     if (err) console.error(err);
     res.send(church);
@@ -99,17 +102,22 @@ router.post('/church', (req, res) => {
 });
 
 router.get('/church/all', (req, res) => {
-  console.log(req, '리퀘스트');
-  Church.find({}).then(church => {
-    console.log(church, '처치');
+  Church.find({}).sort({ seq: 1 }).then(church => {
     res.send(church);
   });
 });
 
+router.post('/church/seq', (req, res) => {
+  const { _id, seq } = req.body;
+  console.log(_id, seq);
+  Church.findOneAndUpdate({ _id }, { $set: { seq } }, { new: true }, (err, resD) => {
+    if (!err) res.send(resD);
+  })
+})
+
 router.get('/networkCell/:sheetId', (req, res) => {
   const sheetId = req.params.sheetId;
   NetworkCell.find({ sheetId }).then(networkCells => {
-    console.log(networkCells, '네트워크셀');
     res.send(networkCells);
   });
 });
@@ -206,14 +214,15 @@ router.get('/gender/:gender', (req, res) => {
     })
 })
 
-router.post('/leader', (req, res, next) => {
+router.post('/leader', async (req, res, next) => {
   const { name, age, gender, attached, cellName, cellNameKr, section, members } = req.body;
   const youth = new YouthAtt(addYouthAtt());
-  console.log(req.body, '알이큐바디');
+  const { seq } = await Counters.findOneAndUpdate({ "_id": 'leader' }, { $inc: { seq: 1 } }).then();
+
   youth.save((err, y) => {
     if (err) return console.error(err);
   })
-  const lead = new Leader(addLeader({ name, age, gender, attached, isNetworkLeader: false, isLeader: true, cellName, cellNameKr, section, members, youth: youth._id }));
+  const lead = new Leader(addLeader({ seq, name, age, gender, attached, isNetworkLeader: false, isLeader: true, cellName, cellNameKr, section, members, youth: youth._id }));
   if (!members.length) {
     lead.save((err, leader) => {
       if (err) return console.error(err);
@@ -291,5 +300,18 @@ router.get('/members', (req, res) => {
       }
     })
 })
+
+router.get('/update', (req, res) => {
+  // Counters.findOneAndUpdate({_}, { $inc: { seq: 1 } }).then(res => console.log(res));
+  // res.send({});
+  // console.log(num);
+  // res.send(num);
+})
+
+function getNextSequence(name) {
+  // Counters.find({id: 'seokki'}).then(res=> console.log(res));
+  Counters.findOneAndUpdate({}, { $inc: { seq: 1 } }).then(res => console.log(res));
+  return ret.seq;
+}
 
 module.exports = router;
