@@ -38,7 +38,54 @@ const ChurchList = (props) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const cardWrapper = useRef(null);
   const _isAdmin = path.match(/admin/);
-
+  useEffect(() => {
+    if (churches.length === 0) return;
+    const el = document.querySelector('.card-wrapper');
+    const sortable = new Sortable(
+      el,
+      {
+        sort: true,
+        delay: 0,
+        animation: 150,
+        onStart: function (/**Event*/evt) {
+          cardWrapper.current.classList.add("sortabling");
+          console.log(evt);
+        },
+        onEnd: function (evt) {
+          console.log(churches);
+          cardWrapper.current.classList.remove("sortabling");
+          const { oldIndex, newIndex } = evt;
+          const prev = churches[oldIndex];
+          const now = churches[newIndex];
+          fetch('/api/church/seq', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              _id: prev._id,
+              seq: now.seq
+            })
+          }).then(res => res.json())
+            .then(res => {
+              console.log(res)
+              sequenceChurch(oldIndex, res.seq);
+              fetch('/api/church/seq', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  _id: now._id,
+                  seq: prev.seq
+                })
+              }).then(res => res.json())
+                .then(res => sequenceChurch(newIndex, res.seq));
+            });
+        },
+      });
+    return () => sortable.destroy();
+  }, [churches])
   useEffect(() => {
     setIsAdmin(_isAdmin);
 
@@ -46,59 +93,7 @@ const ChurchList = (props) => {
       .then(res => res.json())
       .then(res => {
         changeCurrentInfo('churches', res);
-        return res;
-      })
-      .then((church) => {
-        const churches = props.churches.length !== 0 ? props.churches : church;
-        if (_isAdmin) {
-          const el = document.querySelector('.card-wrapper');
-          const sortable = new Sortable(
-            el,
-            {
-              sort: true,
-              delay: 0,
-              animation: 150,
-              onStart: function (/**Event*/evt) {
-                cardWrapper.current.classList.add("sortabling");
-                console.log(evt);
-              },
-              onEnd: function (evt) {
-                console.log(churches);
-                cardWrapper.current.classList.remove("sortabling");
-                const { oldIndex, newIndex } = evt;
-                const prev = churches[oldIndex];
-                const now = churches[newIndex];
-                fetch('/api/church/seq', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    _id: prev._id,
-                    seq: now.seq
-                  })
-                }).then(res => res.json())
-                  .then(res => {
-                    console.log(res)
-                    sequenceChurch(oldIndex, res.seq);
-                    fetch('/api/church/seq', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                        _id: now._id,
-                        seq: prev.seq
-                      })
-                    }).then(res => res.json())
-                      .then(res => sequenceChurch(newIndex, res.seq));
-                  });
-
-              },
-            });
-        }
       });
-
   }, []);
 
 
