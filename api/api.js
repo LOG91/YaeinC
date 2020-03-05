@@ -45,9 +45,10 @@ const addChurch = ({ seq, name, attached }) => {
   )
 };
 
-const addSheet = ({ name, section, attached, cells = [] }) => {
+const addSheet = ({ seq, name, section, attached, cells = [] }) => {
   return (
     {
+      seq,
       name,
       section,
       attached,
@@ -139,9 +140,10 @@ router.post('/networkCell', (req, res) => {
   })
 })
 
-router.post('/sheet', (req, res) => {
+router.post('/sheet', async (req, res) => {
   const { name, section, attached } = req.body;
-  const sheet = new Sheet(addSheet({ name, section, attached }));
+  const { seq } = await Counters.findOneAndUpdate({ "_id": 'sheet' }, { $inc: { seq: 1 } }).then();
+  const sheet = new Sheet(addSheet({ name, section, attached, seq }));
   sheet.save((err, sheet) => {
     if (err) console.error(err);
     res.send(sheet);
@@ -150,18 +152,37 @@ router.post('/sheet', (req, res) => {
 
 router.get('/sheet/:attached', (req, res) => {
   const attached = req.params.attached;
-  Sheet.find({ attached }).then(sheet => {
+  Sheet.find({ attached }).sort({ seq: 1 }).then(sheet => {
     res.send(sheet);
   });
 });
 
-router.get('/cells/:cells', async (req, res) => {
-  const cellNames = JSON.parse(req.params.cells);
+router.delete(`/sheet/:id`, (req, res) => {
+  const { id } = req.params;
+  Sheet.deleteOne({ _id: id }).then(response => res.send(response));
+});
+
+router.post('/sheet/seq', (req, res) => {
+  const { _id, seq } = req.body;
+  Sheet.findOneAndUpdate({ _id }, { $set: { seq } }, { new: true }, (err, resD) => {
+    if (!err) res.send(resD);
+  })
+});
+
+router.get('/test', ({ query }, res) => {
+  console.log(query);
+  res.send({ a: 1 });
+});
+
+router.get('/cells/', async (req, res) => {
+  const cellNames = JSON.parse(req.query.cells);
+  const attached = req.query.attached;
+  console.log(attached);
   const obj = {};
   cellNames.forEach((v, i) => {
     obj[v] = i;
   })
-  const data = await Leader.find({ isLeader: true })
+  const data = await Leader.find({ isLeader: true, attached })
     .populate('youth')
     .populate({
       path: 'members',
@@ -308,18 +329,5 @@ router.get('/members', (req, res) => {
       }
     })
 })
-
-router.get('/update', (req, res) => {
-  // Counters.findOneAndUpdate({_}, { $inc: { seq: 1 } }).then(res => console.log(res));
-  // res.send({});
-  // console.log(num);
-  // res.send(num);
-})
-
-function getNextSequence(name) {
-  // Counters.find({id: 'seokki'}).then(res=> console.log(res));
-  Counters.findOneAndUpdate({}, { $inc: { seq: 1 } }).then(res => console.log(res));
-  return ret.seq;
-}
 
 module.exports = router;

@@ -62,7 +62,11 @@
     &--delete {
       @extend .icon-wrapper__icon;
       margin: 7px;
+      cursor: pointer;
     }
+  }
+  &--center {
+    justify-content: center;
   }
 }
 

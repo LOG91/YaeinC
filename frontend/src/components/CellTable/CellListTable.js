@@ -7,7 +7,7 @@ import AddForm from '../AddForm/AddForm';
 
 
 function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, handleRemoveMember, isAdmin }) {
-  const f = currentSection.map(v => v + 1);
+  if(!currentSection) return <div></div>;
   const mappedByNetwork = currentSection.map((network, idx) => {
     if (!network) return;
     const networkName = network.length ? network[0].cellNameKr : '';

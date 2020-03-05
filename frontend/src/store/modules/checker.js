@@ -18,6 +18,8 @@ const REMOVE_CELL_MEMBER = 'checker/REMOVE_CELL_MEMBER';
 
 const SEQUENCE_CHURCH = 'checker/SEQUENCE_CHURCH';
 const REMOVE_CHURCH = 'checker/REMOVE_CHURCH';
+const REMOVE_SHEET = 'checker/REMOVE_SHEET';
+const SEQUENCE_SHEET = 'checker/SEQUENCE_SHEET';
 
 export const changeCurrentInfo = (left, right) => ({ type: CHANGE_CURRENT_INFO, left, right });
 export const insertNetworkCell = (addedNetworkCell) => ({ type: INSERT_NETWORKCELL, addedNetworkCell });
@@ -39,6 +41,8 @@ export const removeCellMember = (idx) => ({ type: REMOVE_CELL_MEMBER, idx });
 
 export const sequenceChurch = (idx, seq) => ({ type: SEQUENCE_CHURCH, idx, seq });
 export const removeChurch = (idx) => ({ type: REMOVE_CHURCH, idx });
+export const removeSheet = (idx) => ({ type: REMOVE_SHEET, idx });
+export const sequenceSheet = (idx, seq) => ({ type: SEQUENCE_SHEET, idx, seq });
 
 const initialState = {
   attached: '',
@@ -284,6 +288,23 @@ export default function checker(state = initialState, action) {
         churches: [
           ...state.churches.slice(0, action.idx),
           ...state.churches.slice(action.idx + 1, state.churches.length)
+        ]
+      };
+    case REMOVE_SHEET:
+      return {
+        ...state,
+        sheets: [
+          ...state.sheets.slice(0, action.idx),
+          ...state.sheets.slice(action.idx + 1, state.sheets.length)
+        ]
+      };
+    case SEQUENCE_SHEET:
+      return {
+        ...state,
+        sheets: [
+          ...state.sheets.slice(0, action.idx),
+          { ...state.sheets[action.idx], seq: action.seq },
+          ...state.sheets.slice(action.idx + 1, state.sheets.length)
         ]
       };
     default:

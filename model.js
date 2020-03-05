@@ -71,6 +71,9 @@ const Church = new Schema({
 });
 
 const Sheet = new Schema({
+  seq: {
+    type: Number,
+  },
   name: {
     type: String,
   },

@@ -31,18 +31,18 @@ const Home = (props) => {
   const { modalOpend } = useSelector(state => state.checker);
   const isAdmin = match.url.match(/admin/g);
 
-  useEffect(() => {
-    console.log('shouldComponentUpdate');
-    if (!current) {
-      changeCurrentInfo('attached', attached);
-      return;
-    }
-    changeCurrentInfo('idx', current);
-    sheets.length && changeCurrentInfo('currentSheetId', sheets.find(v => v.name === current)._id);
-    changeCurrentInfo('section', mapSectionByEnName(current));
+  // useEffect(() => {
+  //   console.log('shouldComponentUpdate');
+  //   if (!current) {
+  //     changeCurrentInfo('attached', attached);
+  //     return;
+  //   }
+  //   changeCurrentInfo('idx', current);
+  //   sheets.length && changeCurrentInfo('currentSheetId', sheets.find(v => v.name === current)._id);
+  //   changeCurrentInfo('section', mapSectionByEnName(current));
 
-    changeCurrentInfo('attached', attached);
-  }, [current, attached]);
+  //   changeCurrentInfo('attached', attached);
+  // }, [current, attached]);
 
   useEffect(() => {
     changeCurrentInfo('attached', attached);
@@ -64,7 +64,7 @@ const Home = (props) => {
           .then(networkCells => {
             const mapped = networkCells.map(v => v.name);
             changeCurrentInfo('networkCells', networkCells);
-            fetch(`/api/cells/${JSON.stringify(mapped)}`)
+            fetch(`/api/cells?cells=${JSON.stringify(mapped)}&&attached=${attached}`)
               .then(res => res.json())
               .then(cells => {
                 changeCurrentInfo('currentSection', cells);
@@ -72,8 +72,8 @@ const Home = (props) => {
 
           });
       });
-
-  }, [])
+    return () => { changeCurrentInfo('currentSection', null); };
+  }, [current, attached]);
 
   const resetCheck = () => {
     const currentLocation = window.location.href;
@@ -106,7 +106,7 @@ const Home = (props) => {
   return (
     <>
       <h3 className="title"><Link to={isAdmin ? '/admin' : '/'}>출석체크</Link></h3>
-      {isAdmin ? (
+      {(isAdmin && sheets.length !== 0) ? (
         <div className="edit-box">
           <div className="button-box">
             <button

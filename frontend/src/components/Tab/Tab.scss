@@ -13,11 +13,15 @@ $active-color: #7226e5;
     color: #5d5d5d;
     text-align: center;
     border-bottom: 2px solid #fff;
-    a {
+    &__a {
       display: block;
       padding: 1rem 2rem;
       text-decoration: none;
       color: #000;
+    }
+    &__a--admin {
+      @extend .index__a;
+      padding: 0 1rem;
     }
     &.active {
       border-bottom: 2px solid $active-color;
