@@ -52,6 +52,20 @@
   }
 }
 
+.icon-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  &__icon {
+    color: #000;
+    text-align: right;
+    &--move,
+    &--delete {
+      @extend .icon-wrapper__icon;
+      margin: 7px;
+    }
+  }
+}
+
 .card-title {
   text-align: center;
 }
@@ -67,7 +81,6 @@
     }
   }
 }
-
 
 .sortabling div {
   background-color: #a2a2a2;

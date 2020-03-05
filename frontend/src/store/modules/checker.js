@@ -17,6 +17,7 @@ const INSERT_CELL_MEMBER = 'checker/INSERT_CELL_MEMBER';
 const REMOVE_CELL_MEMBER = 'checker/REMOVE_CELL_MEMBER';
 
 const SEQUENCE_CHURCH = 'checker/SEQUENCE_CHURCH';
+const REMOVE_CHURCH = 'checker/REMOVE_CHURCH';
 
 export const changeCurrentInfo = (left, right) => ({ type: CHANGE_CURRENT_INFO, left, right });
 export const insertNetworkCell = (addedNetworkCell) => ({ type: INSERT_NETWORKCELL, addedNetworkCell });
@@ -37,6 +38,7 @@ export const insertCellMember = (left, right, idx) => ({ type: INSERT_CELL_MEMBE
 export const removeCellMember = (idx) => ({ type: REMOVE_CELL_MEMBER, idx });
 
 export const sequenceChurch = (idx, seq) => ({ type: SEQUENCE_CHURCH, idx, seq });
+export const removeChurch = (idx) => ({ type: REMOVE_CHURCH, idx });
 
 const initialState = {
   attached: '',
@@ -276,7 +278,14 @@ export default function checker(state = initialState, action) {
           ...state.churches.slice(action.idx + 1, state.churches.length)
         ]
       };
-
+    case REMOVE_CHURCH:
+      return {
+        ...state,
+        churches: [
+          ...state.churches.slice(0, action.idx),
+          ...state.churches.slice(action.idx + 1, state.churches.length)
+        ]
+      };
     default:
       return state;
   }

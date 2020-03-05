@@ -109,11 +109,19 @@ router.get('/church/all', (req, res) => {
 
 router.post('/church/seq', (req, res) => {
   const { _id, seq } = req.body;
-  console.log(_id, seq);
   Church.findOneAndUpdate({ _id }, { $set: { seq } }, { new: true }, (err, resD) => {
     if (!err) res.send(resD);
   })
+});
+
+router.delete('/church/:id', (req, res) => {
+  const { id } = req.params;
+  Church.deleteOne({ _id: id }, (err, response) => {
+    console.log(response);
+    res.send(response);
+  });
 })
+
 
 router.get('/networkCell/:sheetId', (req, res) => {
   const sheetId = req.params.sheetId;

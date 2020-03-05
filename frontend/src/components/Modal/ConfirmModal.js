@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const ConfirmModal = ({ cancelAction, message, confirmAction, onToggleModal }) => {
+const ConfirmModal = ({ cancelAction, message, confirmAction }) => {
 
   return (
     <div className="confirmModal-container">
