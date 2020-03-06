@@ -47,23 +47,16 @@ class Tab extends Component {
           }).then(res => res.json())
             .then(res => {
               console.log(res);
-              // sequenceSheet(oldIndex, res.seq);
-              // fetch('/api/sheet/seq', {
-              //   method: 'POST',
-              //   headers: {
-              //     'Content-Type': 'application/json'
-              //   },
-              //   body: JSON.stringify({
-              //     _id: now._id,
-              //     seq: prev.seq
-              //   })
-              // }).then(res => res.json())
-              //   .then(res => sequenceSheet(newIndex, res.seq));
             });
         }
       })
     return true;
   };
+  componentWillUnmount() {
+    const {changeCurrentInfo} = this.props;
+    changeCurrentInfo('sheets', []);
+    changeCurrentInfo('networkCells', []);
+  }
 
   handleClick = async (sheetName) => {
     const { changeCurrentInfo, sheets } = this.props;

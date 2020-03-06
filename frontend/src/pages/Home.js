@@ -31,18 +31,6 @@ const Home = (props) => {
   const { modalOpend } = useSelector(state => state.checker);
   const isAdmin = match.url.match(/admin/g);
 
-  // useEffect(() => {
-  //   console.log('shouldComponentUpdate');
-  //   if (!current) {
-  //     changeCurrentInfo('attached', attached);
-  //     return;
-  //   }
-  //   changeCurrentInfo('idx', current);
-  //   sheets.length && changeCurrentInfo('currentSheetId', sheets.find(v => v.name === current)._id);
-  //   changeCurrentInfo('section', mapSectionByEnName(current));
-
-  //   changeCurrentInfo('attached', attached);
-  // }, [current, attached]);
 
   useEffect(() => {
     changeCurrentInfo('attached', attached);

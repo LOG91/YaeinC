@@ -47,7 +47,8 @@ const ChurchList = (props) => {
 
   useEffect(() => {
     setIsAdmin(_isAdmin);
-
+    changeCurrentInfo('attached', null);
+    changeCurrentInfo('section', null);
     fetch('/api/church/all')
       .then(res => res.json())
       .then(res => {
