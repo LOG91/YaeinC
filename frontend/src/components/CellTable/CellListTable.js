@@ -5,27 +5,29 @@ import NameInput from './NameInput';
 import { Modal } from '../Modal';
 import AddForm from '../AddForm/AddForm';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 
-function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, handleRemoveMember, isAdmin }) {
-  if(!currentSection) return <div></div>;
+function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, handleRemoveMember, isAdmin, handleAddMember }) {
+  if (!currentSection) return <div></div>;
   const mappedByNetwork = currentSection.map((network, idx) => {
     if (!network) return;
     const networkName = network.length ? network[0].cellNameKr : '';
-    const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, handleRemoveMember, isAdmin });
+    const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, handleRemoveMember, isAdmin, handleAddMember });
     return tmp;
   });
   return mappedByNetwork;
 };
 
-const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, handleRemoveMember }) => {
+const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, handleRemoveMember, handleAddMember }) => {
   const all_members = network.reduce((ac, cv) => {
-    ac += cv.members.length;
+    ac += cv.members.length + 1;
     return ac;
   }, 0) + network.length;
 
   const evenClsName = (idx % 2 === 0) ? 'i2' : '';
   const reduced = network.map((leader, idxForKey) => {
-    const MEMBER_CNT = leader.members.length + 1;
+    const MEMBER_CNT = leader.members.length + 1 + 1;
     return (
       <Fragment key={idxForKey}>
         {idxForKey === 0 ? (
@@ -43,7 +45,7 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
             </td>
           </tr>
         ) : null}
-        <tr className={evenClsName}>
+        <tr className="cell-table__tr">
           <td className="cell-table__td" rowSpan={MEMBER_CNT}>
             {isAdmin ?
               (<NameInput
@@ -87,7 +89,7 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
               {isAdmin ?
                 (<NameInput
                   value={member.name}
-                  handleRemoveMember={(e) => handleRemoveMember({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey, memberIdx: i })}
+                  handleRemoveMember={(e) => handleRemoveMember({ id: member._id, sectionIdx: idx, leaderIdx: idxForKey, memberIdx: i })}
                   handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling, memberIdx: i })}
                   handleModifyName={(e) => handleModifyName({ id: member._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.parentNode, memberIdx: i })}
                 />) : member.name}
@@ -104,6 +106,11 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
           </tr>
         )) : (
             null)}
+        <tr>
+          <td className="cell-table__td" rowSpan="1">
+            <div className="button-box" onClick={() => handleAddMember(leader)}><button className="btn btn-outline-dark button-box__button--add"><FontAwesomeIcon icon={faUserPlus} />멤버추가</button></div>
+          </td>
+        </tr>
       </Fragment>
     )
   })

@@ -251,6 +251,21 @@ router.get('/gender/:gender', (req, res) => {
     })
 })
 
+router.post('/member', async (req, res) => {
+  const { name, age, gender, attached, cellName, cellNameKr, section, members, leader_id } = req.body;
+  const youth = new YouthAtt(addYouthAtt());
+  const { seq } = await Counters.findOneAndUpdate({ "_id": 'leader' }, { $inc: { seq: 1 } }).then();
+
+  youth.save((err, y) => {
+    if (err) return console.error(err);
+  })
+  const lead = new Leader(addLeader({ seq, name, age, gender, attached, isNetworkLeader: false, isLeader: false, cellName, cellNameKr, section, members, youth: youth._id }));
+  lead.save((err, leader) => {
+    Leader.findOneAndUpdate({ _id: leader_id }, { $push: { members: leader._id } }).then(response => res.send(response));
+    if (err) return console.error(err);
+  });
+})
+
 router.post('/leader', async (req, res, next) => {
   const { name, age, gender, attached, cellName, cellNameKr, section, members } = req.body;
   const youth = new YouthAtt(addYouthAtt());

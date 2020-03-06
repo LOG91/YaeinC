@@ -6,8 +6,24 @@ import { connect } from 'react-redux';
 import renderCellList from './CellListTable';
 import Modal from '../Modal/Modal';
 import AddForm from '../AddForm/AddForm';
+import AddMemberForm from '../AddForm/AddMemberForm';
+
+import Sortable from 'sortablejs';
+
 
 class CellTable extends PureComponent {
+
+  componentDidUpdate() {
+    const el = document.querySelector('.cell-table__tr');
+    if (!el) return;
+    const sortable = new Sortable(el,
+      {
+        sort: true,
+        animation: 150,
+        delay: 0
+      })
+    return true;
+  }
 
   handleCheck = (id, sectionIdx, kind) => {
     fetch(`/api/check/leader/${id}`, {
@@ -101,6 +117,29 @@ class CellTable extends PureComponent {
     changeCurrentInfo('modalOpend', !modalOpend)
   }
 
+  handleAddMember = (leader) => {
+    console.log(leader);
+    const { changeCurrentInfo } = this.props;
+    changeCurrentInfo('currentModal', <Modal><AddMemberForm cellInfo={leader} confirmAction={addNetworkCell} /></Modal>)
+    changeCurrentInfo('modalOpend', true)
+    // console.log(insertedMember)
+
+    async function addNetworkCell({ insertedMember }) {
+      await fetch('/api/member', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(insertedMember),
+      }).then(res => {
+        // onToggleModal({});
+        return res.json();
+      }).then(async leader => {
+        window.location.href = window.location.href;
+      });
+    }
+  }
+
 
   render() {
     const { isAdmin, currentSection, sheets, current } = this.props;
@@ -134,7 +173,8 @@ class CellTable extends PureComponent {
             handleAddLeader: this.handleAddLeader,
             handleModifyName: this.handleModifyName,
             handleChangeName: this.handleChangeName,
-            handleRemoveMember: this.handleRemoveMember
+            handleRemoveMember: this.handleRemoveMember,
+            handleAddMember: this.handleAddMember
           })}
         </tbody>
         {isAdmin ? (
@@ -156,7 +196,7 @@ const mapStateToProps = (state) => {
     members: state.checker.members,
     currentSection: state.checker.currentSection,
     sheets: state.checker.sheets,
-    modalOpend: state.checker.modalOpend
+    modalOpend: state.checker.modalOpend,
   })
 };
 

@@ -3,11 +3,14 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserMinus } from '@fortawesome/free-solid-svg-icons';
 import './MemberList.scss';
+import { changeCurrentInfo } from '../../store/modules/checker';
+import { useDispatch } from 'react-redux';
 
+import { Modal, ConfirmModal } from '../Modal';
 import Sortable from 'sortablejs';
 
 const MemberList = (props) => {
-  console.log(props);
+  const dispatch = useDispatch();
   const [members, setMembers] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [allPagesCount, setAllPagesCount] = useState(0);
@@ -41,6 +44,29 @@ const MemberList = (props) => {
     if (reverse && (targetNumber === 1)) return;
     if (!reverse && targetNumber === allPagesCount) return;
     callback();
+  };
+
+  const onRemoveMember = ({ id, name }) => {
+    dispatch(changeCurrentInfo('modalOpend', true));
+    dispatch(changeCurrentInfo('currentModal',
+      (
+        <Modal>
+          <ConfirmModal
+            message={`정말 ${name} 님을 삭제하시겠습니까?`}
+            confirmAction={() => {
+              fetch(`/api/member/${id}`, {
+                method: 'DELETE'
+              }).then(res => res.json()).then(res => {
+                if (res.ok) {
+                  dispatch(changeCurrentInfo('modalOpend', null));
+                  dispatch(changeCurrentInfo('currentModal', null));
+                }
+              });
+            }} />
+        </Modal>))
+    );
+
+
   };
 
   const PagiNation = ({ allPagesCount, currentPageNumber }) => {
@@ -86,7 +112,11 @@ const MemberList = (props) => {
           <div className="col members-container__col">{member.cellNameKr}</div>
           <div className="col members-container__col">{member.isLeader ? 'O' : null}</div>
           <div className="col members-container__col">{member.isNetworkLeader ? 'O' : null}</div>
-          <div className="col members-container__col"><FontAwesomeIcon icon={faUserMinus} /></div>
+          <div className="col members-container__col">
+            <FontAwesomeIcon
+              icon={faUserMinus}
+              onClick={() => onRemoveMember({ id: member._id, name: member.name })} />
+          </div>
         </div>
       </>
     );

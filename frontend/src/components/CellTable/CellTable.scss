@@ -161,6 +161,11 @@
   }
 }
 
+.button-box__button--add.btn {
+  font-size: 12px;
+  padding: 0;
+}
+
 @include media(mobile) {
   .cell-table {
     font-size: 9px;
