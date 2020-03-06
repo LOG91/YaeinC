@@ -108,11 +108,15 @@ router.get('/church/all', (req, res) => {
   });
 });
 
-router.post('/church/seq', (req, res) => {
-  const { _id, seq } = req.body;
-  Church.findOneAndUpdate({ _id }, { $set: { seq } }, { new: true }, (err, resD) => {
-    if (!err) res.send(resD);
+router.post('/church/seq', async (req, res) => {
+  const { seq } = req.body;
+  const idList = JSON.parse(seq);
+  idList.forEach((id, idx) => {
+    Church.findOneAndUpdate({ _id: id }, { $set: { seq: idx } }, { new: true }, (err, resD) => {
+    })
   })
+  const churchList = await Church.find().sort({ seq: 1 });
+  res.send(churchList);
 });
 
 router.delete('/church/:id', (req, res) => {
@@ -162,11 +166,15 @@ router.delete(`/sheet/:id`, (req, res) => {
   Sheet.deleteOne({ _id: id }).then(response => res.send(response));
 });
 
-router.post('/sheet/seq', (req, res) => {
-  const { _id, seq } = req.body;
-  Sheet.findOneAndUpdate({ _id }, { $set: { seq } }, { new: true }, (err, resD) => {
-    if (!err) res.send(resD);
+router.post('/sheet/seq', async (req, res) => {
+  const { attached, seq } = req.body;
+  const idList = JSON.parse(seq);
+  idList.forEach((id, idx) => {
+    Sheet.findOneAndUpdate({ _id: id }, { $set: { seq: idx } }, { new: true }, (err, resD) => {
+    })
   })
+  const sheetList = await Sheet.find({ attached }).sort({ seq: 1 });
+  res.send(sheetList)
 });
 
 router.get('/test', ({ query }, res) => {

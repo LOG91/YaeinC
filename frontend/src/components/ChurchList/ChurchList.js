@@ -20,7 +20,7 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
     <>
       {churches.map(({ name, attached, _id }, idx) => {
         return (
-          <div key={attached + idx} className={`card card-box ${isAdmin && "card-box--admin"}`}>
+          <div key={attached + idx} data-id={_id} className={`card card-box ${isAdmin && "card-box--admin"}`}>
             <Link to={isAdmin ? `admin/${name}` : name}>
               <div className="card-body">
                 <h5 className="card-title card-box__title">{name}</h5>
@@ -68,34 +68,20 @@ const ChurchList = (props) => {
         onStart: function (/**Event*/evt) {
           cardWrapper.current.classList.add("sortabling");
         },
-        onEnd: function (evt) {
+        onEnd: function ({ target }) {
           cardWrapper.current.classList.remove("sortabling");
-          const { oldIndex, newIndex } = evt;
-          const prev = churches[oldIndex];
-          const now = churches[newIndex];
+          const idList = [...target.children].map(node => node.dataset.id);
           fetch('/api/church/seq', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              _id: prev._id,
-              seq: now.seq
+              seq: JSON.stringify(idList)
             })
           }).then(res => res.json())
             .then(res => {
-              sequenceChurch(oldIndex, res.seq);
-              fetch('/api/church/seq', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  _id: now._id,
-                  seq: prev.seq
-                })
-              }).then(res => res.json())
-                .then(res => sequenceChurch(newIndex, res.seq));
+              console.log(res);
             });
         },
       });

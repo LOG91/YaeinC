@@ -32,33 +32,33 @@ class Tab extends Component {
         },
         onEnd: (evt) => {
           this.tabRef.current.classList.remove("sortabling");
-          const { oldIndex, newIndex } = evt;
-          console.log(sheets);
-          const prev = sheets[oldIndex];
-          const now = sheets[newIndex];
+          const { target: { children } } = evt;
+          const idList = [...children].map(node => node.dataset.id);
+          console.log(idList);
           fetch('/api/sheet/seq', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              _id: prev._id,
-              seq: now.seq
+              attached: this.props.attached,
+              seq: JSON.stringify(idList)
             })
           }).then(res => res.json())
             .then(res => {
-              sequenceSheet(oldIndex, res.seq);
-              fetch('/api/sheet/seq', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  _id: now._id,
-                  seq: prev.seq
-                })
-              }).then(res => res.json())
-                .then(res => sequenceSheet(newIndex, res.seq));
+              console.log(res);
+              // sequenceSheet(oldIndex, res.seq);
+              // fetch('/api/sheet/seq', {
+              //   method: 'POST',
+              //   headers: {
+              //     'Content-Type': 'application/json'
+              //   },
+              //   body: JSON.stringify({
+              //     _id: now._id,
+              //     seq: prev.seq
+              //   })
+              // }).then(res => res.json())
+              //   .then(res => sequenceSheet(newIndex, res.seq));
             });
         }
       })
@@ -116,7 +116,7 @@ class Tab extends Component {
     return (
       <ul className="tab" ref={this.tabRef}>
         {sheets.map((v, idx) => {
-          return <li key={idx} className={currentSheet === v.name ? "index active" : "index"}>
+          return <li key={idx} className={currentSheet === v.name ? "index active" : "index"} data-id={v._id}>
             <Link className={isAdmin ? "index__a--admin" : "index__a"} to={`/${isAdmin ? 'admin/' : ''}${attached}/${v.name}`} onClick={() => this.handleClick(v.name)} >{v.name}</Link>
             {isAdmin ? <div className="icon-wrapper icon-wrapper--center">
               <div className="icon-wrapper__icon--move"><FontAwesomeIcon icon={faBars} /></div>

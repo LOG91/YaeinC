@@ -26,7 +26,7 @@ const mapSectionByEnName = (enName) => {
 };
 
 const Home = (props) => {
-  const { match, sheets, changeCurrentInfo } = props;
+  const { match, sheets, changeCurrentInfo, networkCells } = props;
   const { name: current, attached } = match.params;
   const { modalOpend } = useSelector(state => state.checker);
   const isAdmin = match.url.match(/admin/g);
@@ -115,17 +115,17 @@ const Home = (props) => {
           <div className="button-box">
             <button
               className="btn btn-outline-dark button-box__button"
-              onClick={handlePrint}>
-              프린트
-                </button>
-          </div>
-          <div className="button-box">
-            <button
-              className="btn btn-outline-dark button-box__button"
               onClick={() => handleToggleModal({ inner: <Modal onToggleModal={handleToggleModal}><ConfirmModal message="출석정보를 초기화하시겠습니까?" cancelAction={handleToggleModal} confirmAction={resetCheck} /></Modal> })}>
               초기화
                 </button>
           </div>
+          {networkCells.length !== 0 ? (<div className="button-box">
+            <button
+              className="btn btn-outline-dark button-box__button"
+              onClick={handlePrint}>
+              프린트
+                </button>
+          </div>) : null}
         </div>
       ) : ''}
       <Tab currentSheet={current} sheets={sheets} attached={attached} isAdmin={isAdmin ? true : null} />
