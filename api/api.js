@@ -177,6 +177,15 @@ router.post('/sheet/seq', async (req, res) => {
   res.send(sheetList)
 });
 
+router.post('/sheet/edit', (req, res) => {
+  const { id, name } = req.body;
+  Sheet.findOneAndUpdate({ _id: id }, { $set: { name } }, { new: true }, (err, sheet) => {
+    console.log(sheet);
+    if (err) console.error(err);
+    res.send(sheet);
+  })
+})
+
 router.get('/test', ({ query }, res) => {
   console.log(query);
   res.send({ a: 1 });

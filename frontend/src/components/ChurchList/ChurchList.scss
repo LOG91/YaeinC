@@ -2,7 +2,8 @@
 
 .card-wrapper {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, max-content));
+  justify-content: center;
   padding: 50px;
 }
 
@@ -59,7 +60,8 @@
     color: #000;
     text-align: right;
     &--move,
-    &--delete {
+    &--delete,
+    &--edit {
       @extend .icon-wrapper__icon;
       margin: 7px;
       cursor: pointer;

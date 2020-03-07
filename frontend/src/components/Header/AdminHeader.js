@@ -15,7 +15,6 @@ const AdminHeader = (props) => {
       <div className="nav-box__flex">
         <ul className="nav-box__list">
           <li className="nav-box__item"><Link to="/admin" className="nav-box__a">교회관리</Link></li>
-          <li className="nav-box__item"><Link to="/admin/sheets" className="nav-box__a">시트상세</Link></li>
           <li className="nav-box__item"><Link to="/admin/members" className="nav-box__a">멤버관리</Link></li>
         </ul>
       </div>

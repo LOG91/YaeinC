@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import Sortable from 'sortablejs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faEdit, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { changeCurrentInfo, removeSheet, sequenceSheet } from '../../store/modules/checker';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import './Tab.scss';
 
@@ -15,6 +16,11 @@ class Tab extends Component {
     super(props);
     this.tabRef = React.createRef();
     this.currentSortable = null;
+    this.state = {
+      isEdit: false,
+      editIdx: null,
+      insertedSheetName: ''
+    }
   }
 
   componentDidUpdate(prevState, next) {
@@ -53,7 +59,7 @@ class Tab extends Component {
     return true;
   };
   componentWillUnmount() {
-    const {changeCurrentInfo} = this.props;
+    const { changeCurrentInfo } = this.props;
     changeCurrentInfo('sheets', []);
     changeCurrentInfo('networkCells', []);
   }
@@ -98,6 +104,28 @@ class Tab extends Component {
 
   }
 
+  handleEditButton = ({ id, name, idx }) => {
+    this.setState({ isEdit: true, editIdx: idx, insertedSheetName: name });
+  }
+  handleEditSheetName = ({ id, name, idx }) => {
+    console.log(id, name, idx);
+    const { history, attached } = this.props;
+    console.log(this.props);
+    fetch('/api/sheet/edit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id, name })
+    }).then(res => res.json()).then(res => {
+      if (res) {
+        this.setState({ isEdit: false, editIdx: null, insertedSheetName: '' });
+        console.log(res.name, res);
+        history.push(`/admin/${attached}/${res.name}`);
+      }
+    });
+  }
+
   handleToggleModal = ({ inner }) => {
     const { modalOpend, changeCurrentInfo } = this.props;
     changeCurrentInfo('currentModal', !modalOpend ? inner : null);
@@ -106,12 +134,19 @@ class Tab extends Component {
 
   render() {
     const { isAdmin, attached, sheets, currentSheet } = this.props;
+    const { isEdit, editIdx, insertedSheetName } = this.state;
+
     return (
       <ul className="tab" ref={this.tabRef}>
         {sheets.map((v, idx) => {
           return <li key={idx} className={currentSheet === v.name ? "index active" : "index"} data-id={v._id}>
-            <Link className={isAdmin ? "index__a--admin" : "index__a"} to={`/${isAdmin ? 'admin/' : ''}${attached}/${v.name}`} onClick={() => this.handleClick(v.name)} >{v.name}</Link>
+            {!isEdit || editIdx !== idx ?
+              (<Link className={isAdmin ? "index__a--admin" : "index__a"} to={`/${isAdmin ? 'admin/' : ''}${attached}/${v.name}`} onClick={() => this.handleClick(v.name)} >{v.name}</Link>)
+              : (<><input className="index__input" type="text" value={insertedSheetName} onChange={(e) => this.setState({ insertedSheetName: e.target.value })} />
+                <FontAwesomeIcon className="index__button--edit" icon={faCheckCircle} onClick={() => this.handleEditSheetName({ id: v._id, name: this.state.insertedSheetName })} /></>)
+            }
             {isAdmin ? <div className="icon-wrapper icon-wrapper--center">
+              <div className="icon-wrapper__icon--edit" onClick={() => this.handleEditButton({ id: v._id, name: v.name, idx })}><FontAwesomeIcon icon={faEdit} /></div>
               <div className="icon-wrapper__icon--move"><FontAwesomeIcon icon={faBars} /></div>
               <div className="icon-wrapper__icon--delete" onClick={() => this.handleDeleteSheet({ id: v._id, idx })}><FontAwesomeIcon icon={faTrashAlt} /></div>
             </div> : null}
@@ -137,4 +172,4 @@ const mapDispatchToProps = dispatch => ({
   sequenceSheet: (idx, seq) => dispatch(sequenceSheet(idx, seq))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Tab);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Tab));
