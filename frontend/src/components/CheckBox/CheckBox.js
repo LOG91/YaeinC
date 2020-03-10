@@ -1,7 +1,7 @@
 import React from 'react';
 
-export const CheckBox = ({ checkedValue, onCheck }) => {
-  return <div>
+export const CheckBox = ({ checkedValue, onCheck, buttonClassName }) => {
+  return <div className={buttonClassName}>
     <input type="checkbox" className="custom-checkbox" checked={checkedValue} readOnly />
     <label className="check" onClick={onCheck}>
       <svg className="check__svg" width="18px" height="18px" viewBox="0 0 18 18">

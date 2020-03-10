@@ -1,34 +1,40 @@
 @import '../../_custom.scss';
 
-.cell-table {
+.cell-container {
   font-family: $main-font;
   margin: 0 auto;
   border: 0;
   background-color: #fff;
   width: 90%;
   text-align: center;
-  &__input {
-    width: 65px;
+}
+
+.cell-header {
+  &__list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr 1fr 2fr;
   }
-  &__th {
-    border: 1px dotted #eaeaea;
+  &__item {
+    position: relative;
   }
-  &__td {
-    border: 1px dotted #eaeaea;
-  }
-  &__td__button {
-    cursor: pointer;
-    font-size: 13px;
-    margin-left: 10px;
-    &:hover {
-      color: #999;
-    }
-    &.active {
-      color: #ccc;
-    }
+  &__position {
+    @extend .mid-align--both;
   }
 }
 
+.leader-check,
+.member-check {
+  &__list {
+    display: flex;
+  }
+  &__item {
+    position: relative;
+    width: 30%;
+  }
+}
+
+.cell-table {
+}
 
 .btn.btn-outline-dark {
   display: block;
@@ -138,15 +144,65 @@
   }
 }
 
+.network-container {
+  &__list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr 1fr 2fr;
+  }
+  &__item {
+    position: relative;
+  }
+  &__position {
+    width: 100%;
+    @extend .mid-align--both;
+  }
+}
+.member-container {
+  &__ul {
+    display: flex;
+  }
+  &__li {
+    position: relative;
+    width: 30%;
+    height: 35px;
+  }
+  &__item {
+    position: relative;
+    height: 35px;
+  }
+  &__input {
+    width: 65px;
+  }
+  &__check {
+    @extend .mid-align--both;
+  }
+  &__button {
+    cursor: pointer;
+    font-size: 13px;
+    margin-left: 10px;
+    &:hover {
+      color: #999;
+    }
+    &.active {
+      color: #ccc;
+    }
+  }
+  &__position {
+    width: 100%;
+    @extend .mid-align--both;
+  }
+}
 
+.name-box {
+  @extend .mid-align--both;
+  width: 100%;
+}
 .network-box {
-  &__p {
+  @extend .mid-align--both;
+  width: 100%;
+  &__network {
     font-size: 14px;
     font-weight: 500;
-  }
-  &__td {
-    border: 1px dotted #eaeaea;
-    padding: 10px;
   }
   .btn.network-box__button {
     width: 50px;
@@ -167,14 +223,8 @@
 }
 
 @include media(mobile) {
-  .cell-table {
+  .cell-container {
     font-size: 9px;
-    .cell-table__th {
-      padding: 0;
-      &--section-name {
-        display: none;
-      }
-    }
     .cell-table__td {
       padding: 0.2rem;
     }
@@ -183,6 +233,24 @@
     }
     .check__svg {
       width: 12px;
+    }
+  }
+  .cell-header {
+    padding: 0;
+    &__item:first-child {
+      display: none;
+    }
+    &__list {
+      grid-template-columns: 1fr 3fr 1fr 2fr;
+    }
+
+  }
+  .network-container{
+    &__list {
+      grid-template-columns: 1fr 3fr 1fr 2fr;
+    }
+    &__item:first-child {
+      display: none;
     }
   }
   .networkName-box {
@@ -236,10 +304,10 @@ div.selectBox__option {
 .check:before {
   content: '';
   position: absolute;
-  top: -15px;
-  left: -15px;
-  width: 48px;
-  height: 48px;
+  top: -6px;
+  left: -8px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   background: rgba(34, 50, 84, 0.03);
   opacity: 0;
@@ -314,7 +382,8 @@ input:checked + .check svg polyline {
     &--leader-check {
       width: 35%;
     }
-    &--leader-name, &--member-name {
+    &--leader-name,
+    &--member-name {
       width: 150px;
     }
     &--member-check {

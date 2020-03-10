@@ -13,16 +13,16 @@ const NameInput = (props) => {
     changeCurrentInfo('modalOpend', !modalOpend);
   }
 
-  const { handleRemoveMember, value, handleChangeName, handleModifyName } = props;
+  const { handleRemoveMember, value, handleChangeName, handleModifyName, buttonClassName, inputClassName } = props;
   return (
     <>
-      <input className="cell-table__input" name="name" onChange={handleChangeName} value={value} />
+      <input className={inputClassName} name="name" onChange={handleChangeName} value={value} />
       <FontAwesomeIcon
-        className="cell-table__td__button"
+        className={buttonClassName}
         icon={faCheckCircle}
         onClick={handleModifyName} />
       <FontAwesomeIcon
-        className="cell-table__td__button"
+        className={buttonClassName}
         icon={faTimes}
         onClick={() => handleToggleModal({ inner: <Modal onToggleModal={handleToggleModal}><ConfirmModal confirmAction={handleRemoveMember} message={`멤버 ${value}를 삭제하시겠습니까?`} /></Modal> })}
       />

@@ -25,97 +25,119 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
     return ac;
   }, 0) + network.length;
 
-  const evenClsName = (idx % 2 === 0) ? 'i2' : '';
   const reduced = network.map((leader, idxForKey) => {
     const MEMBER_CNT = leader.members.length + 1 + 1;
     return (
-      <Fragment key={idxForKey}>
-        {idxForKey === 0 ? (
-          <tr className="network-box">
-            <td className="network-box__td"
-              rowSpan={all_members + 1}>
-              <p className="network-box__p">{networkName}</p>
-              {isAdmin ?
-                <button
-                  className="btn btn-outline-dark network-box__button"
-                  onClick={e => handleAddLeader({ inner: <Modal onToggleModal={handleAddLeader}><AddForm cellInfo={leader} cellIndex={idx} /></Modal>, leader, idx })}>
-                  추가
+      <div className="network-container" key={idxForKey + leader}>
+        <ul className="network-container__list">
+          {idxForKey === 0 ? (
+            <li className="network-container__item">
+              <div className="network-box"
+                rowSpan={all_members + 1}>
+                <div className="network-box__name">{networkName}</div>
+                {isAdmin ?
+                  <button
+                    className="btn btn-outline-dark network-box__button"
+                    onClick={e => handleAddLeader({ inner: <Modal onToggleModal={handleAddLeader}><AddForm cellInfo={leader} cellIndex={idx} /></Modal>, leader, idx })}>
+                    추가
                 </button> :
-                null}
-            </td>
-          </tr>
-        ) : null}
-        <tr className="cell-table__tr">
-          <td className="cell-table__td" rowSpan={MEMBER_CNT}>
-            {isAdmin ?
-              (<NameInput
-                value={leader.name}
-                handleRemoveMember={(e) => handleRemoveMember({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey })}
-                handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling })}
-                handleModifyName={(e) => handleModifyName({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.closest('svg') })}
-              />) : leader.name}
-          </td>
-          <td className="cell-table__td" rowSpan={MEMBER_CNT}>
-            <CountDropDown
-              handler={handleCount}
-              length={6}
-              leaderInfo={leader}
-              leaderIndex={idx}
-              option={'dawn'}
-            />
-          </td>
-          <td className="cell-table__td" rowSpan={MEMBER_CNT}>
-            <CountDropDown
-              handler={handleCount}
-              length={3}
-              leaderInfo={leader}
-              leaderIndex={idx}
-              option={'word'}
-            />
-          </td>
-          <td className="cell-table__td" rowSpan={MEMBER_CNT}>
-            <CheckBox checkedValue={leader.cc} onCheck={() => handleCheck(leader._id, idx, 'cc')} />
-          </td>
-          <td className="cell-table__td" rowSpan={MEMBER_CNT}>
-            <CheckBox checkedValue={leader.mc} onCheck={() => handleCheck(leader._id, idx, 'mc')} />
-          </td>
-          <td className="cell-table__td" rowSpan={MEMBER_CNT}>
-            <CheckBox checkedValue={leader.yc} onCheck={() => handleCheck(leader._id, idx, 'yc')} />
-          </td>
-        </tr>
-        {MEMBER_CNT !== 1 ? leader.members.map((member, i) => (
-          <tr key={i}>
-            <td className="cell-table__td" rowSpan="1" key={i}>
+                  null}
+              </div>
+            </li>
+          ) : null}
+          <li className="network-container__item" rowSpan={MEMBER_CNT}>
+            <div className="network-container__position">
               {isAdmin ?
                 (<NameInput
-                  value={member.name}
-                  handleRemoveMember={(e) => handleRemoveMember({ id: member._id, sectionIdx: idx, leaderIdx: idxForKey, memberIdx: i })}
-                  handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling, memberIdx: i })}
-                  handleModifyName={(e) => handleModifyName({ id: member._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.parentNode, memberIdx: i })}
-                />) : member.name}
-            </td>
-            <td className="cell-table__td" rowSpan="1">
-              <CheckBox checkedValue={member.cc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'cc')} />
-            </td>
-            <td className="cell-table__td" rowSpan="1">
-              <CheckBox checkedValue={member.mc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'mc')} />
-            </td>
-            <td className="cell-table__td" rowSpan="1">
-              <CheckBox checkedValue={member.yc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'yc')} />
-            </td>
-          </tr>
-        )) : (
-            null)}
-        <tr>
-          <td className="cell-table__td" rowSpan="1">
-            <div className="button-box" onClick={() => handleAddMember(leader)}><button className="btn btn-outline-dark button-box__button--add"><FontAwesomeIcon icon={faUserPlus} />멤버추가</button></div>
-          </td>
-        </tr>
-      </Fragment>
-    )
-  })
+                  value={leader.name}
+                  inputClassName="member-container__input"
+                  buttonClassName="member-container__button"
+                  handleRemoveMember={(e) => handleRemoveMember({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey })}
+                  handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling })}
+                  handleModifyName={(e) => handleModifyName({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.closest('svg') })}
+                />) : leader.name}
+            </div>
+          </li>
+          <li className="network-container__item">
+            <div className="network-container__position">
+              <ul className="leader-check__list">
+                <li className="leader-check__item">
+                  <CountDropDown
+                    handler={handleCount}
+                    length={6}
+                    leaderInfo={leader}
+                    leaderIndex={idx}
+                    option={'dawn'}
+                  />
+                </li>
+                <li className="leader-check__item">
+                  <CountDropDown
+                    handler={handleCount}
+                    length={3}
+                    leaderInfo={leader}
+                    leaderIndex={idx}
+                    option={'word'}
+                  />
+                </li>
+                <li className="leader-check__item">
+                  <CheckBox checkedValue={leader.cc} onCheck={() => handleCheck(leader._id, idx, 'cc')} />
+                </li>
+                <li className="leader-check__item">
+                  <CheckBox checkedValue={leader.mc} onCheck={() => handleCheck(leader._id, idx, 'mc')} />
+                </li>
+                <li className="leader-check__item">
+                  <CheckBox checkedValue={leader.yc} onCheck={() => handleCheck(leader._id, idx, 'yc')} />
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li className="network-container__item">
+            <ul className="member-container">
+              {MEMBER_CNT !== 1 ? leader.members.map((member, i) => (
+                <li className="member-container__item" key={member + i}>
+                  <div className="member-container__position">
+                    {isAdmin ?
+                      (<NameInput
+                        value={member.name}
+                        inputClassName="member-container__input"
+                        buttonClassName="member-container__button"
+                        handleRemoveMember={(e) => handleRemoveMember({ id: member._id, sectionIdx: idx, leaderIdx: idxForKey, memberIdx: i })}
+                        handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling, memberIdx: i })}
+                        handleModifyName={(e) => handleModifyName({ id: member._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.parentNode, memberIdx: i })}
+                      />) : member.name}
+                  </div>
+                </li>
+              )) : (
+                  null)}
+            </ul>
+          </li>
+          <li className="network-container__item">
+            <ul className="member-container">
+              {MEMBER_CNT !== 1 ? leader.members.map((member, i) => (
+                <li className="member-container__item" key={member + i}>
+                  <ul className="member-container__ul">
+                    <li className="member-container__li">
+                      <CheckBox buttonClassName="member-container__check" checkedValue={member.cc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'cc')} />
+                    </li>
+                    <li className="member-container__li">
+                      <CheckBox buttonClassName="member-container__check" checkedValue={member.mc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'mc')} />
+                    </li>
+                    <li className="member-container__li">
+                      <CheckBox buttonClassName="member-container__check" checkedValue={member.yc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'yc')} />
+                    </li>
+                  </ul>
+                </li>
+              )) : (
+                  null)}
+            </ul>
+          </li>
+          {/* <div className="button-box" onClick={() => handleAddMember(leader)}><button className="btn btn-outline-dark button-box__button--add"><FontAwesomeIcon icon={faUserPlus} />버추가</button></div> */}
+        </ul>
+      </div>
+    );
+  });
 
   return reduced;
-}
+};
 
 export default renderCellList;

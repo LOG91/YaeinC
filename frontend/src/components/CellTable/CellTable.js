@@ -14,7 +14,7 @@ import Sortable from 'sortablejs';
 class CellTable extends PureComponent {
 
   componentDidUpdate() {
-    const el = document.querySelector('.cell-table__tr');
+    const el = document.querySelector('.cell-wrapper');
     if (!el) return;
     const sortable = new Sortable(el,
       {
@@ -145,25 +145,43 @@ class CellTable extends PureComponent {
     const { isAdmin, currentSection, sheets, current } = this.props;
     console.log(current, '커런트');
     return (
-      <table className={isAdmin ? "print-area cell-table" : "cell-table"} border="1" cellPadding="10">
-        <tbody>
-          <tr>
-            <th rowSpan="2" className="cell-table__th cell-table__th--section-name" onClick={() => this.re('israel')}>네트워크</th>
-            <th rowSpan="2" className="cell-table__th cell-table__th--leader-name" onClick={this.onPrint}>리더</th>
-            <th colSpan="5" className="cell-table__th cell-table__th--leader-check">리더 체크리스트</th>
-            <th rowSpan="2" className="cell-table__th cell-table__th--member-name">셀원</th>
-            <th colSpan="3" className="cell-table__th cell-table__th--member-check">셀원 체크리스트</th>
-          </tr>
-          <tr>
-            <td className="cell-table__td">새벽</td>
-            <td className="cell-table__td">말씀</td>
-            <td className="cell-table__td">셀</td>
-            <td className="cell-table__td">주일</td>
-            <td className="cell-table__td">청년</td>
-            <td className="cell-table__td">셀</td>
-            <td className="cell-table__td">주일</td>
-            <td className="cell-table__td">청년</td>
-          </tr>
+      <div className={isAdmin ? "print-area cell-container" : "cell-container"} border="1" cellPadding="10">
+        <div className="cell-header">
+          <ul className="cell-header__list">
+            <li className="cell-header__item" rowSpan="2" onClick={() => this.re('israel')}>
+              <div className="cell-header__position">네트워크</div>
+            </li>
+            <li className="cell-header__item" rowSpan="2" onClick={this.onPrint}>
+              <div className="cell-header__position">리더</div>
+            </li>
+            <li>
+              <div className="leader-check">리더 체크리스트</div>
+              <div className="leader-check">
+                <ul className="leader-check__list">
+                  <li className="leader-check__item">새벽</li>
+                  <li className="leader-check__item">말씀</li>
+                  <li className="leader-check__item">셀</li>
+                  <li className="leader-check__item">주일</li>
+                  <li className="leader-check__item">청년</li>
+                </ul>
+              </div>
+            </li>
+            <li className="cell-header__item">
+              <div className="cell-header__position">셀원</div>
+            </li>
+            <li className="cell-header__item">
+              <div className="member-check">셀원 체크리스트</div>
+              <div className="member-check">
+                <ul className="member-check__list">
+                  <li className="member-check__item">셀</li>
+                  <li className="member-check__item">주일</li>
+                  <li className="member-check__item">청년</li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div className="cell-wrapper">
           {renderCellList({
             isAdmin,
             currentSection,
@@ -176,7 +194,7 @@ class CellTable extends PureComponent {
             handleRemoveMember: this.handleRemoveMember,
             handleAddMember: this.handleAddMember
           })}
-        </tbody>
+        </div>
         {isAdmin ? (
           <div className="networkName-box">
             {sheets.length > 0 ?
@@ -185,7 +203,7 @@ class CellTable extends PureComponent {
                 onClick={() => this.handleAddNetwork({ inner: (<Modal onToggleModal={this.handleAddNetwork}><AddForm isAddNetwork={true} /></Modal>) })}>네트워크 추가</button>)
               : (<div>😰시트가 없습니다 시트를 먼저 추가하세요</div>)}
           </div>) : null}
-      </table>
+      </div>
     )
   }
 }

@@ -16,6 +16,23 @@ ul {
   position: relative;
 }
 
+.mid-align--both {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.mid-align--vertical {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.mid-align--horizon {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 $main-color: #91919e;
 
 $i-desktop: 1440px;
@@ -65,5 +82,3 @@ $breakpoints: (
 //*********** bulma 설정 레이아웃 *************//
 // - 헤더 모바일 UI 로 변하는 분기
 $navbar-breakpoint: $i-mobile + 2px;
-
-
