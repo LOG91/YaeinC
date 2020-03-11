@@ -37,7 +37,23 @@ class CellTable extends PureComponent {
         sort: true,
         animation: 150,
         delay: 0,
-        handle: ".member-container__button.fa-bars"
+        handle: ".member-container__button.fa-bars",
+        onEnd: (evt) => {
+          const { target: { children } } = evt;
+          const idList = [...children].map(node => node.dataset.id);
+          fetch('/api/leader/seq', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              seq: JSON.stringify(idList)
+            })
+          }).then(res => res.json())
+            .then(res => {
+              console.log(res);
+            });
+        }
       });
     return true;
   }
@@ -232,6 +248,7 @@ const mapStateToProps = (state) => {
     currentSection: state.checker.currentSection,
     sheets: state.checker.sheets,
     modalOpend: state.checker.modalOpend,
+    attached: state.checker.attached
   })
 };
 

@@ -100,10 +100,6 @@ class Tab extends Component {
     })
   }
 
-  handleMoveSheet = () => {
-
-  }
-
   handleEditButton = ({ id, name, idx }) => {
     this.setState({ isEdit: true, editIdx: idx, insertedSheetName: name });
   }

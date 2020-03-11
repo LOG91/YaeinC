@@ -1,12 +1,10 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { CheckBox } from '../CheckBox';
 import { CountDropDown } from '../DropDown';
 import NameInput from './NameInput';
-import { Modal } from '../Modal';
-import AddForm from '../AddForm/AddForm';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserPlus, faBars } from '@fortawesome/free-solid-svg-icons'
+import { faUserPlus, faBars } from '@fortawesome/free-solid-svg-icons';
 
 function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember, isAdmin }) {
   if (!currentSection) return <div></div>;
@@ -14,7 +12,7 @@ function renderCellList({ currentSection, handleCheck, handleCount, handleCheckM
     if (!network) return;
     const networkName = network.length ? network[0].cellNameKr : '';
     const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember, isAdmin });
-
+    console.log(network);
     return (
       <div className="network-wrapper" key={network + idx}>
         <div className="network-wrapper__relative">
@@ -40,7 +38,7 @@ const makeCellBox = ({ isAdmin, network, idx, handleCheck, handleCount, handleCh
   const reduced = network.map((leader, idxForKey) => {
     const MEMBER_CNT = leader.members.length + 1 + 1;
     return (
-      <div className="network-container" key={idxForKey + leader}>
+      <div className="network-container" key={idxForKey + leader} data-id={leader._id}>
         <ul className="network-container__list">
           <li className="network-container__item">
             <div className="network-container__position">
@@ -109,7 +107,7 @@ const makeCellBox = ({ isAdmin, network, idx, handleCheck, handleCount, handleCh
               {isAdmin ?
                 (<li className="member-container__item--add" style={leader.members.length > 1 ? { height: "20px" } : null}>
                   <div className="positioning--rel">
-                    <div className="button-box" onClick={() => handleAddMember(leader)}><button className="btn btn-outline-dark button-box__button--add"><FontAwesomeIcon icon={faUserPlus} />멤버추가</button></div>
+                    <div className="button-box" onClick={() => handleAddMember(leader)}><button className="btn btn-outline-dark button-box__button--add"><FontAwesomeIcon icon={faUserPlus} /></button></div>
                   </div>
                 </li>) : null
               }

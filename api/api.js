@@ -199,7 +199,7 @@ router.get('/cells/', async (req, res) => {
   cellNames.forEach((v, i) => {
     obj[v] = i;
   })
-  const data = await Leader.find({ isLeader: true, attached })
+  const data = await Leader.find({ isLeader: true, attached }).sort({ seq: 1 })
     .populate('youth')
     .populate({
       path: 'members',
@@ -323,6 +323,17 @@ router.post('/leader', async (req, res, next) => {
 
   res.send(lead);
 });
+
+router.post('/leader/seq', (req, res) => {
+  const { seq } = req.body;
+  const idList = JSON.parse(seq);
+  idList.forEach((id, idx) => {
+    Leader.findOneAndUpdate({ _id: id }, { $set: { seq: idx } }, { new: true }, (err, resD) => {
+    })
+  })
+  // const sheetList = await Leader.find({ attached }).sort({ seq: 1 });
+  res.send({})
+})
 
 router.put('/check/leader/:id', (req, res) => {
   const { id, kind } = req.body;
