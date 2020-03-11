@@ -12,16 +12,33 @@ import Sortable from 'sortablejs';
 
 
 class CellTable extends PureComponent {
-
+  constructor(props) {
+    super(props);
+    this.sortableForNetwork = null;
+    this.sortableForLeader = null;
+  }
   componentDidUpdate() {
-    const el = document.querySelector('.cell-wrapper');
-    if (!el) return;
-    const sortable = new Sortable(el,
+    const cellWrapperEl = document.querySelector('.cell-wrapper');
+    const leaderListEl = document.querySelector('.network-wrapper__flex--column');
+    if (!cellWrapperEl) return;
+    if (!leaderListEl) return;
+    if (this.sortableForNetwork !== null) this.sortableForNetwork.destroy();
+    if (this.sortableForLeader !== null) this.sortableForLeader.destroy();
+    this.sortableForNetwork = new Sortable(cellWrapperEl,
       {
         sort: true,
         animation: 150,
-        delay: 0
-      })
+        delay: 0,
+        handle: ".network-wrapper__icon"
+      });
+
+    this.sortableForLeader = new Sortable(leaderListEl,
+      {
+        sort: true,
+        animation: 150,
+        delay: 0,
+        handle: ".member-container__button.fa-bars"
+      });
     return true;
   }
 

@@ -6,46 +6,43 @@ import { Modal } from '../Modal';
 import AddForm from '../AddForm/AddForm';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { faUserPlus, faBars } from '@fortawesome/free-solid-svg-icons'
 
-function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, handleRemoveMember, isAdmin, handleAddMember }) {
+function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember, isAdmin }) {
   if (!currentSection) return <div></div>;
   const mappedByNetwork = currentSection.map((network, idx) => {
     if (!network) return;
     const networkName = network.length ? network[0].cellNameKr : '';
-    const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, handleRemoveMember, isAdmin, handleAddMember });
-    return tmp;
+    const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember, isAdmin });
+
+    return (
+      <div className="network-wrapper" key={network + idx}>
+        <div className="network-wrapper__relative">
+          <div className="network-wrapper__position">
+              <div>{networkName}</div>
+              <FontAwesomeIcon
+                className="network-wrapper__icon"
+                icon={faBars}
+              />
+          </div>
+        </div>
+        <div className="network-wrapper__flex--column">
+          {tmp}
+        </div>
+      </div>
+    );
   });
   return mappedByNetwork;
-};
+}
 
-const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleModifyName, handleChangeName, handleRemoveMember, handleAddMember }) => {
-  const all_members = network.reduce((ac, cv) => {
-    ac += cv.members.length + 1;
-    return ac;
-  }, 0) + network.length;
+const makeCellBox = ({ isAdmin, network, idx, handleCheck, handleCount, handleCheckMember, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember }) => {
 
   const reduced = network.map((leader, idxForKey) => {
     const MEMBER_CNT = leader.members.length + 1 + 1;
     return (
       <div className="network-container" key={idxForKey + leader}>
         <ul className="network-container__list">
-          {idxForKey === 0 ? (
-            <li className="network-container__item">
-              <div className="network-box"
-                rowSpan={all_members + 1}>
-                <div className="network-box__name">{networkName}</div>
-                {isAdmin ?
-                  <button
-                    className="btn btn-outline-dark network-box__button"
-                    onClick={e => handleAddLeader({ inner: <Modal onToggleModal={handleAddLeader}><AddForm cellInfo={leader} cellIndex={idx} /></Modal>, leader, idx })}>
-                    추가
-                </button> :
-                  null}
-              </div>
-            </li>
-          ) : null}
-          <li className="network-container__item" rowSpan={MEMBER_CNT}>
+          <li className="network-container__item">
             <div className="network-container__position">
               {isAdmin ?
                 (<NameInput
@@ -109,6 +106,13 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
                 </li>
               )) : (
                   null)}
+              {isAdmin ?
+                (<li className="member-container__item--add" style={leader.members.length > 1 ? { height: "20px" } : null}>
+                  <div className="positioning--rel">
+                    <div className="button-box" onClick={() => handleAddMember(leader)}><button className="btn btn-outline-dark button-box__button--add"><FontAwesomeIcon icon={faUserPlus} />멤버추가</button></div>
+                  </div>
+                </li>) : null
+              }
             </ul>
           </li>
           <li className="network-container__item">
@@ -131,7 +135,6 @@ const makeCellBox = ({ isAdmin, network, idx, networkName, handleCheck, handleCo
                   null)}
             </ul>
           </li>
-          {/* <div className="button-box" onClick={() => handleAddMember(leader)}><button className="btn btn-outline-dark button-box__button--add"><FontAwesomeIcon icon={faUserPlus} />버추가</button></div> */}
         </ul>
       </div>
     );

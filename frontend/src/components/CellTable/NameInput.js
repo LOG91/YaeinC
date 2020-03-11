@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faTimes, faBars } from '@fortawesome/free-solid-svg-icons';
 import { Modal, ConfirmModal } from '../Modal';
 
 import { connect } from 'react-redux';
@@ -25,6 +25,10 @@ const NameInput = (props) => {
         className={buttonClassName}
         icon={faTimes}
         onClick={() => handleToggleModal({ inner: <Modal onToggleModal={handleToggleModal}><ConfirmModal confirmAction={handleRemoveMember} message={`멤버 ${value}를 삭제하시겠습니까?`} /></Modal> })}
+      />
+      <FontAwesomeIcon
+        className={buttonClassName}
+        icon={faBars}
       />
     </>
   )
