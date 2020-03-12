@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import './CellTable.scss';
 import { changeCurrentInfo, checkWorship, checkMemberWorship, countContent, sheets, changeLeaderName, changeMemberName, removeLeader, removeMember, modalOpend } from '../../store/modules/checker';
 import { connect } from 'react-redux';
@@ -11,50 +11,51 @@ import AddMemberForm from '../AddForm/AddMemberForm';
 import Sortable from 'sortablejs';
 
 
-class CellTable extends PureComponent {
+class CellTable extends Component {
   constructor(props) {
     super(props);
     this.sortableForNetwork = null;
     this.sortableForLeader = null;
   }
-  componentDidUpdate() {
+  shouldComponentUpdate() {
     const cellWrapperEl = document.querySelector('.cell-wrapper');
     const leaderListEl = document.querySelector('.network-wrapper__flex--column');
-    if (!cellWrapperEl) return;
-    if (!leaderListEl) return;
     if (this.sortableForNetwork !== null) this.sortableForNetwork.destroy();
     if (this.sortableForLeader !== null) this.sortableForLeader.destroy();
-    this.sortableForNetwork = new Sortable(cellWrapperEl,
-      {
-        sort: true,
-        animation: 150,
-        delay: 0,
-        handle: ".network-wrapper__icon"
-      });
-
-    this.sortableForLeader = new Sortable(leaderListEl,
-      {
-        sort: true,
-        animation: 150,
-        delay: 0,
-        handle: ".member-container__button.fa-bars",
-        onEnd: (evt) => {
-          const { target: { children } } = evt;
-          const idList = [...children].map(node => node.dataset.id);
-          fetch('/api/leader/seq', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              seq: JSON.stringify(idList)
-            })
-          }).then(res => res.json())
-            .then(res => {
-              console.log(res);
-            });
-        }
-      });
+    if (cellWrapperEl) {
+      this.sortableForNetwork = new Sortable(cellWrapperEl,
+        {
+          sort: true,
+          animation: 150,
+          delay: 0,
+          handle: ".network-wrapper__icon"
+        });
+    }
+    if (leaderListEl) {
+      this.sortableForLeader = new Sortable(leaderListEl,
+        {
+          sort: true,
+          animation: 150,
+          delay: 0,
+          handle: ".member-container__button.fa-bars",
+          onEnd: (evt) => {
+            const { target: { children } } = evt;
+            const idList = [...children].map(node => node.dataset.id);
+            fetch('/api/leader/seq', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                seq: JSON.stringify(idList)
+              })
+            }).then(res => res.json())
+              .then(res => {
+                console.log(res);
+              });
+          }
+        });
+    }
     return true;
   }
 

@@ -12,16 +12,15 @@ function renderCellList({ currentSection, handleCheck, handleCount, handleCheckM
     if (!network) return;
     const networkName = network.length ? network[0].cellNameKr : '';
     const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember, isAdmin });
-    console.log(network);
     return (
       <div className="network-wrapper" key={network + idx}>
         <div className="network-wrapper__relative">
           <div className="network-wrapper__position">
-              <div>{networkName}</div>
-              <FontAwesomeIcon
-                className="network-wrapper__icon"
-                icon={faBars}
-              />
+            <div>{networkName}</div>
+            <FontAwesomeIcon
+              className="network-wrapper__icon"
+              icon={faBars}
+            />
           </div>
         </div>
         <div className="network-wrapper__flex--column">
