@@ -56,6 +56,10 @@ const Leader = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'YouthAtt',
   },
+  cell: {
+    type: Schema.Types.ObjectId,
+    ref: 'NetworkCell',
+  }
 });
 
 const Church = new Schema({
@@ -90,6 +94,9 @@ const Sheet = new Schema({
 });
 
 const NetworkCell = new Schema({
+  seq: {
+    type: Number,
+  },
   name: {
     type: String,
   },
@@ -117,7 +124,7 @@ const YouthAtt = new Schema({
 
 const Counters = new Schema({
   _id: {
-    type: String,    
+    type: String,
   },
   seq: {
     type: Number

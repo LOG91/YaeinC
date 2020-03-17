@@ -30,21 +30,6 @@ class AddForm extends Component {
 
   addNetworkCell = async ({ isAddNetwork }) => {
     const { insertedMember, onToggleModal, currentSheetId, networkCells, changeCurrentInfo, insertNetworkCell } = this.props;
-    // await fetch('/api/leader', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(insertedMember),
-    // }).then(res => {
-    //   onToggleModal({});
-    //   return res.json();
-    // }).then(async leader => {
-    //   if (!isAddNetwork) {
-    //     window.location.href = window.location.href;
-    //   }
-    // });
-
     if (isAddNetwork) {
       await fetch('/api/networkCell', {
         method: 'POST',

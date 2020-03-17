@@ -153,6 +153,7 @@
   &__flex--column {
     display: flex;
     flex-direction: column;
+    min-height: 60px;
   }
   &__icon {
     cursor: pointer;

@@ -50,10 +50,8 @@ const Home = (props) => {
         fetch(`/api/networkCell/${currentSheetId}`)
           .then(res => res.json())
           .then(networkCells => {
-            const mapped = networkCells.map(v => v.name);
-            console.log(mapped);
             changeCurrentInfo('networkCells', networkCells);
-            fetch(`/api/cells?cells=${JSON.stringify(mapped)}&&attached=${attached}`)
+            fetch(`/api/cells?cells=${JSON.stringify(networkCells)}`)
               .then(res => res.json())
               .then(cells => {
                 changeCurrentInfo('currentSection', cells);

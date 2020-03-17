@@ -1,6 +1,7 @@
 import React from 'react';
 
 export const CheckBox = ({ checkedValue, onCheck, buttonClassName }) => {
+  console.log(checkedValue);
   return <div className={buttonClassName}>
     <input type="checkbox" className="custom-checkbox" checked={checkedValue} readOnly />
     <label className="check" onClick={onCheck}>

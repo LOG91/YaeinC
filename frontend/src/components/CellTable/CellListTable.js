@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import { CheckBox } from '../CheckBox';
 import { CountDropDown } from '../DropDown';
 import NameInput from './NameInput';
@@ -6,34 +6,103 @@ import NameInput from './NameInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus, faBars } from '@fortawesome/free-solid-svg-icons';
 
-function renderCellList({ currentSection, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember, isAdmin }) {
-  if (!currentSection) return <div></div>;
-  const mappedByNetwork = currentSection.map((network, idx) => {
-    if (!network) return;
-    const networkName = network.length ? network[0].cellNameKr : '';
-    const tmp = makeCellBox({ network, idx, networkName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember, isAdmin });
-    return (
-      <div className="network-wrapper" key={network + idx}>
-        <div className="network-wrapper__relative">
-          <div className="network-wrapper__position">
-            <div>{networkName}</div>
-            <FontAwesomeIcon
-              className="network-wrapper__icon"
-              icon={faBars}
-            />
-          </div>
-        </div>
-        <div className="network-wrapper__flex--column">
-          {tmp}
+import { useDrag, useDrop } from 'react-dnd';
+import { changeCurrentInfo } from '../../store/modules/checker';
+import { useDispatch, useSelector } from 'react-redux';
+import update from 'immutability-helper';
+
+
+const CellList = (props) => {
+  const dispatch = useDispatch();
+  const currentSection = useSelector(state => state.checker.currentSection);
+  const currentSheetId = useSelector(state => state.checker.currentSheetId);
+  const { network, index, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember, isAdmin } = props.customProps;
+  if (!network) return <div></div>;
+
+  const ref = useRef(null);
+  const [, drop] = useDrop({
+    accept: 'card',
+    hover(item, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+      const hoverBoundingRect = ref.current.getBoundingClientRect();
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const clientOffset = monitor.getClientOffset();
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+
+      console.log(dragIndex, hoverIndex);
+      const moveCard = (dragIndex, hoverIndex) => {
+        const dragCard = currentSection[dragIndex];
+        console.log(dragCard, dragIndex, hoverIndex);
+        dispatch(changeCurrentInfo('currentSection',
+          update([...currentSection], {
+            $splice: [
+              [dragIndex, 1],
+              [hoverIndex, 0, dragCard],
+            ],
+          }),
+        ));
+      };
+
+      moveCard(dragIndex, hoverIndex);
+      monitor.getItem().index = hoverIndex;
+      // const idList = [...document.querySelector('.cell-wrapper').children].map(v => v.dataset.id);
+      // fetch('/api/networkCell/seq', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ seq: JSON.stringify(idList), sheetId: currentSheetId })
+      // }).then(res => res.json()).then(res => {
+      //   console.log(res);
+      // });
+    },
+    // drop: (e, monitor) => { console.log(e, monitor.getItem()); }
+  });
+
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: 'card', index },
+    collect: monitor => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+  const opacity = isDragging ? 0 : 1;
+  drag(drop(ref));
+
+  const tmp = makeCellBox({ network: network.leaders, index, networkName: network.name, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember, isAdmin });
+  return (
+    <div className="network-wrapper" key={network.name + index} ref={ref}>
+      <div className="network-wrapper__relative">
+        <div className="network-wrapper__position">
+          <div>{network.name}</div>
+          <FontAwesomeIcon
+            className="network-wrapper__icon"
+            icon={faBars}
+          />
         </div>
       </div>
-    );
-  });
-  return mappedByNetwork;
-}
+      <div className="network-wrapper__flex--column">
+        {tmp}
+      </div>
+    </div>
+  );
+};
 
-const makeCellBox = ({ isAdmin, network, idx, handleCheck, handleCount, handleCheckMember, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember }) => {
-
+const makeCellBox = ({ isAdmin, network, index, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember }) => {
   const reduced = network.map((leader, idxForKey) => {
     const MEMBER_CNT = leader.members.length + 1 + 1;
     return (
@@ -46,9 +115,9 @@ const makeCellBox = ({ isAdmin, network, idx, handleCheck, handleCount, handleCh
                   value={leader.name}
                   inputClassName="member-container__input"
                   buttonClassName="member-container__button"
-                  handleRemoveMember={(e) => handleRemoveMember({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey })}
-                  handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling })}
-                  handleModifyName={(e) => handleModifyName({ id: leader._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.closest('svg') })}
+                  handleRemoveMember={(e) => handleRemoveMember({ id: leader._id, sectionIdx: index, leaderIdx: idxForKey })}
+                  handleChangeName={(e) => handleChangeName({ sectionIdx: index, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling })}
+                  handleModifyName={(e) => handleModifyName({ id: leader._id, sectionIdx: index, leaderIdx: idxForKey, target: e.target.closest('svg') })}
                 />) : leader.name}
             </div>
           </li>
@@ -60,7 +129,7 @@ const makeCellBox = ({ isAdmin, network, idx, handleCheck, handleCount, handleCh
                     handler={handleCount}
                     length={6}
                     leaderInfo={leader}
-                    leaderIndex={idx}
+                    leaderIndex={index}
                     option={'dawn'}
                   />
                 </li>
@@ -69,18 +138,18 @@ const makeCellBox = ({ isAdmin, network, idx, handleCheck, handleCount, handleCh
                     handler={handleCount}
                     length={3}
                     leaderInfo={leader}
-                    leaderIndex={idx}
+                    leaderIndex={index}
                     option={'word'}
                   />
                 </li>
                 <li className="leader-check__item">
-                  <CheckBox checkedValue={leader.cc} onCheck={() => handleCheck(leader._id, idx, 'cc')} />
+                  <CheckBox checkedValue={leader.cc} onCheck={() => handleCheck(leader._id, index, 'cc')} />
                 </li>
                 <li className="leader-check__item">
-                  <CheckBox checkedValue={leader.mc} onCheck={() => handleCheck(leader._id, idx, 'mc')} />
+                  <CheckBox checkedValue={leader.mc} onCheck={() => handleCheck(leader._id, index, 'mc')} />
                 </li>
                 <li className="leader-check__item">
-                  <CheckBox checkedValue={leader.yc} onCheck={() => handleCheck(leader._id, idx, 'yc')} />
+                  <CheckBox checkedValue={leader.yc} onCheck={() => handleCheck(leader._id, index, 'yc')} />
                 </li>
               </ul>
             </div>
@@ -95,9 +164,9 @@ const makeCellBox = ({ isAdmin, network, idx, handleCheck, handleCount, handleCh
                         value={member.name}
                         inputClassName="member-container__input"
                         buttonClassName="member-container__button"
-                        handleRemoveMember={(e) => handleRemoveMember({ id: member._id, sectionIdx: idx, leaderIdx: idxForKey, memberIdx: i })}
-                        handleChangeName={(e) => handleChangeName({ sectionIdx: idx, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling, memberIdx: i })}
-                        handleModifyName={(e) => handleModifyName({ id: member._id, sectionIdx: idx, leaderIdx: idxForKey, target: e.target.parentNode, memberIdx: i })}
+                        handleRemoveMember={(e) => handleRemoveMember({ id: member._id, sectionIdx: index, leaderIdx: idxForKey, memberIdx: i })}
+                        handleChangeName={(e) => handleChangeName({ sectionIdx: index, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling, memberIdx: i })}
+                        handleModifyName={(e) => handleModifyName({ id: member._id, sectionIdx: index, leaderIdx: idxForKey, target: e.target.parentNode, memberIdx: i })}
                       />) : member.name}
                   </div>
                 </li>
@@ -118,13 +187,13 @@ const makeCellBox = ({ isAdmin, network, idx, handleCheck, handleCount, handleCh
                 <li className="member-container__item" key={member + i}>
                   <ul className="member-container__ul">
                     <li className="member-container__li">
-                      <CheckBox buttonClassName="member-container__check" checkedValue={member.cc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'cc')} />
+                      <CheckBox buttonClassName="member-container__check" checkedValue={member.cc} onCheck={() => handleCheckMember(leader._id, member._id, i, index, 'cc')} />
                     </li>
                     <li className="member-container__li">
-                      <CheckBox buttonClassName="member-container__check" checkedValue={member.mc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'mc')} />
+                      <CheckBox buttonClassName="member-container__check" checkedValue={member.mc} onCheck={() => handleCheckMember(leader._id, member._id, i, index, 'mc')} />
                     </li>
                     <li className="member-container__li">
-                      <CheckBox buttonClassName="member-container__check" checkedValue={member.yc} onCheck={() => handleCheckMember(leader._id, member._id, i, idx, 'yc')} />
+                      <CheckBox buttonClassName="member-container__check" checkedValue={member.yc} onCheck={() => handleCheckMember(leader._id, member._id, i, index, 'yc')} />
                     </li>
                   </ul>
                 </li>
@@ -140,4 +209,4 @@ const makeCellBox = ({ isAdmin, network, idx, handleCheck, handleCount, handleCh
   return reduced;
 };
 
-export default renderCellList;
+export default CellList;

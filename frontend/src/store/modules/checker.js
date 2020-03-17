@@ -52,15 +52,6 @@ const initialState = {
   currentSheetId: '',
   networkCells: [],
   churches: [],
-  insertedMember: {
-    name: '',
-    age: '',
-    gender: '',
-    section: '',
-    cellName: '',
-    cellNameKr: '',
-    members: []
-  },
   currentSection: [],
   currentModal: null,
   modalOpend: null,
@@ -84,37 +75,49 @@ export default function checker(state = initialState, action) {
       return {
         ...state,
         currentSection: [...state.currentSection.slice(0, action.sectionIdx),
-        [...state.currentSection[action.sectionIdx].slice(0, action.leaderIdx),
-        { ...state.currentSection[action.sectionIdx][action.leaderIdx], name: action.changedName },
-        ...state.currentSection[action.sectionIdx].slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
-        ],
+        {
+          ...state.currentSection[action.sectionIdx],
+          leaders: [...state.currentSection[action.sectionIdx].leaders.slice(0, action.leaderIdx),
+          { ...state.currentSection[action.sectionIdx].leaders[action.leaderIdx], name: action.changedName },
+          ...state.currentSection[action.sectionIdx].leaders.slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
+          ]
+        },
         ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
       };
     case CHANGE_MEMBER_NAME:
       return {
         ...state,
-        currentSection: [...state.currentSection.slice(0, action.sectionIdx),
-        [...state.currentSection[action.sectionIdx].slice(0, action.leaderIdx),
-        {
-          ...state.currentSection[action.sectionIdx][action.leaderIdx],
-          members: [...state.currentSection[action.sectionIdx][action.leaderIdx].members.slice(0, action.memberIdx),
-          { ...state.currentSection[action.sectionIdx][action.leaderIdx].members[action.memberIdx], name: action.changedName },
-          ...state.currentSection[action.sectionIdx][action.leaderIdx].members.slice(action.memberIdx + 1, state.currentSection[action.sectionIdx][action.leaderIdx].members.length)
-          ]
-        },
-        ...state.currentSection[action.sectionIdx].slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
-        ],
-        ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
+        currentSection: [
+          ...state.currentSection.slice(0, action.sectionIdx),
+          {
+            ...state.currentSection[action.sectionIdx],
+            leaders: [
+              ...state.currentSection[action.sectionIdx].leaders.slice(0, action.leaderIdx),
+              {
+                ...state.currentSection[action.sectionIdx].leaders[action.leaderIdx],
+                members: [
+                  ...state.currentSection[action.sectionIdx].leaders[action.leaderIdx].members.slice(0, action.memberIdx),
+                  { ...state.currentSection[action.sectionIdx].leaders[action.leaderIdx].members[action.memberIdx], name: action.changedName },
+                  ...state.currentSection[action.sectionIdx].leaders[action.leaderIdx].members.slice(action.memberIdx + 1, state.currentSection[action.sectionIdx].leaders[action.leaderIdx].members.length)
+                ]
+              },
+              ...state.currentSection[action.sectionIdx].leaders.slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
+            ]
+          },
+          ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
       };
     case REMOVE_LEADER:
       return {
         ...state,
         currentSection: [...state.currentSection.slice(0, action.sectionIdx),
-        [...state.currentSection[action.sectionIdx].slice(0, action.leaderIdx),
-        ...state.currentSection[action.sectionIdx].slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
-        ],
+        {
+          ...state.currentSection[action.sectionIdx],
+          leaders: [...state.currentSection[action.sectionIdx].leaders.slice(0, action.leaderIdx),
+          ...state.currentSection[action.sectionIdx].leaders.slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
+          ],
+        },
         ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
       };
@@ -122,14 +125,18 @@ export default function checker(state = initialState, action) {
       return {
         ...state,
         currentSection: [...state.currentSection.slice(0, action.sectionIdx),
-        [...state.currentSection[action.sectionIdx].slice(0, action.leaderIdx),
         {
-          ...state.currentSection[action.sectionIdx][action.leaderIdx],
-          members: state.currentSection[action.sectionIdx][action.leaderIdx].members.filter((val, idx) => idx !== action.memberIdx)
-        },
-        ...state.currentSection[action.sectionIdx].slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
-        ],
-        ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
+          ...state.currentSection[action.sectionIdx],
+          leaders:
+            [...state.currentSection[action.sectionIdx].leaders.slice(0, action.leaderIdx),
+            {
+              ...state.currentSection[action.sectionIdx].leaders[action.leaderIdx],
+              members: state.currentSection[action.sectionIdx].leaders[action.leaderIdx].members.filter((val, idx) => idx !== action.memberIdx)
+            },
+            ...state.currentSection[action.sectionIdx].leaders.slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
+            ],
+          ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
+        }
         ]
       };
     case CHECK_WORSHIP:
@@ -137,12 +144,15 @@ export default function checker(state = initialState, action) {
         ...state,
         currentSection: [
           ...state.currentSection.slice(0, action.sectionIdx),
-          state.currentSection[action.sectionIdx].map(member => {
-            if (member._id === action.id) {
-              return { ...member, [action.left]: !member[action.left] };
-            }
-            return member;
-          }),
+          {
+            ...state.currentSection[action.sectionIdx],
+            leaders: state.currentSection[action.sectionIdx].leaders.map(member => {
+              if (member._id === action.id) {
+                return { ...member, [action.left]: !member[action.left] };
+              }
+              return member;
+            })
+          },
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ],
       };
@@ -151,17 +161,19 @@ export default function checker(state = initialState, action) {
         ...state,
         currentSection: [
           ...state.currentSection.slice(0, action.sectionIdx),
-          state.currentSection[action.sectionIdx].map(member => {
-            if (member._id === action.leaderId) {
-              return {
-                ...member,
-                members: [...member.members.slice(0, action.sec),
-                { ...member.members[action.sec], [action.left]: !member.members[action.sec][action.left] },
-                ...member.members.slice(action.sec + 1, member.members.length)]
-              };
-            }
-            return member;
-          }),
+          {
+            ...state.currentSection[action.sectionIdx], leaders: state.currentSection[action.sectionIdx].leaders.map(member => {
+              if (member._id === action.leaderId) {
+                return {
+                  ...member,
+                  members: [...member.members.slice(0, action.sec),
+                  { ...member.members[action.sec], [action.left]: !member.members[action.sec][action.left] },
+                  ...member.members.slice(action.sec + 1, member.members.length)]
+                };
+              }
+              return member;
+            }),
+          },
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ],
       };
@@ -170,12 +182,15 @@ export default function checker(state = initialState, action) {
         ...state,
         currentSection: [
           ...state.currentSection.slice(0, action.sectionIdx),
-          state.currentSection[action.sectionIdx].map(member => {
-            if (member._id === action.id) {
-              return { ...member, [action.left]: action.count };
-            }
-            return member;
-          }),
+          {
+            ...state.currentSection[action.sectionIdx],
+            leaders: state.currentSection[action.sectionIdx].leaders.map(member => {
+              if (member._id === action.id) {
+                return { ...member, [action.left]: action.count };
+              }
+              return member;
+            }),
+          },
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ],
       };
@@ -184,21 +199,24 @@ export default function checker(state = initialState, action) {
         ...state,
         currentSection: [
           ...state.currentSection.slice(0, action.sectionIdx),
-          state.currentSection[action.sectionIdx].map(leader => {
-            if (leader._id === action.leaderId) {
-              return {
-                ...leader,
-                youth: {
-                  ...leader.youth,
-                  att: {
-                    ...leader.youth.att,
-                    [action.date]: !leader.youth.att[action.date]
+          {
+            ...state.currentSection[action.sectionIdx],
+            leaders: state.currentSection[action.sectionIdx].leaders.map(leader => {
+              if (leader._id === action.leaderId) {
+                return {
+                  ...leader,
+                  youth: {
+                    ...leader.youth,
+                    att: {
+                      ...leader.youth.att,
+                      [action.date]: !leader.youth.att[action.date]
+                    }
                   }
-                }
-              };
-            }
-            return leader;
-          }),
+                };
+              }
+              return leader;
+            }),
+          },
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
       };
@@ -207,27 +225,31 @@ export default function checker(state = initialState, action) {
         ...state,
         currentSection: [
           ...state.currentSection.slice(0, action.sectionIdx),
-          [
-            ...state.currentSection[action.sectionIdx].slice(0, action.leaderIdx),
-            {
-              ...state.currentSection[action.sectionIdx][action.leaderIdx],
-              members: [
-                ...state.currentSection[action.sectionIdx][action.leaderIdx].members.slice(0, action.memberIdx),
+          {
+            ...state.currentSection[action.sectionIdx],
+            leaders:
+              [
+                ...state.currentSection[action.sectionIdx].leaders.slice(0, action.leaderIdx),
                 {
-                  ...state.currentSection[action.sectionIdx][action.leaderIdx].members[action.memberIdx],
-                  youth: {
-                    ...state.currentSection[action.sectionIdx][action.leaderIdx].members[action.memberIdx].youth,
-                    att: {
-                      ...state.currentSection[action.sectionIdx][action.leaderIdx].members[action.memberIdx].youth.att,
-                      [action.date]: !state.currentSection[action.sectionIdx][action.leaderIdx].members[action.memberIdx].youth.att[action.date]
-                    }
-                  }
+                  ...state.currentSection[action.sectionIdx].leaders[action.leaderIdx],
+                  members: [
+                    ...state.currentSection[action.sectionIdx].leaders[action.leaderIdx].members.slice(0, action.memberIdx),
+                    {
+                      ...state.currentSection[action.sectionIdx].leaders[action.leaderIdx].members[action.memberIdx],
+                      youth: {
+                        ...state.currentSection[action.sectionIdx].leaders[action.leaderIdx].members[action.memberIdx].youth,
+                        att: {
+                          ...state.currentSection[action.sectionIdx].leaders[action.leaderIdx].members[action.memberIdx].youth.att,
+                          [action.date]: !state.currentSection[action.sectionIdx].leaders[action.leaderIdx].members[action.memberIdx].youth.att[action.date]
+                        }
+                      }
+                    },
+                    ...state.currentSection[action.sectionIdx].leaders[action.leaderIdx].members.slice(action.memberIdx + 1, state.currentSection[action.sectionIdx].leaders[action.leaderIdx].members.length)
+                  ]
                 },
-                ...state.currentSection[action.sectionIdx][action.leaderIdx].members.slice(action.memberIdx + 1, state.currentSection[action.sectionIdx][action.leaderIdx].members.length)
-              ]
-            },
-            ...state.currentSection[action.sectionIdx].slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
-          ],
+                ...state.currentSection[action.sectionIdx].leaders.slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
+              ],
+          },
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
       };

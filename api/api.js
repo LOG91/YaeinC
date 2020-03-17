@@ -14,7 +14,7 @@ const {
 const addLeader = (
   {
     seq, name, gender, age, attached, isNetworkLeader, isLeader,
-    section, cellName, cellNameKr, dawn = 0, word = 0, cc = false, mc = false, yc = false, youth,
+    section, cellName, cellNameKr, dawn = 0, word = 0, cc = false, mc = false, yc = false, youth, cell
   },
 ) => ({
   seq,
@@ -33,6 +33,7 @@ const addLeader = (
   mc,
   yc,
   youth,
+  cell
 });
 
 const addChurch = ({ seq, name, attached }) => {
@@ -57,9 +58,10 @@ const addSheet = ({ seq, name, section, attached, cells = [] }) => {
   )
 };
 
-const addNetworkCell = ({ name, networkLeaderName, gender, attached, sheetId }) => {
+const addNetworkCell = ({ seq, name, networkLeaderName, gender, attached, sheetId }) => {
   return (
     {
+      seq,
       name,
       networkLeaderName,
       gender,
@@ -130,24 +132,39 @@ router.delete('/church/:id', (req, res) => {
 
 router.get('/networkCell/:sheetId', (req, res) => {
   const sheetId = req.params.sheetId;
-  NetworkCell.find({ sheetId }).then(networkCells => {
+  NetworkCell.find({ sheetId }).sort({ seq: 1 }).then(networkCells => {
     res.send(networkCells);
   });
 });
 
-router.post('/networkCell', (req, res) => {
+router.post('/networkCell', async (req, res) => {
   const { name, networkLeaderName, gender, attached, sheetId } = req.body;
-  const networkCell = new NetworkCell(addNetworkCell({ name, networkLeaderName, gender, attached, sheetId }));
+  const { seq } = await Counters.findOneAndUpdate({ "_id": 'networkcell' }, { $inc: { seq: 1 } }).then();
+  const networkCell = new NetworkCell(addNetworkCell({ seq, name, networkLeaderName, gender, attached, sheetId }));
   networkCell.save((err, networkCell) => {
     if (err) console.error(err);
     res.send(networkCell);
   })
 })
 
+router.post('/networkCell/seq', async (req, res) => {
+  const { seq, sheetId } = req.body;
+  console.log(seq, 8127391);
+  const idList = JSON.parse(seq);
+  idList.forEach((id, idx) => {
+    NetworkCell.findOneAndUpdate({ _id: id }, { $set: { seq: idx } }, { new: true }, (err, resD) => {
+      if (err) console.error(err);
+    });
+  })
+
+  const networkCellList = await NetworkCell.find({ sheetId }).sort({ seq: 1 });
+  res.send(networkCellList);
+})
+
 router.post('/sheet', async (req, res) => {
   const { name, section, attached } = req.body;
   const { seq } = await Counters.findOneAndUpdate({ "_id": 'sheet' }, { $inc: { seq: 1 } }).then();
-  const sheet = new Sheet(addSheet({ name, section, attached, seq }));
+  const sheet = new Sheet(addSheet({ seq, name, section, attached }));
   sheet.save((err, sheet) => {
     if (err) console.error(err);
     res.send(sheet);
@@ -180,42 +197,29 @@ router.post('/sheet/seq', async (req, res) => {
 router.post('/sheet/edit', (req, res) => {
   const { id, name } = req.body;
   Sheet.findOneAndUpdate({ _id: id }, { $set: { name } }, { new: true }, (err, sheet) => {
-    console.log(sheet);
     if (err) console.error(err);
     res.send(sheet);
   })
 })
 
 router.get('/test', ({ query }, res) => {
-  console.log(query);
   res.send({ a: 1 });
 });
 
 router.get('/cells/', async (req, res) => {
-  const cellNames = JSON.parse(req.query.cells);
-  const attached = req.query.attached;
-  console.log(attached);
-  const obj = {};
-  cellNames.forEach((v, i) => {
-    obj[v] = i;
-  })
-  const data = await Leader.find({ isLeader: true, attached }).sort({ seq: 1 })
-    .populate('youth')
-    .populate({
-      path: 'members',
-      populate: {
-        path: 'youth'
-      }
-    })
-    .then(lead => {
-      const reduced = lead.reduce((acc, cv) => {
-        if (!acc[obj[cv.cellNameKr]]) acc[obj[cv.cellNameKr]] = [cv];
-        else acc[obj[cv.cellNameKr]].push(cv);
-        return acc;
-      }, [])
-      return reduced;
-    });
-  res.send(data);
+  const cells = JSON.parse(req.query.cells);
+  const mapped = await Promise.all(cells.map(async (cell, i) => {
+    const added = await Leader.find({ isLeader: true, cell: cell._id }).sort({ seq: 1 })
+      .populate('youth')
+      .populate({
+        path: 'members',
+        populate: {
+          path: 'youth'
+        }
+      }).then();
+    return { ...cell, leaders: added }
+  }));
+  res.send(mapped);
 })
 
 router.post('/youth/:id', (req, res) => {
@@ -276,14 +280,13 @@ router.post('/member', async (req, res) => {
 })
 
 router.post('/leader', async (req, res, next) => {
-  const { name, age, gender, attached, cellName, cellNameKr, section, members } = req.body;
+  const { name, age, gender, attached, cellName, cellNameKr, section, members, cellId } = req.body;
   const youth = new YouthAtt(addYouthAtt());
   const { seq } = await Counters.findOneAndUpdate({ "_id": 'leader' }, { $inc: { seq: 1 } }).then();
-
   youth.save((err, y) => {
     if (err) return console.error(err);
   })
-  const lead = new Leader(addLeader({ seq, name, age, gender, attached, isNetworkLeader: false, isLeader: true, cellName, cellNameKr, section, members, youth: youth._id }));
+  const lead = new Leader(addLeader({ seq, name, age, gender, attached, isNetworkLeader: false, isLeader: true, cellName, cellNameKr, section, members, youth: youth._id, cell: cellId }));
   if (!members.length) {
     lead.save((err, leader) => {
       if (err) return console.error(err);
@@ -308,7 +311,8 @@ router.post('/leader', async (req, res, next) => {
         cellNameKr,
         section,
         leaderId: lead._id,
-        youth: youth._id
+        youth: youth._id,
+        cell: cellId
       }));
     memb.save((err, member) => {
     })
