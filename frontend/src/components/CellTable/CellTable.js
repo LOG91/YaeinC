@@ -1,67 +1,65 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './CellTable.scss';
 import { changeCurrentInfo, checkWorship, checkMemberWorship, countContent, sheets, changeLeaderName, changeMemberName, removeLeader, removeMember, modalOpend } from '../../store/modules/checker';
 import { connect } from 'react-redux';
 
-import CellList from './CellListTable';
+import CellList from './CellList';
 import Modal from '../Modal/Modal';
 import { AddNetworkForm } from '../AddForm';
 import AddMemberForm from '../AddForm/AddMemberForm';
 
 import Sortable from 'sortablejs';
-import { DndProvider } from 'react-dnd';
-import Backend from 'react-dnd-html5-backend';
+// import { DndProvider } from 'react-dnd';
+// import Backend from 'react-dnd-html5-backend';
 
 
 const CellTable = (props) => {
-  const { isAdmin, currentSection, sheets, current, networkCells } = props;
-
+  const { isAdmin, sheets, current } = props;
   let sortableForNetwork = null;
   let sortableForLeader = null;
 
+  // useEffect(() => {
+  // const cellWrapperEl = document.querySelector('.cell-wrapper');
+  // const leaderListEl = document.querySelector('.network-wrapper__flex--column');
+  // console.log(cellWrapperEl, leaderListEl);
+  // if (cellWrapperEl) {
+  //   this.sortableForNetwork = new Sortable(cellWrapperEl,
+  //     {
+  //       sort: true,
+  //       animation: 150,
+  //       delay: 0,
+  //       handle: ".network-wrapper__icon",
+  //     });
+  // }
+  // if (leaderListEl) {
+  //   this.sortableForLeader = new Sortable(leaderListEl,
+  //     {
+  //       sort: true,
+  //       animation: 150,
+  //       delay: 0,
+  //       handle: ".member-container__button.fa-bars",
+  //       onEnd: (evt) => {
+  //         const { target: { children } } = evt;
+  //         const idList = [...children].map(node => node.dataset.id);
+  //         fetch('/api/leader/seq', {
+  //           method: 'POST',
+  //           headers: {
+  //             'Content-Type': 'application/json'
+  //           },
+  //           body: JSON.stringify({
+  //             seq: JSON.stringify(idList)
+  //           })
+  //         }).then(res => res.json())
+  //           .then(res => {
+  //             console.log(res);
+  //           });
+  //       }
+  //     });
+  // }
+  // })
 
-  useEffect(() => {
-    // const cellWrapperEl = document.querySelector('.cell-wrapper');
-    // const leaderListEl = document.querySelector('.network-wrapper__flex--column');
-    // console.log(cellWrapperEl, leaderListEl);
-    // if (cellWrapperEl) {
-    //   this.sortableForNetwork = new Sortable(cellWrapperEl,
-    //     {
-    //       sort: true,
-    //       animation: 150,
-    //       delay: 0,
-    //       handle: ".network-wrapper__icon",
-    //     });
-    // }
-    // if (leaderListEl) {
-    //   this.sortableForLeader = new Sortable(leaderListEl,
-    //     {
-    //       sort: true,
-    //       animation: 150,
-    //       delay: 0,
-    //       handle: ".member-container__button.fa-bars",
-    //       onEnd: (evt) => {
-    //         const { target: { children } } = evt;
-    //         const idList = [...children].map(node => node.dataset.id);
-    //         fetch('/api/leader/seq', {
-    //           method: 'POST',
-    //           headers: {
-    //             'Content-Type': 'application/json'
-    //           },
-    //           body: JSON.stringify({
-    //             seq: JSON.stringify(idList)
-    //           })
-    //         }).then(res => res.json())
-    //           .then(res => {
-    //             console.log(res);
-    //           });
-    //       }
-    //     });
-    // }
-  })
 
-
-  const handleCheck = (id, sectionIdx, kind) => {
+  const handleCheck = useCallback((id, sectionIdx, kind) => {
     fetch(`/api/check/leader/${id}`, {
       method: 'PUT',
       headers: {
@@ -73,25 +71,11 @@ const CellTable = (props) => {
         props.checkWorship(id, sectionIdx, kind);
       }
     });
-  };
+  });
 
-  const handleModifyName = ({ id, sectionIdx, leaderIdx, target, memberIdx }) => {
-    const { currentSection } = props;
-    const changedName = typeof memberIdx !== 'undefined' ?
-      currentSection[sectionIdx].leaders[leaderIdx].members[memberIdx].name :
-      currentSection[sectionIdx].leaders[leaderIdx].name;
-    console.log(changedName);
-    fetch(`/api/change/${id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ changedName })
-    });
-    target.classList.remove('active');
-  };
 
-  const handleChangeName = ({ sectionIdx, leaderIdx, changedName, nextNode, memberIdx }) => {
+
+  const handleChangeName = useCallback(({ sectionIdx, leaderIdx, changedName, nextNode, memberIdx }) => {
     const { changeLeaderName, changeMemberName } = props;
     nextNode.classList.add('active');
     if (typeof memberIdx !== 'undefined') {
@@ -99,9 +83,9 @@ const CellTable = (props) => {
     } else {
       changeLeaderName(sectionIdx, leaderIdx, changedName);
     }
-  };
+  });
 
-  const handleRemoveMember = ({ id, sectionIdx, leaderIdx, memberIdx }) => {
+  const handleRemoveMember = useCallback(({ id, sectionIdx, leaderIdx, memberIdx }) => {
     const { removeLeader, removeMember, changeCurrentInfo, modalOpend } = props;
     fetch(`/api/member/${id}`, {
       method: 'DELETE'
@@ -114,9 +98,9 @@ const CellTable = (props) => {
             removeMember(sectionIdx, leaderIdx, memberIdx);
         }
       });
-  }
+  });
 
-  const handleCheckMember = async (leaderId, id, memberIdx, sectionIdx, kind) => {
+  const handleCheckMember = useCallback(async (leaderId, id, memberIdx, sectionIdx, kind) => {
     const responsedData = await fetch(`/api/check/leader/${id}`, {
       method: 'PUT',
       headers: {
@@ -127,9 +111,9 @@ const CellTable = (props) => {
     if (responsedData.status === 200) {
       props.checkMemberWorship(leaderId, id, memberIdx, sectionIdx, kind);
     }
-  }
+  });
 
-  const handleCount = async (id, sectionIdx, kind, count) => {
+  const handleCount = useCallback(async (id, sectionIdx, kind, count) => {
     const responsedData = await fetch(`/api/count/${id}`, {
       method: 'PUT',
       headers: {
@@ -140,21 +124,21 @@ const CellTable = (props) => {
     if (responsedData.status === 200) {
       props.countContent(id, sectionIdx, kind, Number(count));
     }
-  };
+  });
 
-  const handleAddLeader = ({ inner, leader, idx }) => {
+  const handleAddLeader = useCallback(({ inner, leader, idx }) => {
     const { changeCurrentInfo, modalOpend } = props;
     changeCurrentInfo('currentModal', !modalOpend ? inner : null);
     changeCurrentInfo('modalOpend', !modalOpend)
-  };
+  });
 
-  const handleAddNetwork = ({ inner }) => {
+  const handleAddNetwork = useCallback(({ inner }) => {
     const { changeCurrentInfo, modalOpend } = props;
     changeCurrentInfo('currentModal', !modalOpend ? inner : null);
     changeCurrentInfo('modalOpend', !modalOpend)
-  }
+  });
 
-  const handleAddMember = (leader) => {
+  const handleAddMember = useCallback((leader) => {
     console.log(leader);
     const { changeCurrentInfo } = props;
     changeCurrentInfo('currentModal', <Modal><AddMemberForm cellInfo={leader} confirmAction={addNetworkCell} /></Modal>)
@@ -175,7 +159,7 @@ const CellTable = (props) => {
         window.location.href = window.location.href;
       });
     }
-  }
+  });
 
 
 
@@ -218,25 +202,18 @@ const CellTable = (props) => {
         </ul>
       </div>
       <div className="cell-wrapper">
-        <DndProvider backend={Backend}>
-          {currentSection.map((section, index) => {
-            return (
-              <CellList key={section + index} customProps={{
-                isAdmin,
-                network: section,
-                index,
-                handleCheck: handleCheck,
-                handleCount: handleCount,
-                handleCheckMember: handleCheckMember,
-                handleAddLeader: handleAddLeader,
-                handleModifyName: handleModifyName,
-                handleChangeName: handleChangeName,
-                handleRemoveMember: handleRemoveMember,
-                handleAddMember: handleAddMember
-              }} />
-            );
-          })}
-        </DndProvider>
+        {/* <DndProvider backend={Backend}> */}
+          <CellList customProps={{
+            isAdmin,
+            handleCheck: handleCheck,
+            handleCount: handleCount,
+            handleCheckMember: handleCheckMember,
+            handleAddLeader: handleAddLeader,
+            handleChangeName: handleChangeName,
+            handleRemoveMember: handleRemoveMember,
+            handleAddMember: handleAddMember
+          }} />
+        {/* </DndProvider> */}
       </div>
       {isAdmin ? (
         <div className="networkName-box">
@@ -247,19 +224,15 @@ const CellTable = (props) => {
             : (<div>😰시트가 없습니다 시트를 먼저 추가하세요</div>)}
         </div>) : null}
     </div>
-  )
+  );
 
-}
+};
 
 
 const mapStateToProps = (state) => {
   return ({
-    members: state.checker.members,
-    currentSection: state.checker.currentSection,
     sheets: state.checker.sheets,
     modalOpend: state.checker.modalOpend,
-    attached: state.checker.attached,
-    networkCells: state.checker.networkCells
   });
 };
 

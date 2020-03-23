@@ -4,6 +4,8 @@ import App from './components/App';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
+import { DndProvider } from 'react-dnd';
+import Backend from 'react-dnd-html5-backend';
 import rootReducer from './store/modules';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -15,6 +17,8 @@ const store = createStore(rootReducer, compose(applyMiddleware(thunk), devTools)
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <DndProvider backend={Backend}>
+      <App />
+    </DndProvider>
   </Provider>,
   document.getElementById('root'));

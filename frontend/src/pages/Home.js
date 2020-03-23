@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { connect, useSelector } from 'react-redux';
+import React, { useEffect, memo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -26,41 +26,44 @@ const mapSectionByEnName = (enName) => {
 };
 
 const Home = (props) => {
-  const { match, sheets, changeCurrentInfo, networkCells } = props;
+  const dispatch = useDispatch();
+  const { match } = props;
   const { name: current, attached } = match.params;
-  const { modalOpend } = useSelector(state => state.checker);
+  const modalOpend = useSelector(state => state.checker.modalOpend);
+  const networkCells = useSelector(state => state.checker.networkCells);
+  const sheets = useSelector(state => state.checker.sheets);
   const isAdmin = match.url.match(/admin/g);
-
+  console.log('홈');
 
   useEffect(() => {
-    changeCurrentInfo('attached', attached);
+    dispatch(changeCurrentInfo('attached', attached));
+    console.log(1111);
     fetch(`/api/sheet/${attached}`).then(res => {
       return res;
     }).then(res => res.json())
       .then(sheets => {
-        changeCurrentInfo('sheets', sheets);
+        dispatch(changeCurrentInfo('sheets', sheets));
         if (!current) {
           return;
         }
-        changeCurrentInfo('idx', current);
-        changeCurrentInfo('section', mapSectionByEnName(current));
-        changeCurrentInfo('attached', attached);
+        dispatch(changeCurrentInfo('idx', current));
+        dispatch(changeCurrentInfo('section', mapSectionByEnName(current)));
         const currentSheetId = sheets.length && sheets.find(v => v.name === current)._id;
-        changeCurrentInfo('currentSheetId', currentSheetId);
+        dispatch(changeCurrentInfo('currentSheetId', currentSheetId));
         fetch(`/api/networkCell/${currentSheetId}`)
           .then(res => res.json())
           .then(networkCells => {
-            changeCurrentInfo('networkCells', networkCells);
+            dispatch(changeCurrentInfo('networkCells', networkCells));
             fetch(`/api/cells?cells=${JSON.stringify(networkCells)}`)
               .then(res => res.json())
               .then(cells => {
-                changeCurrentInfo('currentSection', cells);
+                dispatch(changeCurrentInfo('currentSection', cells));
               });
 
           });
       });
-    return () => { changeCurrentInfo('currentSection', null); };
-  }, [current, attached]);
+    return () => { dispatch(changeCurrentInfo('currentSection', null)); };
+  }, []);
 
   const resetCheck = () => {
     const currentLocation = window.location.href;
@@ -116,31 +119,21 @@ const Home = (props) => {
         </div>
       ) : ''}
       <Tab currentSheet={current} sheets={sheets} attached={attached} isAdmin={isAdmin ? true : null} />
-      {match.params.name ?
-        <div className="admin-table"><CellTable isAdmin={isAdmin} current={match.params.name} /></div> :
-        <div>
-          <div className="root__description">{attached} 출석체크 페이지 :)</div>
-          <div className="root__description">🇮🇱🇰🇷🇪🇬🇸🇾🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
-          {sheets.length === 0 ? (<div className="sheet-container" onClick={() => handleToggleModal({ inner: <Modal><SheetForm /></Modal> })}>
-            <div className="sheet-container__description">시트가 없습니다 추가해보세요</div>
-            <div className="sheet-container__icon"><FontAwesomeIcon icon={faPlusCircle} /></div>
-          </div>) : null}
-        </div>
-      }
+        {current ?
+          <div className="admin-table"><CellTable isAdmin={isAdmin} current={current} /></div> :
+          <div>
+            <div className="root__description">{attached} 출석체크 페이지 :)</div>
+            <div className="root__description">🇮🇱🇰🇷🇪🇬🇸🇾🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
+            {sheets.length === 0 ? (<div className="sheet-container" onClick={() => handleToggleModal({ inner: <Modal><SheetForm /></Modal> })}>
+              <div className="sheet-container__description">시트가 없습니다 추가해보세요</div>
+              <div className="sheet-container__icon"><FontAwesomeIcon icon={faPlusCircle} /></div>
+            </div>) : null}
+          </div>
+        }
     </>
   );
 
 };
-const mapStateToProps = (state) => ({
-  currentSection: state.checker.currentSection,
-  attached: state.checker.attached,
-  sheets: state.checker.sheets,
-  networkCells: state.checker.networkCells,
-  modalOpend: state.checker.modalOpend
-});
 
-const mapDispatchToProps = dispatch => ({
-  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

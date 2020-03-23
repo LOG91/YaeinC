@@ -154,7 +154,6 @@ class Tab extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  currentSection: state.checker.currentSection,
   attached: state.checker.attached,
   sheets: state.checker.sheets,
   networkCells: state.checker.networkCells,

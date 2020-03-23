@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import { Layout } from '../pages/Layout';
@@ -10,7 +10,7 @@ import { MemberList } from '../components/MemberList';
 
 
 const AdminMain = (props) => {
-  
+  console.log('어드민메인');
   return (
     <>
       <BrowserRouter>

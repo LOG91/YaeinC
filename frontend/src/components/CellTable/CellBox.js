@@ -1,25 +1,23 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { CheckBox } from '../CheckBox';
 import { CountDropDown } from '../DropDown';
 import NameInput from './NameInput';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus, faBars } from '@fortawesome/free-solid-svg-icons';
 
 import { useDrag, useDrop } from 'react-dnd';
-import { changeCurrentInfo } from '../../store/modules/checker';
+import { changeCurrentInfo, dndChange } from '../../store/modules/checker';
 import { useDispatch, useSelector } from 'react-redux';
 import update from 'immutability-helper';
 
-
-const CellList = (props) => {
+const CellBox = ({ moveCard, isAdmin, network, index, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember }) => {
+  if (!network) return <div></div>;
   const dispatch = useDispatch();
   const currentSection = useSelector(state => state.checker.currentSection);
-  const currentSheetId = useSelector(state => state.checker.currentSheetId);
-  const { network, index, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember, isAdmin } = props.customProps;
-  if (!network) return <div></div>;
-
   const ref = useRef(null);
+  console.log('이게 리랜더링 되야함', network);
+
   const [, drop] = useDrop({
     accept: 'card',
     hover(item, monitor) {
@@ -31,6 +29,7 @@ const CellList = (props) => {
       if (dragIndex === hoverIndex) {
         return;
       }
+
       const hoverBoundingRect = ref.current.getBoundingClientRect();
       const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
@@ -45,31 +44,10 @@ const CellList = (props) => {
       }
 
       console.log(dragIndex, hoverIndex);
-      const moveCard = (dragIndex, hoverIndex) => {
-        const dragCard = currentSection[dragIndex];
-        console.log(dragCard, dragIndex, hoverIndex);
-        dispatch(changeCurrentInfo('currentSection',
-          update([...currentSection], {
-            $splice: [
-              [dragIndex, 1],
-              [hoverIndex, 0, dragCard],
-            ],
-          }),
-        ));
-      };
+
 
       moveCard(dragIndex, hoverIndex);
-      monitor.getItem().index = hoverIndex;
-      // const idList = [...document.querySelector('.cell-wrapper').children].map(v => v.dataset.id);
-      // fetch('/api/networkCell/seq', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({ seq: JSON.stringify(idList), sheetId: currentSheetId })
-      // }).then(res => res.json()).then(res => {
-      //   console.log(res);
-      // });
+      item.index = hoverIndex;
     },
     // drop: (e, monitor) => { console.log(e, monitor.getItem()); }
   });
@@ -79,31 +57,14 @@ const CellList = (props) => {
     collect: monitor => ({
       isDragging: monitor.isDragging(),
     }),
+    end: (result, monitor) => {
+      dispatch(changeCurrentInfo('currentSection', [...currentSection]));
+      // console.log(monitor);
+    }
   });
-  const opacity = isDragging ? 0 : 1;
   drag(drop(ref));
 
-  const tmp = makeCellBox({ network: network.leaders, index, networkName: network.name, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember, isAdmin });
-  return (
-    <div className="network-wrapper" key={network.name + index} ref={ref}>
-      <div className="network-wrapper__relative">
-        <div className="network-wrapper__position">
-          <div>{network.name}</div>
-          <FontAwesomeIcon
-            className="network-wrapper__icon"
-            icon={faBars}
-          />
-        </div>
-      </div>
-      <div className="network-wrapper__flex--column">
-        {tmp}
-      </div>
-    </div>
-  );
-};
-
-const makeCellBox = ({ isAdmin, network, index, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember }) => {
-  const reduced = network.map((leader, idxForKey) => {
+  const reduced = network.leaders.map((leader, idxForKey) => {
     const MEMBER_CNT = leader.members.length + 1 + 1;
     return (
       <div className="network-container" key={idxForKey + leader} data-id={leader._id}>
@@ -206,7 +167,22 @@ const makeCellBox = ({ isAdmin, network, index, handleCheck, handleCount, handle
     );
   });
 
-  return reduced;
+  return <>
+    <div className="network-wrapper" key={network.name} ref={ref}>
+      <div className="network-wrapper__relative">
+        <div className="network-wrapper__position">
+          <div>{network.name}</div>
+          <FontAwesomeIcon
+            className="network-wrapper__icon"
+            icon={faBars}
+          />
+        </div>
+      </div>
+      <div className="network-wrapper__flex--column">
+        {reduced}
+      </div>
+    </div>
+  </>;
 };
 
-export default CellList;
+export default CellBox;

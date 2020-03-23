@@ -1,4 +1,7 @@
+import update from 'immutability-helper';
+
 const CHANGE_CURRENT_INFO = 'checker/CHANGE_CURRENT_INFO';
+const DND_CHANGE = 'checker/DND_CHANGE';
 const INSERT_NETWORKCELL = 'checker/INSERT_NETWORKCELL';
 
 const CHANGE_LEADER_NAME = 'checker/CHANGE_LEADER_NAME';
@@ -22,6 +25,7 @@ const REMOVE_SHEET = 'checker/REMOVE_SHEET';
 const SEQUENCE_SHEET = 'checker/SEQUENCE_SHEET';
 
 export const changeCurrentInfo = (left, right) => ({ type: CHANGE_CURRENT_INFO, left, right });
+export const dndChange = (dragIndex, hoverIndex) => ({ type: DND_CHANGE, dragIndex, hoverIndex });
 export const insertNetworkCell = (addedNetworkCell) => ({ type: INSERT_NETWORKCELL, addedNetworkCell });
 
 export const changeLeaderName = (sectionIdx, leaderIdx, changedName) => ({ type: CHANGE_LEADER_NAME, sectionIdx, leaderIdx, changedName });
@@ -66,6 +70,17 @@ export default function checker(state = initialState, action) {
         [action.left]: action.right
       };
 
+    case DND_CHANGE:
+      return {
+        ...state,
+        currentSection:
+          update(state.currentSection, {
+            $splice: [
+              [action.dragIndex, 1],
+              [action.hoverIndex, 0, state.currentSection[action.dragIndex]],
+            ],
+          })
+      };
     case INSERT_NETWORKCELL:
       return {
         ...state,
