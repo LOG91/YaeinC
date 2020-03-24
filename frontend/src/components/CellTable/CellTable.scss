@@ -192,7 +192,10 @@
     }
   }
   &__input {
-    width: 65px;
+    width: 70px;
+    border-radius: 7px;
+    padding: 3px;
+    border: 1px solid #ccc
   }
   &__check {
     @extend .mid-align--both;
@@ -200,7 +203,7 @@
   &__button {
     cursor: pointer;
     font-size: 13px;
-    margin-left: 10px;
+    margin-left: 5px;
     &:hover {
       color: #999;
     }

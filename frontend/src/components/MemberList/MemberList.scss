@@ -1,7 +1,7 @@
 @import '../../custom';
 
 .members-container {
-  font-size: 20px;
+  font-size: 17px;
   font-family: $main-font;
   text-align: center;
 
@@ -15,9 +15,23 @@
     // border: 1px dotted #7228e6;
     // cursor: pointer;
   }
+  &__input {
+    width: 80px;
+  }
   .col {
     border: 1px solid #ccc;
     padding: 7px;
+  }
+}
+
+.toggle-container {
+  display: flex;
+  justify-content: center;
+  &__left {
+    padding: 5px;
+  }
+  &__right {
+    padding: 5px;
   }
 }
 
@@ -29,4 +43,119 @@
 
 .fa-user-minus {
   cursor: pointer;
+}
+
+.toggle-button-cover {
+  display: table-cell;
+  position: relative;
+  width: 200px;
+  height: 140px;
+  box-sizing: border-box;
+}
+
+.button-cover {
+  height: 100px;
+  margin: 20px;
+  background-color: #fff;
+  box-shadow: 0 10px 20px -8px #c5d6d6;
+  border-radius: 4px;
+}
+
+.button-cover:before {
+  counter-increment: button-counter;
+  content: counter(button-counter);
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  color: #d7e3e3;
+  font-size: 12px;
+  line-height: 1;
+  padding: 5px;
+}
+
+.button-cover,
+.knobs,
+.layer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.button {
+  position: relative;
+  top: 50%;
+  width: 74px;
+  height: 36px;
+  margin: -20px auto 0 auto;
+  overflow: hidden;
+}
+
+.button.r,
+.button.r .layer {
+  border-radius: 100px;
+}
+
+.button.b2 {
+  border-radius: 2px;
+}
+
+.checkbox {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.knobs {
+  z-index: 2;
+}
+
+.layer {
+  width: 100%;
+  background-color: #ebf7fc;
+  transition: 0.3s ease all;
+  z-index: 1;
+}
+
+#button-3 .knobs:before {
+  content: '남';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 24px;
+  height: 28px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1;
+  padding: 8px 6px;
+  background-color: #03a9f4;
+  border-radius: 50%;
+  transition: 0.3s ease all, left 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15);
+}
+
+#button-3 .checkbox:active + .knobs:before {
+  width: 46px;
+  border-radius: 100px;
+}
+
+#button-3 .checkbox:checked:active + .knobs:before {
+  margin-left: -26px;
+}
+
+#button-3 .checkbox:checked + .knobs:before {
+  content: '여';
+  left: 42px;
+  background-color: #f44336;
+}
+
+#button-3 .checkbox:checked ~ .layer {
+  background-color: #fcebeb;
 }

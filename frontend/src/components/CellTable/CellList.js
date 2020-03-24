@@ -43,6 +43,7 @@ const CellList = (props) => {
     });
     dispatch(
       changeCurrentInfo('currentSection', newCurrentSection));
+
     // dispatch(dndChange(dragIndex, hoverIndex));
   };
   

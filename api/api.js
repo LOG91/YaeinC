@@ -147,7 +147,7 @@ router.post('/networkCell', async (req, res) => {
   })
 })
 
-router.post('/networkCell/seq', async (req, res) => {
+router.put('/networkCell/seq', async (req, res) => {
   const { seq, sheetId } = req.body;
   console.log(seq, 8127391);
   const idList = JSON.parse(seq);

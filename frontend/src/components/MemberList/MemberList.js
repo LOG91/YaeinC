@@ -7,7 +7,7 @@ import { changeCurrentInfo } from '../../store/modules/checker';
 import { useDispatch } from 'react-redux';
 
 import { Modal, ConfirmModal } from '../Modal';
-import Sortable from 'sortablejs';
+
 
 const MemberList = (props) => {
   const dispatch = useDispatch();
@@ -27,10 +27,6 @@ const MemberList = (props) => {
         setMembers(members);
         setAllPagesCount(Math.ceil(members.length / viewPageCount));
       });
-
-    const el = document.querySelector('.members-container__wrap');
-    // const sortable = Sortable.create(el);
-    const sortable = new Sortable(el, { sort: true, delay: 0 });
   }, []);
 
   useEffect(() => {
@@ -99,14 +95,31 @@ const MemberList = (props) => {
     );
   };
 
+  const changeMemberData = ({ idx }) => (evt) => {
+    console.log(members);
+    const left = evt.target.name;
+    const right = evt.target.value;
+    console.log(left, right, idx);
+    const newMembers = [
+      ...members.slice(0, idx),
+      { ...members[idx], [left]: right },
+      ...members.slice(idx + 1, members.length)
+    ];
+    setMembers(newMembers);
+  };
+
   const renderMemberColumn = (member, idx) => {
     return (
       <>
         <div className="row members-container__row">
           <div className="col members-container__col">{pageMinCount + idx}</div>
-          <div className="col members-container__col">{member.name}</div>
+          <div className="col members-container__col">
+            <input className="members-container__input" name="name" value={member.name} onChange={changeMemberData({ idx })} />
+          </div>
           <div className="col members-container__col">{member.age}</div>
-          <div className="col members-container__col">{member.gender}</div>
+          <div className="col members-container__col">
+            {member.gender === 'male' ? '남' : '여'}
+          </div>
           <div className="col members-container__col">{member.attached}</div>
           <div className="col members-container__col">{member.section}</div>
           <div className="col members-container__col">{member.cellNameKr}</div>

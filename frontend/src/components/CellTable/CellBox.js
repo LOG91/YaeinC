@@ -15,6 +15,7 @@ const CellBox = ({ moveCard, isAdmin, network, index, handleCheck, handleCount, 
   if (!network) return <div></div>;
   const dispatch = useDispatch();
   const currentSection = useSelector(state => state.checker.currentSection);
+  const currentSheetId = useSelector(state => state.checker.currentSheetId);
   const ref = useRef(null);
   console.log('이게 리랜더링 되야함', network);
 
@@ -52,14 +53,31 @@ const CellBox = ({ moveCard, isAdmin, network, index, handleCheck, handleCount, 
     // drop: (e, monitor) => { console.log(e, monitor.getItem()); }
   });
 
-  const [{ isDragging }, drag] = useDrag({
+  const [spec, drag] = useDrag({
     item: { type: 'card', index },
     collect: monitor => ({
       isDragging: monitor.isDragging(),
     }),
     end: (result, monitor) => {
       dispatch(changeCurrentInfo('currentSection', [...currentSection]));
+      fetch('/api/networkCell/seq', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          seq: JSON.stringify([...currentSection].map(v => v._id)),
+          sheetId: currentSheetId
+        })
+      }).then(res => res.json()).then(res => console.log(res));
       // console.log(monitor);
+    },
+    begin: (monitor) => {
+      console.log(monitor);
+    },
+    canDrag: (monitor, f) => {
+      console.log(monitor);
+      return true;
     }
   });
   drag(drop(ref));
