@@ -208,6 +208,7 @@ router.get('/test', ({ query }, res) => {
 
 router.get('/cells/', async (req, res) => {
   const cells = JSON.parse(req.query.cells);
+  if (cells.length === 0) res.send([]);
   const mapped = await Promise.all(cells.map(async (cell, i) => {
     const added = await Leader.find({ isLeader: true, cell: cell._id }).sort({ seq: 1 })
       .populate('youth')

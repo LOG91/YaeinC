@@ -31,6 +31,7 @@ const Home = (props) => {
   const { name: current, attached } = match.params;
   const modalOpend = useSelector(state => state.checker.modalOpend);
   const networkCells = useSelector(state => state.checker.networkCells);
+  const currentSection = useSelector(state => state.checker.currentSection);
   const sheets = useSelector(state => state.checker.sheets);
   const isAdmin = match.url.match(/admin/g);
   console.log('홈');

@@ -1,91 +1,64 @@
 import React, { useRef, useEffect } from 'react';
-import ReactDOM from 'react-dom';
+
+import { Modal } from '../Modal';
+import { AddMemberForm } from '../AddForm';
 import { CheckBox } from '../CheckBox';
 import { CountDropDown } from '../DropDown';
 import NameInput from './NameInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus, faBars } from '@fortawesome/free-solid-svg-icons';
+import Sortable from 'sortablejs';
 
-import { useDrag, useDrop } from 'react-dnd';
-import { changeCurrentInfo, dndChange } from '../../store/modules/checker';
 import { useDispatch, useSelector } from 'react-redux';
-import update from 'immutability-helper';
 
-const CellBox = ({ moveCard, isAdmin, network, index, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember }) => {
+const CellBox = ({ len, isAdmin, network, index, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember }) => {
   if (!network) return <div></div>;
   const dispatch = useDispatch();
   const currentSection = useSelector(state => state.checker.currentSection);
   const currentSheetId = useSelector(state => state.checker.currentSheetId);
   const ref = useRef(null);
-  console.log('이게 리랜더링 되야함', network);
+  let sortableForLeader = null;
 
-  const [, drop] = useDrop({
-    accept: 'card',
-    hover(item, monitor) {
-      if (!ref.current) {
-        return;
-      }
-      const dragIndex = item.index;
-      const hoverIndex = index;
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      const hoverBoundingRect = ref.current.getBoundingClientRect();
-      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-      const clientOffset = monitor.getClientOffset();
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
-
-      console.log(dragIndex, hoverIndex);
-
-
-      moveCard(dragIndex, hoverIndex);
-      item.index = hoverIndex;
-    },
-    // drop: (e, monitor) => { console.log(e, monitor.getItem()); }
-  });
-
-  const [spec, drag] = useDrag({
-    item: { type: 'card', index },
-    collect: monitor => ({
-      isDragging: monitor.isDragging(),
-    }),
-    end: (result, monitor) => {
-      dispatch(changeCurrentInfo('currentSection', [...currentSection]));
-      fetch('/api/networkCell/seq', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          seq: JSON.stringify([...currentSection].map(v => v._id)),
-          sheetId: currentSheetId
-        })
-      }).then(res => res.json()).then(res => console.log(res));
-      // console.log(monitor);
-    },
-    begin: (monitor) => {
-      console.log(monitor);
-    },
-    canDrag: (monitor, f) => {
-      console.log(monitor);
-      return true;
+  useEffect(() => {
+    if (sortableForLeader) sortableForLeader.destroy();
+    const leaderListEl = document.querySelectorAll('.network-wrapper__flex--column');
+    if (leaderListEl) {
+      leaderListEl.forEach(item => {
+        sortableForLeader = new Sortable(item,
+          {
+            sort: true,
+            animation: 150,
+            delay: 0,
+            handle: ".member-container__button.fa-bars",
+            onEnd: (evt) => {
+              const { target: { children } } = evt;
+              const idList = [...children].map(node => node.dataset.id);
+              fetch('/api/leader/seq', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  seq: JSON.stringify(idList)
+                })
+              }).then(res => res.json())
+                .then(res => {
+                  console.log(res);
+                });
+            }
+          });
+      });
     }
-  });
-  drag(drop(ref));
+    return () => {
+      // if (sortableForLeader) sortableForLeader.destroy();
+    };
+  }, [currentSection]);
 
   const reduced = network.leaders.map((leader, idxForKey) => {
+    console.log(index, leader, idxForKey);
     const MEMBER_CNT = leader.members.length + 1 + 1;
     return (
-      <div className="network-container" key={idxForKey + leader} data-id={leader._id}>
+      <div className="network-container" key={idxForKey + leader} style={{ zIndex: ((len - index) * 10 - idxForKey) }} data-id={leader._id}>
         <ul className="network-container__list">
           <li className="network-container__item">
             <div className="network-container__position">
@@ -186,14 +159,24 @@ const CellBox = ({ moveCard, isAdmin, network, index, handleCheck, handleCount, 
   });
 
   return <>
-    <div className="network-wrapper" key={network.name} ref={ref}>
+    <div className="network-wrapper" key={network.name} data-id={network._id}>
       <div className="network-wrapper__relative">
         <div className="network-wrapper__position">
           <div>{network.name}</div>
-          <FontAwesomeIcon
+          {isAdmin && <FontAwesomeIcon
             className="network-wrapper__icon"
             icon={faBars}
-          />
+          />}
+          {isAdmin && <div className="positioning--rel">
+            <div className="button-box">
+              <button
+                className="btn btn-outline-dark button-box__button--add"
+                onClick={() => handleAddLeader({ ...network.leaders[0], cellId: network._id })}
+              >
+                <FontAwesomeIcon icon={faUserPlus} />
+              </button>
+            </div>
+          </div>}
         </div>
       </div>
       <div className="network-wrapper__flex--column">

@@ -1,5 +1,5 @@
 @import '../../_custom.scss';
-$active-color: #7226e5;
+$active-color: #fd5e82;
 
 .tab {
   font-family: $main-font;
@@ -44,6 +44,9 @@ $active-color: #7226e5;
       }
       border-bottom: 2px solid $active-color;
     }
+  }
+  .active {
+    color: #fd5e82;
   }
 }
 @include media(mobile) {

@@ -7,8 +7,7 @@ import update from 'immutability-helper';
 
 const CellList = (props) => {
   const currentSection = useSelector(state => state.checker.currentSection);
-  const cf = [...currentSection];
-  const [cs, setCs] = useState(cf);
+
   const { handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleChangeName, handleRemoveMember, isAdmin } = props.customProps;
 
   const handleModifyName = ({ id, sectionIdx, leaderIdx, target, memberIdx }) => {
@@ -24,51 +23,28 @@ const CellList = (props) => {
     });
     target.classList.remove('active');
   };
-  const dispatch = useDispatch();
 
-  const moveCard = (dragIndex, hoverIndex) => {
-    const dragCard = currentSection[dragIndex];
-    console.log(dragCard, dragIndex, hoverIndex);
-    // setCs(update(cs, {
-    //   $splice: [
-    //     [dragIndex, 1],
-    //     [hoverIndex, 0, cs[dragIndex]],
-    //   ],
-    // }));
-    const newCurrentSection = update(currentSection, {
-      $splice: [
-        [dragIndex, 1],
-        [hoverIndex, 0, currentSection[dragIndex]],
-      ],
-    });
-    dispatch(
-      changeCurrentInfo('currentSection', newCurrentSection));
+  return (currentSection ? currentSection.map((network, index) => {
+    console.log(network);
+    return (
+      <CellBox
+        key={network + index}
+        isAdmin={isAdmin}
+        len={currentSection.length}
+        network={network}
+        index={index}
+        handleCheck={handleCheck}
+        handleCount={handleCount}
+        handleCheckMember={handleCheckMember}
+        handleAddLeader={handleAddLeader}
+        handleAddMember={handleAddMember}
+        handleModifyName={handleModifyName}
+        handleChangeName={handleChangeName}
+        handleRemoveMember={handleRemoveMember}
+      />
 
-    // dispatch(dndChange(dragIndex, hoverIndex));
-  };
-  
-  console.log(123);
-  return (
-    currentSection.map((network, index) => {
-      return (
-        <CellBox
-          key={network + index}
-          moveCard={moveCard}
-          isAdmin={isAdmin}
-          network={network}
-          index={index}
-          handleCheck={handleCheck}
-          handleCount={handleCount}
-          handleCheckMember={handleCheckMember}
-          handleAddLeader={handleAddLeader}
-          handleAddMember={handleAddMember}
-          handleModifyName={handleModifyName}
-          handleChangeName={handleChangeName}
-          handleRemoveMember={handleRemoveMember}
-        />
-
-      )
-    })
+    );
+  }) : null
   );
 };
 

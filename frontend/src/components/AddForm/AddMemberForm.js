@@ -66,9 +66,33 @@ class AddForm extends Component {
     }
   }
 
+  renderMembersList(list) {
+    return list.map((member, i) => {
+      return (
+        <div key={i}>
+          <div style={{ fontSize: '14px' }}>셀원 {i + 1}</div>
+          <div className="addMember-wrap">
+            <div>이름</div>
+            <input
+              className="cellMember add-form__right--member"
+              name="members"
+              onChange={evt => this.handleChangeMember('name', evt, i)} />
+            <div>나이</div>
+            <input
+              className="cellMember add-form__right--member"
+              name="members"
+              onChange={evt => this.handleChangeMember('age', evt, i)} />
+            <button className="btn btn-outline-dark add-form__btn--cell" onClick={this.handleRemoveMember(i)}>삭제</button>
+          </div>
+        </div>
+      )
+    })
+  }
+
 
   render() {
-    const { onToggleModal, attached, insertMemberData, insertedMember, section, cellInfo, isAddNetwork, confirmAction } = this.props;
+    const { isLeader, onToggleModal, attached, insertMemberData, insertedMember, section, cellInfo, isAddNetwork, confirmAction } = this.props;
+    console.log(isLeader);
     console.log(isAddNetwork);
     return (
       <div className="add-form">
@@ -103,7 +127,7 @@ class AddForm extends Component {
             <button className="btn btn-outline-dark add-form__btn--bottom" onClick={onToggleModal}>닫기</button>
           </div>
         </div>
-      </div>
+      </div >
     )
   }
 

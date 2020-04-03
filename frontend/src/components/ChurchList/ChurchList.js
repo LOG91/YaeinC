@@ -27,10 +27,10 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
                 <h5 className="card-title card-box__subtitle">{attached}</h5>
               </div>
             </Link>
-            <div className="icon-wrapper">
+            {isAdmin && <div className="icon-wrapper">
               <div className="icon-wrapper__icon--move"><FontAwesomeIcon icon={faBars} /></div>
               <div className="icon-wrapper__icon--delete" onClick={() => handleDeleteChurch({ id: _id, idx })}><FontAwesomeIcon icon={faTrashAlt} /></div>
-            </div>
+            </div>}
           </div>
         );
       })}

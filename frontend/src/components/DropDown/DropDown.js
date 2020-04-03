@@ -7,13 +7,14 @@ export const CountDropDown = ({ handler, length, leaderInfo, option, leaderIndex
       <a
         key={leaderInfo._id + idx}
         className="dropdown-item"
-        onClick={() => handler(leaderInfo._id, leaderIndex, option, idx)}>{idx}
+        onClick={handler(leaderInfo._id, leaderIndex, option, idx)}>{idx}
       </a>)
   });
 
   return (
     <div className="dropdown-box">
       <button
+        onClick={(evt)=>console.log(evt)}
         className="btn btn-secondary dropdown-toggle dropdown-box__button"
         type="button"
         id="dropdownMenuButton"
@@ -26,17 +27,17 @@ export const CountDropDown = ({ handler, length, leaderInfo, option, leaderIndex
         {options}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export const BasicDropDown = ({ kind, list, handler, initialValue }) => {
   const options = list.map((cv, idx) => {
     return (
       <a
-        key={cv+idx}
+        key={cv + idx}
         className="dropdown-item"
         onClick={() => handler(kind, cv)}
-        >{cv}
+      >{cv}
       </a>)
   })
   return (

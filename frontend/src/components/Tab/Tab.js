@@ -70,8 +70,9 @@ class Tab extends Component {
     changeCurrentInfo('currentSheetId', currentSheetId);
     const networkCells = await fetch(`/api/networkCell/${currentSheetId}`).then(res => res.json()).then();
     const mapped = networkCells.map(v => v.name);
+    console.log(networkCells)
     changeCurrentInfo('networkCells', networkCells);
-    fetch(`/api/cells/${JSON.stringify(mapped)}`)
+    fetch(`/api/cells?cells=${JSON.stringify(networkCells)}`)
       .then(res => res.json())
       .then(cells => {
         changeCurrentInfo('currentSection', cells);
@@ -142,9 +143,9 @@ class Tab extends Component {
                 <FontAwesomeIcon className="index__button--edit" icon={faCheckCircle} onClick={() => this.handleEditSheetName({ id: v._id, name: this.state.insertedSheetName })} /></>)
             }
             {isAdmin ? <div className="icon-wrapper icon-wrapper--center">
-              <div className="icon-wrapper__icon--edit" onClick={() => this.handleEditButton({ id: v._id, name: v.name, idx })}><FontAwesomeIcon icon={faEdit} /></div>
-              <div className="icon-wrapper__icon--move"><FontAwesomeIcon icon={faBars} /></div>
-              <div className="icon-wrapper__icon--delete" onClick={() => this.handleDeleteSheet({ id: v._id, idx })}><FontAwesomeIcon icon={faTrashAlt} /></div>
+              <div className={`icon-wrapper__icon--edit ${currentSheet === v.name && "active"}`} onClick={() => this.handleEditButton({ id: v._id, name: v.name, idx })}><FontAwesomeIcon icon={faEdit} /></div>
+              <div className={`icon-wrapper__icon--move ${currentSheet === v.name && "active"}`}><FontAwesomeIcon icon={faBars} /></div>
+              <div className={`icon-wrapper__icon--delete ${currentSheet === v.name && "active"}`} onClick={() => this.handleDeleteSheet({ id: v._id, idx })}><FontAwesomeIcon icon={faTrashAlt} /></div>
             </div> : null}
           </li>
         })}

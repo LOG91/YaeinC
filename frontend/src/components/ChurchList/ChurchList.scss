@@ -65,6 +65,9 @@
       @extend .icon-wrapper__icon;
       margin: 7px;
       cursor: pointer;
+      &:hover {
+        color: #fd5e82;
+      }
     }
   }
   &--center {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import './CellTable.scss';
 import { changeCurrentInfo, checkWorship, checkMemberWorship, countContent, sheets, changeLeaderName, changeMemberName, removeLeader, removeMember, modalOpend } from '../../store/modules/checker';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
 import CellList from './CellList';
 import Modal from '../Modal/Modal';
@@ -9,54 +9,58 @@ import { AddNetworkForm } from '../AddForm';
 import AddMemberForm from '../AddForm/AddMemberForm';
 
 import Sortable from 'sortablejs';
-// import { DndProvider } from 'react-dnd';
-// import Backend from 'react-dnd-html5-backend';
 
 
 const CellTable = (props) => {
-  const { isAdmin, sheets, current } = props;
+  const { isAdmin, current, changeCurrentInfo } = props;
+  const currentSection = useSelector(state => state.checker.currentSection);
+  const sheets = useSelector(state => state.checker.sheets);
+  const currentSheetId = useSelector(state => state.checker.currentSheetId);
   let sortableForNetwork = null;
-  let sortableForLeader = null;
 
-  // useEffect(() => {
-  // const cellWrapperEl = document.querySelector('.cell-wrapper');
-  // const leaderListEl = document.querySelector('.network-wrapper__flex--column');
-  // console.log(cellWrapperEl, leaderListEl);
-  // if (cellWrapperEl) {
-  //   this.sortableForNetwork = new Sortable(cellWrapperEl,
-  //     {
-  //       sort: true,
-  //       animation: 150,
-  //       delay: 0,
-  //       handle: ".network-wrapper__icon",
-  //     });
-  // }
-  // if (leaderListEl) {
-  //   this.sortableForLeader = new Sortable(leaderListEl,
-  //     {
-  //       sort: true,
-  //       animation: 150,
-  //       delay: 0,
-  //       handle: ".member-container__button.fa-bars",
-  //       onEnd: (evt) => {
-  //         const { target: { children } } = evt;
-  //         const idList = [...children].map(node => node.dataset.id);
-  //         fetch('/api/leader/seq', {
-  //           method: 'POST',
-  //           headers: {
-  //             'Content-Type': 'application/json'
-  //           },
-  //           body: JSON.stringify({
-  //             seq: JSON.stringify(idList)
-  //           })
-  //         }).then(res => res.json())
-  //           .then(res => {
-  //             console.log(res);
-  //           });
-  //       }
-  //     });
-  // }
-  // })
+  useEffect(() => {
+    const cellWrapperEl = document.querySelector('.cell-wrapper');
+    if (isAdmin && cellWrapperEl) {
+      console.log(currentSection);
+      sortableForNetwork = new Sortable(cellWrapperEl,
+        {
+          sort: true,
+          animation: 150,
+          delay: 0,
+          handle: ".network-wrapper__icon",
+          onEnd: (evt) => {
+            console.log(12313);
+            const { target: { children } } = evt;
+            console.log(12313);
+
+            const idList = [...children].map(node => node.dataset.id);
+            console.log(12313, currentSheetId, currentSection);
+
+            fetch('/api/networkCell/seq', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                seq: JSON.stringify(idList),
+                sheetId: currentSheetId
+              })
+            })
+              .then(res => res.json())
+              .then(() => {
+                const filtered = idList.map(v => currentSection.find(item => item._id === v));
+                console.log(123333);
+                changeCurrentInfo('currentSection', filtered);
+              });
+          }
+        });
+    }
+
+    return () => {
+      console.log(123);
+      isAdmin && sortableForNetwork.destroy();
+    };
+  }, [currentSection]);
 
 
   const handleCheck = useCallback((id, sectionIdx, kind) => {
@@ -86,7 +90,7 @@ const CellTable = (props) => {
   });
 
   const handleRemoveMember = useCallback(({ id, sectionIdx, leaderIdx, memberIdx }) => {
-    const { removeLeader, removeMember, changeCurrentInfo, modalOpend } = props;
+    const { removeLeader, removeMember, changeCurrentInfo } = props;
     fetch(`/api/member/${id}`, {
       method: 'DELETE'
     }).then(res => res.json())
@@ -113,7 +117,7 @@ const CellTable = (props) => {
     }
   });
 
-  const handleCount = useCallback(async (id, sectionIdx, kind, count) => {
+  const handleCount = useCallback((id, sectionIdx, kind, count) => async evt => {
     const responsedData = await fetch(`/api/count/${id}`, {
       method: 'PUT',
       headers: {
@@ -126,27 +130,58 @@ const CellTable = (props) => {
     }
   });
 
-  const handleAddLeader = useCallback(({ inner, leader, idx }) => {
-    const { changeCurrentInfo, modalOpend } = props;
-    changeCurrentInfo('currentModal', !modalOpend ? inner : null);
-    changeCurrentInfo('modalOpend', !modalOpend)
+  const handleAddLeader = useCallback((leader) => {
+    const { changeCurrentInfo } = props;
+    console.log(leader);
+    // changeCurrentInfo('currentModal', !modalOpend ? inner : null);
+    changeCurrentInfo('currentModal', <Modal><AddMemberForm isLeader={true} cellInfo={leader} confirmAction={addLeader} /></Modal>)
+    changeCurrentInfo('modalOpend', !modalOpend);
+
+    function addLeader({ insertedMember }) {
+      fetch('/api/leader', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...insertedMember, cellId: leader.cellId }),
+      }).then(res => {
+        // onToggleModal({});
+        return res.json();
+      }).then(async leader => {
+        window.location.href = window.location.href;
+      });
+    }
+
+
+    // fetch('/api/leader', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({ ...insertedMember, cellId: cell._id })
+    // }).then(res => {
+    //   onToggleModal({});
+    //   return res.json()
+    // }).then(leader => {
+    //   window.location.href = window.location.href;
+    // })
   });
 
   const handleAddNetwork = useCallback(({ inner }) => {
-    const { changeCurrentInfo, modalOpend } = props;
+    const { changeCurrentInfo } = props;
     changeCurrentInfo('currentModal', !modalOpend ? inner : null);
-    changeCurrentInfo('modalOpend', !modalOpend)
+    changeCurrentInfo('modalOpend', !modalOpend);
   });
 
   const handleAddMember = useCallback((leader) => {
     console.log(leader);
     const { changeCurrentInfo } = props;
-    changeCurrentInfo('currentModal', <Modal><AddMemberForm cellInfo={leader} confirmAction={addNetworkCell} /></Modal>)
-    changeCurrentInfo('modalOpend', true)
+    changeCurrentInfo('currentModal', <Modal><AddMemberForm cellInfo={leader} confirmAction={addMember} /></Modal>)
+    changeCurrentInfo('modalOpend', true);
     // console.log(insertedMember)
 
-    async function addNetworkCell({ insertedMember }) {
-      await fetch('/api/member', {
+    function addMember({ insertedMember }) {
+      fetch('/api/member', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -202,18 +237,16 @@ const CellTable = (props) => {
         </ul>
       </div>
       <div className="cell-wrapper">
-        {/* <DndProvider backend={Backend}> */}
-          <CellList customProps={{
-            isAdmin,
-            handleCheck: handleCheck,
-            handleCount: handleCount,
-            handleCheckMember: handleCheckMember,
-            handleAddLeader: handleAddLeader,
-            handleChangeName: handleChangeName,
-            handleRemoveMember: handleRemoveMember,
-            handleAddMember: handleAddMember
-          }} />
-        {/* </DndProvider> */}
+        <CellList customProps={{
+          isAdmin,
+          handleCheck: handleCheck,
+          handleCount: handleCount,
+          handleCheckMember: handleCheckMember,
+          handleAddLeader: handleAddLeader,
+          handleChangeName: handleChangeName,
+          handleRemoveMember: handleRemoveMember,
+          handleAddMember: handleAddMember
+        }} />
       </div>
       {isAdmin ? (
         <div className="networkName-box">
@@ -229,12 +262,6 @@ const CellTable = (props) => {
 };
 
 
-const mapStateToProps = (state) => {
-  return ({
-    sheets: state.checker.sheets,
-    modalOpend: state.checker.modalOpend,
-  });
-};
 
 const mapDispatchToProps = dispatch => ({
   checkWorship: (name, sectionIdx, left) => dispatch(checkWorship(name, sectionIdx, left)),
@@ -247,4 +274,4 @@ const mapDispatchToProps = dispatch => ({
   removeMember: (sectionIdx, leaderIdx, memberIdx) => dispatch(removeMember(sectionIdx, leaderIdx, memberIdx)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CellTable);
+export default connect(null, mapDispatchToProps)(CellTable);
