@@ -171,7 +171,7 @@ const CellBox = ({ len, isAdmin, network, index, handleCheck, handleCount, handl
             <div className="button-box">
               <button
                 className="btn btn-outline-dark button-box__button--add"
-                onClick={() => handleAddLeader({ ...network.leaders[0], cellId: network._id })}
+                onClick={() => handleAddLeader({ ...network, cellId: network._id })}
               >
                 <FontAwesomeIcon icon={faUserPlus} />
               </button>

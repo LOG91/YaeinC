@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import './CellTable.scss';
 import { changeCurrentInfo, checkWorship, checkMemberWorship, countContent, sheets, changeLeaderName, changeMemberName, removeLeader, removeMember, modalOpend } from '../../store/modules/checker';
-import { connect, useSelector } from 'react-redux';
+// import {} from '../../store/modules/inserted';
+import { connect, useSelector, useDispatch } from 'react-redux';
 
 import CellList from './CellList';
 import Modal from '../Modal/Modal';
@@ -13,9 +14,14 @@ import Sortable from 'sortablejs';
 
 const CellTable = (props) => {
   const { isAdmin, current, changeCurrentInfo } = props;
+  const dispatch = useDispatch(null);
   const currentSection = useSelector(state => state.checker.currentSection);
   const sheets = useSelector(state => state.checker.sheets);
   const currentSheetId = useSelector(state => state.checker.currentSheetId);
+  const cellWrapperRef = useRef(null);
+
+  const isNameEmpty = useSelector(state => state.inserted.isNameEmpty);
+
   let sortableForNetwork = null;
 
   useEffect(() => {
@@ -28,13 +34,13 @@ const CellTable = (props) => {
           animation: 150,
           delay: 0,
           handle: ".network-wrapper__icon",
+          onStart: (evt) => {
+            cellWrapperRef.current.classList.add('sortabling');
+          },
           onEnd: (evt) => {
-            console.log(12313);
+            cellWrapperRef.current.classList.remove('sortabling');
             const { target: { children } } = evt;
-            console.log(12313);
-
             const idList = [...children].map(node => node.dataset.id);
-            console.log(12313, currentSheetId, currentSection);
 
             fetch('/api/networkCell/seq', {
               method: 'PUT',
@@ -49,7 +55,6 @@ const CellTable = (props) => {
               .then(res => res.json())
               .then(() => {
                 const filtered = idList.map(v => currentSection.find(item => item._id === v));
-                console.log(123333);
                 changeCurrentInfo('currentSection', filtered);
               });
           }
@@ -57,7 +62,6 @@ const CellTable = (props) => {
     }
 
     return () => {
-      console.log(123);
       isAdmin && sortableForNetwork.destroy();
     };
   }, [currentSection]);
@@ -132,12 +136,26 @@ const CellTable = (props) => {
 
   const handleAddLeader = useCallback((leader) => {
     const { changeCurrentInfo } = props;
-    console.log(leader);
-    // changeCurrentInfo('currentModal', !modalOpend ? inner : null);
-    changeCurrentInfo('currentModal', <Modal><AddMemberForm isLeader={true} cellInfo={leader} confirmAction={addLeader} /></Modal>)
+
+    changeCurrentInfo('currentModal',
+      <Modal>
+        <AddMemberForm
+          isLeader={true}
+          cellInfo={leader}
+          confirmAction={addLeader}
+        />
+      </Modal>);
     changeCurrentInfo('modalOpend', !modalOpend);
 
     function addLeader({ insertedMember }) {
+      if (insertedMember.name === '') {
+        dispatch({ type: 'GO_EMPTY', target: 'name' });
+        return;
+      }
+      if (insertedMember.age === '') {
+        dispatch({ type: 'GO_EMPTY', target: 'age' });
+        return;
+      }
       fetch('/api/leader', {
         method: 'POST',
         headers: {
@@ -152,19 +170,6 @@ const CellTable = (props) => {
       });
     }
 
-
-    // fetch('/api/leader', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ ...insertedMember, cellId: cell._id })
-    // }).then(res => {
-    //   onToggleModal({});
-    //   return res.json()
-    // }).then(leader => {
-    //   window.location.href = window.location.href;
-    // })
   });
 
   const handleAddNetwork = useCallback(({ inner }) => {
@@ -174,11 +179,9 @@ const CellTable = (props) => {
   });
 
   const handleAddMember = useCallback((leader) => {
-    console.log(leader);
     const { changeCurrentInfo } = props;
     changeCurrentInfo('currentModal', <Modal><AddMemberForm cellInfo={leader} confirmAction={addMember} /></Modal>)
     changeCurrentInfo('modalOpend', true);
-    // console.log(insertedMember)
 
     function addMember({ insertedMember }) {
       fetch('/api/member', {
@@ -197,8 +200,6 @@ const CellTable = (props) => {
   });
 
 
-
-  console.log(current, '커런트');
   return (
     <div className={isAdmin ? "print-area cell-container" : "cell-container"} border="1" cellPadding="10">
       <div className="cell-header">
@@ -236,7 +237,7 @@ const CellTable = (props) => {
           </li>
         </ul>
       </div>
-      <div className="cell-wrapper">
+      <div className="cell-wrapper" ref={cellWrapperRef}>
         <CellList customProps={{
           isAdmin,
           handleCheck: handleCheck,

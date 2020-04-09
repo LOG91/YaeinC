@@ -21,6 +21,7 @@ module.exports = {
         "react"
     ],
     "rules": {
-      "semi-color": ["error"]
+      "semi-color": ["error"],
+      "react/jsx-filename-extension": 0
     }
 };

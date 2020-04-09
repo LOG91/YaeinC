@@ -35,8 +35,10 @@
     "autoprefixer": "^9.7.4",
     "bulma": "^0.7.5",
     "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^18.1.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.3",
     "http-proxy-middleware": "^0.20.0"
   },

@@ -25,7 +25,6 @@ const CellList = (props) => {
   };
 
   return (currentSection ? currentSection.map((network, index) => {
-    console.log(network);
     return (
       <CellBox
         key={network + index}

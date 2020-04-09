@@ -34,11 +34,9 @@ const Home = (props) => {
   const currentSection = useSelector(state => state.checker.currentSection);
   const sheets = useSelector(state => state.checker.sheets);
   const isAdmin = match.url.match(/admin/g);
-  console.log('홈');
 
   useEffect(() => {
     dispatch(changeCurrentInfo('attached', attached));
-    console.log(1111);
     fetch(`/api/sheet/${attached}`).then(res => {
       return res;
     }).then(res => res.json())
@@ -88,9 +86,8 @@ const Home = (props) => {
   };
 
   const handleToggleModal = ({ inner }) => {
-    const { changeCurrentInfo } = props;
-    changeCurrentInfo('currentModal', !modalOpend ? inner : null);
-    changeCurrentInfo('modalOpend', !modalOpend);
+    dispatch(changeCurrentInfo('currentModal', !modalOpend ? inner : null));
+    dispatch(changeCurrentInfo('modalOpend', !modalOpend));
   };
 
 
@@ -102,7 +99,10 @@ const Home = (props) => {
           <div className="button-box">
             <button
               className={"btn btn-outline-dark button-box__button"}
-              onClick={() => handleToggleModal({ inner: <Modal><SheetForm /></Modal> })}>시트 추가</button></div>
+              onClick={() => handleToggleModal({ inner: <Modal><SheetForm /></Modal> })}>
+              시트 추가
+                </button>
+          </div>
           <div className="button-box">
             <button
               className="btn btn-outline-dark button-box__button"
@@ -120,17 +120,17 @@ const Home = (props) => {
         </div>
       ) : ''}
       <Tab currentSheet={current} sheets={sheets} attached={attached} isAdmin={isAdmin ? true : null} />
-        {current ?
-          <div className="admin-table"><CellTable isAdmin={isAdmin} current={current} /></div> :
-          <div>
-            <div className="root__description">{attached} 출석체크 페이지 :)</div>
-            <div className="root__description">🇮🇱🇰🇷🇪🇬🇸🇾🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
-            {sheets.length === 0 ? (<div className="sheet-container" onClick={() => handleToggleModal({ inner: <Modal><SheetForm /></Modal> })}>
-              <div className="sheet-container__description">시트가 없습니다 추가해보세요</div>
-              <div className="sheet-container__icon"><FontAwesomeIcon icon={faPlusCircle} /></div>
-            </div>) : null}
-          </div>
-        }
+      {current ?
+        <div className="admin-table"><CellTable isAdmin={isAdmin} current={current} /></div> :
+        <div>
+          <div className="root__description">{attached} 출석체크 페이지 :)</div>
+          <div className="root__description">🇮🇱🇰🇷🇪🇬🇸🇾🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
+          {sheets.length === 0 ? (<div className="sheet-container" onClick={() => handleToggleModal({ inner: <Modal><SheetForm /></Modal> })}>
+            <div className="sheet-container__description">시트가 없습니다 추가해보세요</div>
+            <div className="sheet-container__icon"><FontAwesomeIcon icon={faPlusCircle} /></div>
+          </div>) : null}
+        </div>
+      }
     </>
   );
 

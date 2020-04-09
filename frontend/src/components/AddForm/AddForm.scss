@@ -40,6 +40,9 @@
       margin: 0 auto;
       border: none;
       border-bottom: 1px solid #ccc;
+      &.empty {
+        border: 1px solid #fd5e82;
+      }
     }
     &--member {
       width: 20%;
