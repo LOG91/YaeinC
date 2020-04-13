@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserMinus } from '@fortawesome/free-solid-svg-icons';
+import { faUserMinus, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import './MemberList.scss';
 import { changeCurrentInfo } from '../../store/modules/checker';
 import { useDispatch } from 'react-redux';
 
 import { Modal, ConfirmModal } from '../Modal';
+import { FilterDropDown } from '../DropDown';
 
 
 const MemberList = (props) => {
@@ -17,6 +18,8 @@ const MemberList = (props) => {
   const [viewPageCount, setViewPageCount] = useState(10);
   const [pageMinCount, setPageMinCount] = useState(10);
   const [pageMaxCount, setPageMaxCount] = useState(10);
+
+  const [filteredAge, setFilteredAge] = useState('나이');
 
   useEffect(() => {
     const idxQuery = new URLSearchParams(props.location.search).get('idx') || 1;
@@ -35,7 +38,6 @@ const MemberList = (props) => {
   }, [currentPageNumber]);
 
   const changeCurrentPageNumber = ({ targetNumber, callback, reverse = false }) => e => {
-    console.log(e, targetNumber, callback);
     e.preventDefault();
     if (reverse && (targetNumber === 1)) return;
     if (!reverse && targetNumber === allPagesCount) return;
@@ -61,8 +63,6 @@ const MemberList = (props) => {
             }} />
         </Modal>))
     );
-
-
   };
 
   const PagiNation = ({ allPagesCount, currentPageNumber }) => {
@@ -96,7 +96,6 @@ const MemberList = (props) => {
   };
 
   const changeMemberData = ({ idx }) => (evt) => {
-    console.log(members);
     const left = evt.target.name;
     const right = evt.target.value;
     console.log(left, right, idx);
@@ -107,6 +106,19 @@ const MemberList = (props) => {
     ];
     setMembers(newMembers);
   };
+
+  const filterByAge = ({ rating, currentValue }) => {
+    setFilteredAge(currentValue === '전체' ? '나이' : `나이 : ${currentValue}`);
+    const queryString = rating === null ? '' : `gte=${rating[0]}&lte=${rating[1]}`;
+    fetch(`/api/members?${queryString}`)
+      .then(res => res.json())
+      .then(members => {
+        setMembers(members);
+        setAllPagesCount(Math.ceil(members.length / viewPageCount));
+      });
+  };
+
+
 
   const renderMemberColumn = (member, idx) => {
     return (
@@ -138,11 +150,22 @@ const MemberList = (props) => {
   return (
     <>
       <h3 className="title"><Link to="/admin/members">멤버관리</Link></h3>
+      <ul className="filter-box">
+        <li>
+          <FilterDropDown
+            rating={[null, [20, 25], [26, 30], [31, 35], [36, null]]}
+            list={['전체', '20 - 25', '26 - 30', '31 - 35', '36 -']}
+            initialValue={filteredAge}
+            handler={filterByAge} />
+        </li>
+      </ul>
       <div className="container members-container">
         <div className="row">
           <div className="col">번호</div>
-          <div className="col">이름</div>
-          <div className="col">나이</div>
+          <div className="col"><div>이름</div></div>
+          <div className="col">
+            <div>나이</div>
+          </div>
           <div className="col">성별</div>
           <div className="col">소속</div>
           <div className="col">지역군</div>

@@ -366,16 +366,45 @@ router.put('/count/:id', (req, res) => {
   });
 })
 
-router.get('/members', (req, res) => {
-  Leader.find({})
-    .populate('youth')
-    .exec((err, leader) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.json(leader);
-      }
-    })
+router.get('/members/', (req, res) => {
+  const { gte, lte } = req.query;
+  if (!gte && !lte) {
+    Leader.find({})
+      .populate('youth')
+      .exec((err, leader) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(leader);
+        }
+      })
+  } else if (lte === 'null') {
+    Leader.find()
+      .where('age')
+      .gte(gte)
+      .populate('youth')
+      .exec((err, leader) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(leader);
+        }
+      })
+  }
+  else {
+    Leader.find()
+      .where('age')
+      .gte(gte)
+      .lte(lte)
+      .populate('youth')
+      .exec((err, leader) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(leader);
+        }
+      })
+  }
 })
 
 module.exports = router;

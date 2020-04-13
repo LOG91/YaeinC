@@ -1,5 +1,17 @@
 @import '../../custom';
 
+.dropdown-menu.member-dropdown {
+  min-width: 0;
+}
+
+.filter-box {
+  display: flex;
+  justify-content: center;
+  font-family: $main-font;
+  &__item {
+  }
+}
+
 .members-container {
   font-size: 17px;
   font-family: $main-font;

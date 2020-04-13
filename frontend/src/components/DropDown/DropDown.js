@@ -14,7 +14,7 @@ export const CountDropDown = ({ handler, length, leaderInfo, option, leaderIndex
   return (
     <div className="dropdown-box">
       <button
-        onClick={(evt)=>console.log(evt)}
+        onClick={(evt) => console.log(evt)}
         className="btn btn-secondary dropdown-toggle dropdown-box__button"
         type="button"
         id="dropdownMenuButton"
@@ -36,7 +36,7 @@ export const BasicDropDown = ({ kind, list, handler, initialValue }) => {
       <a
         key={cv + idx}
         className="dropdown-item"
-        onClick={() => handler(kind, cv)}
+        onClick={() => handler({ kind, cv })}
       >{cv}
       </a>)
   })
@@ -55,5 +55,33 @@ export const BasicDropDown = ({ kind, list, handler, initialValue }) => {
         {options}
       </div>
     </div>
-  )
-}
+  );
+};
+
+export const FilterDropDown = ({ rating, kind, list, handler, initialValue }) => {
+  const options = list.map((cv, idx) => {
+    return (
+      <a
+        key={cv + idx}
+        className="dropdown-item"
+        onClick={() => handler({ rating: rating[idx], currentValue: cv })}
+      >{cv}
+      </a>)
+  })
+  return (
+    <div className="dropdown">
+      <button
+        className="btn btn-secondary dropdown-toggle select-box"
+        type="button"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false">
+        {initialValue}
+      </button>
+      <div className="dropdown-menu selectBox__option" aria-labelledby="dropdownMenuButton">
+        {options}
+      </div>
+    </div>
+  );
+};
