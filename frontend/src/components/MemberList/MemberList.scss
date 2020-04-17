@@ -9,6 +9,25 @@
   justify-content: center;
   font-family: $main-font;
   &__item {
+    margin: 0 5px;
+  }
+  &__deletion {
+    cursor: pointer;
+    display: flex;
+    border: 1px solid #000;
+    border-radius: 7px;
+    background-color: #fff;
+    font-size: 14px;
+    padding: 1px 4px;
+    color: #d05b5b;
+    &:hover {
+      color: #fff;
+    }
+  }
+  &__svg {
+    position: relative;
+    top: 1px;
+    margin-left: 2px;
   }
 }
 

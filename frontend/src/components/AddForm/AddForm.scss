@@ -85,4 +85,12 @@
   .btn-group.btn-group-toggle {
     margin: 0 auto;
   }
+
+  &__empty-alert {
+    display: none;
+    color: #f164a2;
+    &.active {
+      display: block;
+    }
+  }
 }

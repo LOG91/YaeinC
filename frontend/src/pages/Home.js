@@ -110,7 +110,7 @@ const Home = (props) => {
             <button
               className={"btn btn-outline-dark button-box__button"}
               onClick={() => handleToggleModal({ inner: <Modal><SheetForm /></Modal> })}>
-              트 추가
+              시트 추가
                 </button>
           </div>
           <div className="button-box">

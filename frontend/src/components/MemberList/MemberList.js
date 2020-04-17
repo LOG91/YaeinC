@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserMinus, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { faUserMinus, faSortDown, faTimes } from '@fortawesome/free-solid-svg-icons';
 import './MemberList.scss';
 import { changeCurrentInfo } from '../../store/modules/checker';
 import { useDispatch } from 'react-redux';
@@ -141,6 +141,11 @@ const MemberList = (props) => {
     setAllPagesCount(Math.ceil(filteredMemberData.length / viewPageCount));
   };
 
+  const initFiltering = () => {
+    filterByAge({ rating: null, currentValue: '전체' });
+    filterByGender({ rating: null, currentValue: '전체' });
+  };
+
 
 
   const renderMemberColumn = (member, idx) => {
@@ -174,19 +179,25 @@ const MemberList = (props) => {
     <>
       <h3 className="title"><Link to="/admin/members">멤버관리</Link></h3>
       <ul className="filter-box">
-        <li>
+        <li className="filter-box__item">
           <FilterDropDown
             rating={[null, [20, 25], [26, 30], [31, 35], [36, null]]}
             list={['전체', '20 - 25', '26 - 30', '31 - 35', '36 -']}
             initialValue={filteredAge}
             handler={filterByAge} />
         </li>
-        <li>
+        <li className="filter-box__item">
           <FilterDropDown
             rating={[null, 'male', 'female']}
             list={['전체', '형제', '자매']}
             initialValue={filteredGender}
             handler={filterByGender} />
+        </li>
+        <li className="filter-box__item">
+          <a className="filter-box__deletion" onClick={initFiltering}>
+            <div>필터 제거</div>
+            <FontAwesomeIcon icon={faTimes} className="filter-box__svg" />
+          </a>
         </li>
       </ul>
       <div className="container members-container">

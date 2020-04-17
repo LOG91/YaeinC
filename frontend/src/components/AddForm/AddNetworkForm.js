@@ -5,9 +5,19 @@ import { changeCurrentInfo, insertNetworkCell } from '../../store/modules/checke
 import { insertMemberData, insertCellMember, initMemberData, removeCellMember } from '../../store/modules/inserted';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
+import { faAddressCard, faSmileBeam } from '@fortawesome/free-solid-svg-icons';
 
 class AddForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      emptyCheck: {
+        isEmptyCellName: false,
+        isEmptyNetworkLeaderName: false,
+        isEmptyAge: false
+      }
+    }
+  }
 
   componentDidMount() {
     const { cellInfo } = this.props;
@@ -26,11 +36,24 @@ class AddForm extends Component {
     })
   }
 
-  
+  checkEmptyError = () => {
+
+  }
 
   addNetworkCell = async ({ isAddNetwork }) => {
-    const { insertedMember, onToggleModal, currentSheetId, networkCells, changeCurrentInfo, insertNetworkCell } = this.props;
-    if (isAddNetwork) {
+    const { insertedMember, onToggleModal, currentSheetId, insertNetworkCell } = this.props;
+
+    this.setState({
+      ...this.state,
+      emptyCheck: {
+        ...this.state.emptyCheck,
+        isEmptyCellName: !insertedMember.cellNameKr,
+        isEmptyNetworkLeaderName: !insertedMember.name,
+        isEmptyAge: !insertedMember.age,
+      }
+    });
+
+    if (insertedMember.cellNameKr !== '' && insertedMember.name !== '' && insertedMember.age !== '') {
       await fetch('/api/networkCell', {
         method: 'POST',
         headers: {
@@ -39,7 +62,6 @@ class AddForm extends Component {
         body: JSON.stringify({ name: insertedMember.cellNameKr, networkLeaderName: insertedMember.name, gender: insertedMember.gender, attached: insertedMember.attached, sheetId: currentSheetId })
       }).then(res => res.json())
         .then(cell => {
-          console.log(cell);
           insertNetworkCell(cell);
           fetch('/api/leader', {
             method: 'POST',
@@ -53,19 +75,18 @@ class AddForm extends Component {
           }).then(leader => {
             window.location.href = window.location.href;
           })
-          // const networkCellsNames = [...networkCells.map(v => v.name), cell.name];
-          // fetch(`/api/cells/${JSON.stringify(networkCellsNames)}`)
-          //   .then(res => res.json())
-          //   .then(cell => {
-          //     changeCurrentInfo('currentSection', cell);
-          //   });
         });
 
     }
   }
 
   handleChange = (key, value) => {
+    const map = { cellNameKr: 'isEmptyCellName', name: 'isEmptyNetworkLeaderName', age: 'isEmptyAge' };
+    if (value !== '') {
+      this.setState({ ...this.state, emptyCheck: { ...this.state.emptyCheck, [map[key]]: false } })
+    }
     this.props.insertMemberData(key, value);
+
   }
 
   renderMembersList(list) {
@@ -103,9 +124,16 @@ class AddForm extends Component {
     this.props.insertCellMember('', '', this.props.insertedMember.members.length);
   }
 
+  isEmptyError = ({ obj }) => {
+    for (const value in obj) {
+      if (obj[value]) return true;
+    }
+    return false;
+  }
+
   render() {
     const { onToggleModal, attached, insertedMember, section, cellInfo, isAddNetwork } = this.props;
-    console.log(isAddNetwork);
+    const { emptyCheck } = this.state;
     return (
       <div className="add-form">
         <div className="add-form__icon"><FontAwesomeIcon icon={faAddressCard} /><h4>{cellInfo ? '리더 추가' : '네트워크 추가'}</h4></div>
@@ -120,29 +148,25 @@ class AddForm extends Component {
           </div>
           <div className="add-form__box">
             <div className="add-form__left">셀</div>
-            {!isAddNetwork ?
-              (<div className="add-form__right">{insertedMember.cellNameKr}</div>)
-              : (<input className="add-form__right--input" name="cellNameKr" onChange={({ target }) => this.handleChange(target.name, target.value)} />)}
+            <input className={`add-form__right--input ${emptyCheck.isEmptyCellName && 'empty'}`} name="cellNameKr" onChange={({ target }) => this.handleChange(target.name, target.value)} />
           </div>
           <div className="add-form__box">
             <div className="add-form__left">성별</div>
-            {!isAddNetwork ?
-              (<div className="add-form__right">{insertedMember.gender === 'male' ? '남' : '여'}</div>)
-              : (<div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-secondary select__btn--gender">
-                  <input onClick={e => this.handleChange(e.target.name, e.target.id)} type="radio" name="gender" id="male" autocomplete="off" />남</label>
-                <label class="btn btn-secondary select__btn--gender">
-                  <input onClick={e => this.handleChange(e.target.name, e.target.id)} type="radio" name="gender" id="female" autocomplete="off" /> 여</label>
-              </div>)
-            }
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+              <label class="btn btn-secondary select__btn--gender">
+                <input onClick={e => this.handleChange(e.target.name, e.target.id)} type="radio" name="gender" id="male" autocomplete="off" />남</label>
+              <label class="btn btn-secondary select__btn--gender">
+                <input onClick={e => this.handleChange(e.target.name, e.target.id)} type="radio" name="gender" id="female" autocomplete="off" /> 여</label>
+            </div>
+
           </div>
           <div className="add-form__box">
-            <div className="add-form__left">{!isAddNetwork ? '리더' : '네트워크리더'}</div>
-            <input className="add-form__right--input" name="name" onChange={({ target }) => this.handleChange(target.name, target.value)} />
+            <div className="add-form__left">네트워크리더</div>
+            <input className={`add-form__right--input ${emptyCheck.isEmptyNetworkLeaderName && 'empty'}`} name="name" onChange={({ target }) => this.handleChange(target.name, target.value)} />
           </div>
           <div className="add-form__box">
             <div className="add-form__left">나이</div>
-            <input className="add-form__right--input" name="age" onChange={({ target }) => this.handleChange(target.name, target.value)}></input>
+            <input className={`add-form__right--input ${emptyCheck.isEmptyAge && 'empty'}`} name="age" onChange={({ target }) => this.handleChange(target.name, target.value)}></input>
           </div>
           {this.renderMembersList(this.props.insertedMember.members)}
           <button className="btn btn-outline-dark add-member" onClick={() => this.handleAddMember()}>셀원 추가</button>
@@ -150,6 +174,7 @@ class AddForm extends Component {
             <button className="btn btn-outline-dark add_member_btn add-form__btn--bottom" onClick={() => this.addNetworkCell({ isAddNetwork })}>등록</button>
             <button className="btn btn-outline-dark add-form__btn--bottom" onClick={onToggleModal}>닫기</button>
           </div>
+          <div className={`add-form__empty-alert ${this.isEmptyError({ obj: this.state.emptyCheck }) && 'active'}`}>빨간색 네모 안을 입력하세요 :)</div>
         </div>
       </div>
     )
