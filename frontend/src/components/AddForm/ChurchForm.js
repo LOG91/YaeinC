@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { insertMemberData, insertCellMember, removeCellMember, initMemberData, changeCurrentInfo } from '../../store/modules/checker';
+import { CHURCH_FORM_NAME_EMPTY } from '../../store/modules/emptyCheck';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons';
@@ -16,7 +17,7 @@ const ChurchForm = ({ church, churches, attached, onToggleModal, handleChange, c
     initData();
     return () => initMemberData();
   }, []);
-
+  const isEmptyName = useSelector(state => state.emptyCheck.churchForm.isEmptyName);
 
   return (
     <div className="add-form">
@@ -24,7 +25,7 @@ const ChurchForm = ({ church, churches, attached, onToggleModal, handleChange, c
       <div>
         <div className="add-form__box">
           <div className="add-form__left">페이지 이름</div>
-          <input className="add-form__right--input" name="church" onChange={({ target }) => handleChange(target.name, target.value)} />
+          <input className={`add-form__right--input ${isEmptyName && 'empty'}`} name="church" onChange={({ target }) => handleChange(target.name, target.value)} />
         </div>
         <div className="add-form__box">
           <div className="add-form__left">소속</div>
@@ -32,9 +33,10 @@ const ChurchForm = ({ church, churches, attached, onToggleModal, handleChange, c
         </div>
         <div className="add-form__bottom">
           <button className="btn btn-outline-dark add_member_btn add-form__btn--bottom" onClick={() => confirmAction({ church, attached, churches })}>등록</button>
-          <button className="btn btn-outline-dark add-form__btn--bottom" onClick={()=>onToggleModal({})}>닫기</button>
+          <button className="btn btn-outline-dark add-form__btn--bottom" onClick={() => onToggleModal({})}>닫기</button>
         </div>
       </div>
+      <div className={`add-form__empty-alert ${isEmptyName && 'active'}`}>빨간색 네모 안을 입력하세요 :)</div>
     </div>
   );
 };

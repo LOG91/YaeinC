@@ -1,6 +1,6 @@
 /*eslint-disable */
 import React, { useEffect, useState, useRef } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Sortable from 'sortablejs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,7 +14,10 @@ import { insertMemberData, initMemberData } from '../../store/modules/inserted';
 import { Modal, ConfirmModal } from '../Modal'
 import ChurchForm from '../AddForm/ChurchForm';
 
-const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, addChurch, handleDeleteChurch }) => {
+import { CHURCH_FORM_NAME_EMPTY } from '../../store/modules/emptyCheck';
+
+
+const spreadChurchList = ({ churches, isAdmin, handleDeleteChurch }) => {
 
   return (
     <>
@@ -40,10 +43,14 @@ const spreadChurchList = ({ churches, isAdmin, handleToggleModal, handleChange, 
 };
 
 const ChurchList = (props) => {
-  const { match: { path }, modalOpend, church, attached, churches, changeCurrentInfo, sequenceChurch, removeChurch } = props
+  const { match: { path }, modalOpend, church, attached, churches, changeCurrentInfo, sequenceChurch, removeChurch } = props;
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isEmptyName, setIsEmptyName] = useState(false);
   const cardWrapper = useRef(null);
   const _isAdmin = path.match(/admin/);
+
+  // const chur = useSelector(state => state.checker.church);
+  const dispatch = useDispatch('');
 
   useEffect(() => {
     setIsAdmin(_isAdmin);
@@ -101,7 +108,6 @@ const ChurchList = (props) => {
                 method: 'DELETE',
               }).then(res => res.json())
                 .then(res => {
-                  console.log(res);
                   removeChurch(idx);
                   res.ok && handleToggleModal({});
                 });
@@ -112,16 +118,20 @@ const ChurchList = (props) => {
   }
 
   const handleChange = (key, value) => {
+    if (value.trim() !== '') dispatch({ type: CHURCH_FORM_NAME_EMPTY, right: false });
     changeCurrentInfo(key, value);
   }
 
   const handleToggleModal = ({ inner }) => {
-    console.log(inner);
     changeCurrentInfo('currentModal', !modalOpend ? inner : null);
     changeCurrentInfo('modalOpend', !modalOpend);
   }
 
   const addChurch = ({ church, attached, churches }) => {
+    if (church.trim() === '') {
+      dispatch({ type: CHURCH_FORM_NAME_EMPTY, right: true });
+      return;
+    }
     fetch('/api/church', {
       method: 'POST',
       headers: {
@@ -140,7 +150,7 @@ const ChurchList = (props) => {
     <>
       <h3 className="title"><a href={isAdmin ? '/admin' : '/'}>교회 목록</a></h3>
       <div className="card-wrapper" ref={cardWrapper}>
-        {spreadChurchList({ churches, isAdmin, handleToggleModal, handleChange, addChurch, church, attached, handleDeleteChurch })}
+        {spreadChurchList({ churches, isAdmin, handleDeleteChurch })}
       </div>
       {isAdmin ? (
         <div
@@ -148,7 +158,7 @@ const ChurchList = (props) => {
           onClick={() => handleToggleModal({
             inner: (
               <Modal>
-                <ChurchForm handleChange={handleChange} confirmAction={addChurch} />
+                <ChurchForm isEmptyName={isEmptyName} handleChange={handleChange} confirmAction={addChurch} />
               </Modal>)
           })}>
           <div className="card-body">
@@ -164,7 +174,7 @@ const mapStateToProps = state => ({
   insertedMember: state.inserted.insertedMember,
   churches: state.checker.churches,
   modalOpend: state.checker.modalOpend,
-  attached: state.checker.attached
+  attached: state.checker.attached,
 });
 
 const mapDispatchToProps = dispatch => ({

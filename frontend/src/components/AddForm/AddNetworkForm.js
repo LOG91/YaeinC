@@ -36,10 +36,6 @@ class AddForm extends Component {
     })
   }
 
-  checkEmptyError = () => {
-
-  }
-
   addNetworkCell = async ({ isAddNetwork }) => {
     const { insertedMember, onToggleModal, currentSheetId, insertNetworkCell } = this.props;
 
@@ -53,7 +49,7 @@ class AddForm extends Component {
       }
     });
 
-    if (insertedMember.cellNameKr !== '' && insertedMember.name !== '' && insertedMember.age !== '') {
+    if (insertedMember.cellNameKr.trim() !== '' && insertedMember.name.trim() !== '' && insertedMember.age.trim() !== '') {
       await fetch('/api/networkCell', {
         method: 'POST',
         headers: {
@@ -82,7 +78,7 @@ class AddForm extends Component {
 
   handleChange = (key, value) => {
     const map = { cellNameKr: 'isEmptyCellName', name: 'isEmptyNetworkLeaderName', age: 'isEmptyAge' };
-    if (value !== '') {
+    if (value.trim() !== '') {
       this.setState({ ...this.state, emptyCheck: { ...this.state.emptyCheck, [map[key]]: false } })
     }
     this.props.insertMemberData(key, value);
