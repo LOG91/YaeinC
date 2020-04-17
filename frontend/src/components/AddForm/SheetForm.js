@@ -9,7 +9,7 @@ import { BasicDropDown } from '../DropDown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 
-const SheetForm = ({ onToggleModal, attached, insertedMember: {name, section}, insertMemberData, changeCurrentInfo, sheets, initMemberData }) => {
+const SheetForm = ({ onToggleModal, attached, insertedMember: { name, section }, insertMemberData, changeCurrentInfo, sheets, initMemberData }) => {
 
   useEffect(() => {
     initData();
@@ -29,15 +29,16 @@ const SheetForm = ({ onToggleModal, attached, insertedMember: {name, section}, i
     }).then(res => {
       changeCurrentInfo('sheets', [...sheets, res]);
     });
-  }
-  const handleChange = (key, value) => {
-    insertMemberData(key, value);
-  }
+  };
+
+  const handleChange = (left, right) => {
+    insertMemberData(left, right);
+  };
 
   const initData = () => {
     handleChange('attached', attached);
     handleChange('section', '이스라엘');
-  }
+  };
 
   return (
     <div className="add-form">

@@ -36,6 +36,15 @@ const Home = (props) => {
   const isAdmin = match.url.match(/admin/g);
 
   useEffect(() => {
+    if (!current) {
+      return;
+    }
+    dispatch(changeCurrentInfo('idx', current));
+    console.log(9999);
+    dispatch(changeCurrentInfo('section', mapSectionByEnName(current)));
+  }, [current]);
+
+  useEffect(() => {
     dispatch(changeCurrentInfo('attached', attached));
     fetch(`/api/sheet/${attached}`).then(res => {
       return res;
@@ -45,6 +54,7 @@ const Home = (props) => {
         if (!current) {
           return;
         }
+        console.log(1231243);
         dispatch(changeCurrentInfo('idx', current));
         dispatch(changeCurrentInfo('section', mapSectionByEnName(current)));
         const currentSheetId = sheets.length && sheets.find(v => v.name === current)._id;
@@ -100,7 +110,7 @@ const Home = (props) => {
             <button
               className={"btn btn-outline-dark button-box__button"}
               onClick={() => handleToggleModal({ inner: <Modal><SheetForm /></Modal> })}>
-              시트 추가
+              트 추가
                 </button>
           </div>
           <div className="button-box">

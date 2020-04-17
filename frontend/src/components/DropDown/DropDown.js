@@ -36,7 +36,7 @@ export const BasicDropDown = ({ kind, list, handler, initialValue }) => {
       <a
         key={cv + idx}
         className="dropdown-item"
-        onClick={() => handler({ kind, cv })}
+        onClick={() => handler(kind, cv)}
       >{cv}
       </a>)
   })

@@ -13,6 +13,7 @@ import { FilterDropDown } from '../DropDown';
 const MemberList = (props) => {
   const dispatch = useDispatch();
   const [members, setMembers] = useState([]);
+  const [ALL_MEMBERS, setALL_MEMBERS] = useState([]);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [allPagesCount, setAllPagesCount] = useState(0);
   const [viewPageCount, setViewPageCount] = useState(10);
@@ -20,6 +21,7 @@ const MemberList = (props) => {
   const [pageMaxCount, setPageMaxCount] = useState(10);
 
   const [filteredAge, setFilteredAge] = useState('나이');
+  const [filteredGender, setFilteredGender] = useState('성별');
 
   useEffect(() => {
     const idxQuery = new URLSearchParams(props.location.search).get('idx') || 1;
@@ -28,6 +30,7 @@ const MemberList = (props) => {
       .then(res => res.json())
       .then(members => {
         setMembers(members);
+        setALL_MEMBERS(members);
         setAllPagesCount(Math.ceil(members.length / viewPageCount));
       });
   }, []);
@@ -109,13 +112,33 @@ const MemberList = (props) => {
 
   const filterByAge = ({ rating, currentValue }) => {
     setFilteredAge(currentValue === '전체' ? '나이' : `나이 : ${currentValue}`);
-    const queryString = rating === null ? '' : `gte=${rating[0]}&lte=${rating[1]}`;
-    fetch(`/api/members?${queryString}`)
-      .then(res => res.json())
-      .then(members => {
-        setMembers(members);
-        setAllPagesCount(Math.ceil(members.length / viewPageCount));
-      });
+    let filteredMemberData = null;
+    if (!rating) {
+      setMembers(ALL_MEMBERS);
+      setAllPagesCount(Math.ceil(ALL_MEMBERS.length / viewPageCount));
+      return;
+    }
+    if (!rating[1]) {
+      filteredMemberData = ALL_MEMBERS.filter(v => v.age >= rating[0]);
+      setMembers(filteredMemberData);
+      setAllPagesCount(Math.ceil(filteredMemberData.length / viewPageCount));
+      return;
+    }
+    filteredMemberData = ALL_MEMBERS.filter(v => v.age >= rating[0] && v.age <= rating[1]);
+    setMembers(filteredMemberData);
+    setAllPagesCount(Math.ceil(filteredMemberData.length / viewPageCount));
+  };
+
+  const filterByGender = ({ rating, currentValue }) => {
+    setFilteredGender(currentValue === '전체' ? '성별' : currentValue);
+    if (!rating) {
+      setMembers(ALL_MEMBERS);
+      setAllPagesCount(Math.ceil(ALL_MEMBERS.length / viewPageCount));
+      return;
+    }
+    const filteredMemberData = ALL_MEMBERS.filter(v => v.gender === rating);
+    setMembers(filteredMemberData);
+    setAllPagesCount(Math.ceil(filteredMemberData.length / viewPageCount));
   };
 
 
@@ -157,6 +180,13 @@ const MemberList = (props) => {
             list={['전체', '20 - 25', '26 - 30', '31 - 35', '36 -']}
             initialValue={filteredAge}
             handler={filterByAge} />
+        </li>
+        <li>
+          <FilterDropDown
+            rating={[null, 'male', 'female']}
+            list={['전체', '형제', '자매']}
+            initialValue={filteredGender}
+            handler={filterByGender} />
         </li>
       </ul>
       <div className="container members-container">

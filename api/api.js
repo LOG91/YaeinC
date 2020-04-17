@@ -366,8 +366,21 @@ router.put('/count/:id', (req, res) => {
   });
 })
 
-router.get('/members/', (req, res) => {
+router.get('/members', (req, res) => {
+  Leader.find({})
+    .populate('youth')
+    .exec((err, leader) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(leader);
+      }
+    })
+})
+
+router.get('/members/age/', (req, res) => {
   const { gte, lte } = req.query;
+  console.log(req.query);
   if (!gte && !lte) {
     Leader.find({})
       .populate('youth')
@@ -396,6 +409,32 @@ router.get('/members/', (req, res) => {
       .where('age')
       .gte(gte)
       .lte(lte)
+      .populate('youth')
+      .exec((err, leader) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(leader);
+        }
+      })
+  }
+})
+
+router.get('/members/gender/', (req, res) => {
+  const { gender } = req.query;
+  console.log(gender);
+  if (!gender) {
+    Leader.find({})
+      .populate('youth')
+      .exec((err, leader) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(leader);
+        }
+      })
+  } else {
+    Leader.find({ gender })
       .populate('youth')
       .exec((err, leader) => {
         if (err) {
