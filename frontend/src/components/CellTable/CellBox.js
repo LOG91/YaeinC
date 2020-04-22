@@ -55,7 +55,7 @@ const CellBox = ({ len, isAdmin, network, index, handleCheck, handleCount, handl
   }, [currentSection]);
 
   const reduced = network.leaders.map((leader, idxForKey) => {
-    console.log(index, leader, idxForKey);
+
     const MEMBER_CNT = leader.members.length + 1 + 1;
     return (
       <div className="network-container" key={idxForKey + leader} style={{ zIndex: ((len - index) * 10 - idxForKey) }} data-id={leader._id}>
@@ -68,8 +68,7 @@ const CellBox = ({ len, isAdmin, network, index, handleCheck, handleCount, handl
                   inputClassName="member-container__input"
                   buttonClassName="member-container__button"
                   handleRemoveMember={(e) => handleRemoveMember({ id: leader._id, sectionIdx: index, leaderIdx: idxForKey })}
-                  handleChangeName={(e) => handleChangeName({ sectionIdx: index, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling })}
-                  handleModifyName={(e) => handleModifyName({ id: leader._id, sectionIdx: index, leaderIdx: idxForKey, target: e.target.closest('svg') })}
+                  handleChangeName={(e) => handleChangeName({ id: leader._id, sectionIdx: index, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling })}
                 />) : leader.name}
             </div>
           </li>
@@ -117,8 +116,7 @@ const CellBox = ({ len, isAdmin, network, index, handleCheck, handleCount, handl
                         inputClassName="member-container__input"
                         buttonClassName="member-container__button"
                         handleRemoveMember={(e) => handleRemoveMember({ id: member._id, sectionIdx: index, leaderIdx: idxForKey, memberIdx: i })}
-                        handleChangeName={(e) => handleChangeName({ sectionIdx: index, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling, memberIdx: i })}
-                        handleModifyName={(e) => handleModifyName({ id: member._id, sectionIdx: index, leaderIdx: idxForKey, target: e.target.parentNode, memberIdx: i })}
+                        handleChangeName={(e) => handleChangeName({ id: member._id, sectionIdx: index, leaderIdx: idxForKey, changedName: e.target.value, nextNode: e.target.nextElementSibling, memberIdx: i })}
                       />) : member.name}
                   </div>
                 </li>

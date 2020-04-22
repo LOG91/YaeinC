@@ -8,21 +8,21 @@ import update from 'immutability-helper';
 const CellList = (props) => {
   const currentSection = useSelector(state => state.checker.currentSection);
 
-  const { handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleChangeName, handleRemoveMember, isAdmin } = props.customProps;
+  const { handleModifyName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleChangeName, handleRemoveMember, isAdmin } = props.customProps;
 
-  const handleModifyName = ({ id, sectionIdx, leaderIdx, target, memberIdx }) => {
-    const changedName = typeof memberIdx !== 'undefined' ?
-      currentSection[sectionIdx].leaders[leaderIdx].members[memberIdx].name :
-      currentSection[sectionIdx].leaders[leaderIdx].name;
-    fetch(`/api/change/${id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ changedName })
-    });
-    target.classList.remove('active');
-  };
+  // const handleModifyName = ({ id, sectionIdx, leaderIdx, target, memberIdx }) => {
+  //   const changedName = typeof memberIdx !== 'undefined' ?
+  //     currentSection[sectionIdx].leaders[leaderIdx].members[memberIdx].name :
+  //     currentSection[sectionIdx].leaders[leaderIdx].name;
+  //   fetch(`/api/change/${id}`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ changedName })
+  //   });
+  //   target.classList.remove('active');
+  // };
 
   return (currentSection ? currentSection.map((network, index) => {
     return (

@@ -11,16 +11,12 @@ const NameInput = (props) => {
     const { changeCurrentInfo, modalOpend } = props;
     changeCurrentInfo('currentModal', !modalOpend ? inner : null);
     changeCurrentInfo('modalOpend', !modalOpend);
-  }
+  };
 
-  const { handleRemoveMember, value, handleChangeName, handleModifyName, buttonClassName, inputClassName } = props;
+  const { handleRemoveMember, value, handleChangeName, buttonClassName, inputClassName } = props;
   return (
     <>
       <input className={inputClassName} name="name" onChange={handleChangeName} value={value} />
-      <FontAwesomeIcon
-        className={buttonClassName}
-        icon={faCheckCircle}
-        onClick={handleModifyName} />
       <FontAwesomeIcon
         className={buttonClassName}
         icon={faTimes}
@@ -31,8 +27,8 @@ const NameInput = (props) => {
         icon={faBars}
       />
     </>
-  )
-}
+  );
+};
 
 const mapStateToProps = state => ({});
 

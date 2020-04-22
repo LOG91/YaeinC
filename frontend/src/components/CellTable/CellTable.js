@@ -13,28 +13,26 @@ import Sortable from 'sortablejs';
 
 
 const CellTable = (props) => {
-  const { isAdmin, current, changeCurrentInfo } = props;
+  const { isAdmin, changeCurrentInfo } = props;
   const dispatch = useDispatch(null);
   const currentSection = useSelector(state => state.checker.currentSection);
   const sheets = useSelector(state => state.checker.sheets);
   const currentSheetId = useSelector(state => state.checker.currentSheetId);
   const cellWrapperRef = useRef(null);
-
-  const isNameEmpty = useSelector(state => state.inserted.isNameEmpty);
+  const [checker, setChecker] = useState(null);
 
   let sortableForNetwork = null;
 
   useEffect(() => {
     const cellWrapperEl = document.querySelector('.cell-wrapper');
     if (isAdmin && cellWrapperEl) {
-      console.log(currentSection);
       sortableForNetwork = new Sortable(cellWrapperEl,
         {
           sort: true,
           animation: 150,
           delay: 0,
           handle: ".network-wrapper__icon",
-          onStart: (evt) => {
+          onStart: () => {
             cellWrapperRef.current.classList.add('sortabling');
           },
           onEnd: (evt) => {
@@ -81,17 +79,47 @@ const CellTable = (props) => {
     });
   });
 
+  const handleModifyName = ({ changedName, id, sectionIdx, leaderIdx, target, memberIdx }) => {
+    console.log(currentSection, sectionIdx, id, leaderIdx, memberIdx);
+    // const changedName = typeof memberIdx !== 'undefined' ?
+    //   currentSection[sectionIdx].leaders[leaderIdx].members[memberIdx].name :
+    //   currentSection[sectionIdx].leaders[leaderIdx].name;
+    console.log(changedName, id);
+    fetch(`/api/change/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ changedName })
+    });
+  };
 
 
-  const handleChangeName = useCallback(({ sectionIdx, leaderIdx, changedName, nextNode, memberIdx }) => {
+  const handleChangeName = ({ id, sectionIdx, leaderIdx, changedName, nextNode, memberIdx }) => {
     const { changeLeaderName, changeMemberName } = props;
-    nextNode.classList.add('active');
-    if (typeof memberIdx !== 'undefined') {
-      changeMemberName(sectionIdx, leaderIdx, memberIdx, changedName)
+
+    const changeMember = () => {
+      if (typeof memberIdx !== 'undefined') {
+        changeMemberName(sectionIdx, leaderIdx, memberIdx, changedName);
+      } else {
+        changeLeaderName(sectionIdx, leaderIdx, changedName);
+      }
+    };
+    changeMember();
+    if (checker) {
+      clearTimeout(checker);
+      setChecker(setTimeout(() => {
+        handleModifyName({ changedName, id, sectionIdx, leaderIdx, memberIdx });
+        setChecker(null);
+      }, 1000));
     } else {
-      changeLeaderName(sectionIdx, leaderIdx, changedName);
+      setChecker(setTimeout(() => {
+        handleModifyName({ changedName, id, sectionIdx, leaderIdx, memberIdx });
+        setChecker(null);
+      }, 1000));
+
     }
-  });
+  };
 
   const handleRemoveMember = useCallback(({ id, sectionIdx, leaderIdx, memberIdx }) => {
     const { removeLeader, removeMember, changeCurrentInfo } = props;
@@ -246,7 +274,8 @@ const CellTable = (props) => {
           handleAddLeader: handleAddLeader,
           handleChangeName: handleChangeName,
           handleRemoveMember: handleRemoveMember,
-          handleAddMember: handleAddMember
+          handleAddMember: handleAddMember,
+          handleModifyName
         }} />
       </div>
       {isAdmin ? (
