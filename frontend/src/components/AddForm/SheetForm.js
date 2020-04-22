@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import './AddForm.scss';
 import { changeCurrentInfo } from '../../store/modules/checker';
 import { insertMemberData, insertCellMember, removeCellMember, initMemberData } from '../../store/modules/inserted';
@@ -11,27 +11,34 @@ import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 
 const SheetForm = ({ onToggleModal, attached, insertedMember: { name, section }, insertMemberData, changeCurrentInfo, sheets, initMemberData }) => {
 
+  const insertedMember = useSelector(state => state.inserted.insertedMember);
+
+  const [isEmptyName, setIsEmptyName] = useState(false);
   useEffect(() => {
     initData();
     return () => initMemberData();
   }, []);
 
   const addSheet = () => {
-    fetch('/api/sheet', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name, attached, section })
-    }).then(res => {
-      onToggleModal({ action: 'addSheet' });
-      return res.json();
-    }).then(res => {
-      changeCurrentInfo('sheets', [...sheets, res]);
-    });
+    if (insertedMember.name.trim() === '') setIsEmptyName(true);
+    else {
+      fetch('/api/sheet', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, attached, section })
+      }).then(res => {
+        onToggleModal({ action: 'addSheet' });
+        return res.json();
+      }).then(res => {
+        changeCurrentInfo('sheets', [...sheets, res]);
+      });
+    }
   };
 
   const handleChange = (left, right) => {
+    if (insertedMember.name.trim() !== '') setIsEmptyName(false);
     insertMemberData(left, right);
   };
 
@@ -54,12 +61,13 @@ const SheetForm = ({ onToggleModal, attached, insertedMember: { name, section },
         </div>
         <div className="add-form__box">
           <div className="add-form__left">시트 이름</div>
-          <input className="add-form__right--input" name="name" onChange={({ target }) => handleChange(target.name, target.value)} />
+          <input className={`add-form__right--input ${isEmptyName && 'empty'}`} name="name" onChange={({ target }) => handleChange(target.name, target.value)} />
         </div>
         <div className="add-form__bottom">
           <button className="btn btn-outline-dark add_member_btn add-form__btn--bottom" onClick={() => addSheet()}>등록</button>
           <button className="btn btn-outline-dark add-form__btn--bottom" onClick={onToggleModal}>닫기</button>
         </div>
+        <div className={`add-form__empty-alert ${isEmptyName && 'active'}`}>빨간색 네모 안을 입력하세요 :)</div>
       </div>
     </div>
   )

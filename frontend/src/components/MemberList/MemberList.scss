@@ -70,6 +70,13 @@
   display: flex;
   justify-content: center;
   color: black;
+  .page-link {
+    color: #fc6084;
+  }
+  .page-item.active .page-link {
+    background-color: #fc6084;
+    border-color: #fc6084;
+  }
 }
 
 .fa-user-minus {

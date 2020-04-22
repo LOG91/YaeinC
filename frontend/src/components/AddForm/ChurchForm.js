@@ -13,6 +13,7 @@ const ChurchForm = ({ church, churches, attached, onToggleModal, handleChange, c
   const initData = () => {
     handleChange('attached', ATTACHED_LIST[0]);
   };
+  
   useEffect(() => {
     initData();
     return () => initMemberData();

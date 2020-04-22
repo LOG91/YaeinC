@@ -25,34 +25,19 @@ const AddForm = (props) => {
     };
   }, []);
 
+  const isEmptyError = ({ obj }) => {
+    for (const value in obj) {
+      if (obj[value]) return true;
+    }
+    return false;
+  };
+
   const initInsertedMember = ({ info, wish, fn }) => {
     wish.forEach(item => {
       fn(item, info[item]);
     });
   };
 
-  // const renderMembersList = (list) => {
-  //   return list.map((member, i) => {
-  //     return (
-  //       <div key={i}>
-  //         <div style={{ fontSize: '14px' }}>셀원 {i + 1}</div>
-  //         <div className="addMember-wrap">
-  //           <div>이름</div>
-  //           <input
-  //             className="cellMember add-form__right--member"
-  //             name="members"
-  //             onChange={evt => handleChangeMember('name', evt, i)} />
-  //           <div>나이</div>
-  //           <input
-  //             className="cellMember add-form__right--member"
-  //             name="members"
-  //             onChange={evt => handleChangeMember('age', evt, i)} />
-  //           <button className="btn btn-outline-dark add-form__btn--cell" onClick={handleRemoveMember(i)}>삭제</button>
-  //         </div>
-  //       </div>
-  //     )
-  //   })
-  // }
   const onChangeData = ({ target }) => {
     console.log(target);
     target.value !== '' ? dispatch({ type: 'OUT_EMPTY', target: target.name }) : null;
@@ -94,6 +79,7 @@ const AddForm = (props) => {
           <button className="btn btn-outline-dark add_member_btn add-form__btn--bottom" onClick={() => confirmAction({ insertedMember })}>등록</button>
           <button className="btn btn-outline-dark add-form__btn--bottom" onClick={onToggleModal}>닫기</button>
         </div>
+        <div className={`add-form__empty-alert ${isEmptyError({ obj: emptyWarning }) && 'active'}`}>빨간색 네모칸을 입력해주세요 :)</div>
       </div>
     </div >
   );

@@ -24,7 +24,6 @@ class Tab extends Component {
   }
 
   componentDidUpdate(prevState, next) {
-    const { sheets } = this.props;
     const el = document.querySelector('.tab');
     if (this.currentSortable !== null) this.currentSortable.destroy();
     this.currentSortable = new Sortable(el,
@@ -40,7 +39,6 @@ class Tab extends Component {
           this.tabRef.current.classList.remove("sortabling");
           const { target: { children } } = evt;
           const idList = [...children].map(node => node.dataset.id);
-          console.log(idList);
           fetch('/api/sheet/seq', {
             method: 'POST',
             headers: {
@@ -64,13 +62,12 @@ class Tab extends Component {
     changeCurrentInfo('networkCells', []);
   }
 
-  handleClick = async (sheetName) => {
+  handleClick = async (sheetId) => {
     const { changeCurrentInfo, sheets } = this.props;
-    const currentSheetId = sheets.length && sheets.find(v => v.name === sheetName)._id;
+    const currentSheetId = sheets.length && sheets.find(v => v._id === sheetId)._id;
     changeCurrentInfo('currentSheetId', currentSheetId);
     const networkCells = await fetch(`/api/networkCell/${currentSheetId}`).then(res => res.json()).then();
     const mapped = networkCells.map(v => v.name);
-    console.log(networkCells)
     changeCurrentInfo('networkCells', networkCells);
     fetch(`/api/cells?cells=${JSON.stringify(networkCells)}`)
       .then(res => res.json())
@@ -105,9 +102,7 @@ class Tab extends Component {
     this.setState({ isEdit: true, editIdx: idx, insertedSheetName: name });
   }
   handleEditSheetName = ({ id, name, idx }) => {
-    console.log(id, name, idx);
     const { history, attached } = this.props;
-    console.log(this.props);
     fetch('/api/sheet/edit', {
       method: 'POST',
       headers: {
@@ -117,7 +112,6 @@ class Tab extends Component {
     }).then(res => res.json()).then(res => {
       if (res) {
         this.setState({ isEdit: false, editIdx: null, insertedSheetName: '' });
-        console.log(res.name, res);
         history.push(`/admin/${attached}/${res.name}`);
       }
     });
@@ -130,22 +124,22 @@ class Tab extends Component {
   }
 
   render() {
-    const { isAdmin, attached, sheets, currentSheet } = this.props;
+    const { isAdmin, attached, sheets, currentSheet, currentSheetId } = this.props;
     const { isEdit, editIdx, insertedSheetName } = this.state;
 
     return (
       <ul className="tab" ref={this.tabRef}>
         {sheets.map((v, idx) => {
-          return <li key={idx} className={currentSheet === v.name ? "index active" : "index"} data-id={v._id}>
+          return <li key={idx} className={currentSheetId === v._id ? "index active" : "index"} data-id={v._id}>
             {!isEdit || editIdx !== idx ?
-              (<Link className={isAdmin ? "index__a--admin" : "index__a"} to={`/${isAdmin ? 'admin/' : ''}${attached}/${v.name}`} onClick={() => this.handleClick(v.name)} >{v.name}</Link>)
+              (<Link className={isAdmin ? "index__a--admin" : "index__a"} to={`/${isAdmin ? 'admin/' : ''}${attached}/${v.name}`} onClick={() => this.handleClick(v._id)} >{v.name}</Link>)
               : (<><input className="index__input" type="text" value={insertedSheetName} onChange={(e) => this.setState({ insertedSheetName: e.target.value })} />
                 <FontAwesomeIcon className="index__button--edit" icon={faCheckCircle} onClick={() => this.handleEditSheetName({ id: v._id, name: this.state.insertedSheetName })} /></>)
             }
             {isAdmin ? <div className="icon-wrapper icon-wrapper--center">
-              <div className={`icon-wrapper__icon--edit ${currentSheet === v.name && "active"}`} onClick={() => this.handleEditButton({ id: v._id, name: v.name, idx })}><FontAwesomeIcon icon={faEdit} /></div>
-              <div className={`icon-wrapper__icon--move ${currentSheet === v.name && "active"}`}><FontAwesomeIcon icon={faBars} /></div>
-              <div className={`icon-wrapper__icon--delete ${currentSheet === v.name && "active"}`} onClick={() => this.handleDeleteSheet({ id: v._id, idx })}><FontAwesomeIcon icon={faTrashAlt} /></div>
+              <div className={`icon-wrapper__icon--edit ${currentSheetId === v._id && "active"}`} onClick={() => this.handleEditButton({ id: v._id, name: v.name, idx })}><FontAwesomeIcon icon={faEdit} /></div>
+              <div className={`icon-wrapper__icon--move ${currentSheetId === v._id && "active"}`}><FontAwesomeIcon icon={faBars} /></div>
+              <div className={`icon-wrapper__icon--delete ${currentSheetId === v._id && "active"}`} onClick={() => this.handleDeleteSheet({ id: v._id, idx })}><FontAwesomeIcon icon={faTrashAlt} /></div>
             </div> : null}
           </li>
         })}
@@ -158,7 +152,8 @@ const mapStateToProps = (state) => ({
   attached: state.checker.attached,
   sheets: state.checker.sheets,
   networkCells: state.checker.networkCells,
-  modalOpend: state.checker.modalOpend
+  modalOpend: state.checker.modalOpend,
+  currentSheetId: state.checker.currentSheetId
 });
 
 const mapDispatchToProps = dispatch => ({
