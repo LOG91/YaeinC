@@ -28,7 +28,11 @@ const CellBox = ({ len, isAdmin, network, index, handleCheck, handleCount, handl
             animation: 150,
             delay: 0,
             handle: ".member-container__button.fa-bars",
+            onStart: () => {
+              item.classList.add('sortabling');
+            },
             onEnd: (evt) => {
+              item.classList.remove('sortabling');
               const { target: { children } } = evt;
               const idList = [...children].map(node => node.dataset.id);
               fetch('/api/leader/seq', {

@@ -13,6 +13,7 @@ const CHECK_MEMBER_WORSHIP = 'checker/CHECK_MEMBER_WORSHIP';
 const COUNT_CONTENT = 'checker/COUNT_CONTENT';
 const CHECK_YOUTH = 'checker/CHECK_YOUTH';
 const CHECK_MEMBER_YOUTH = 'checker/CHECK_MEMBER_YOUTH';
+export const CHANGE_CHURCH_NAME = 'checker/CHANGE_CHURCH_NAME';
 
 const INIT_MEMBER_DATA = 'checker/INIT_MEMBER_DATA';
 const INSERT_MEMBER_DATA = 'checker/INSERT_MEMBER_DATA';
@@ -268,7 +269,17 @@ export default function checker(state = initialState, action) {
           ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
       };
-
+    //////////////////////
+    case CHANGE_CHURCH_NAME:
+      return {
+        ...state,
+        churches: [
+          ...state.churches.slice(0, action.idx),
+          { ...state.churches[action.idx], name: action.name },
+          ...state.churches.slice(action.idx + 1, state.churches.length),
+        ]
+      };
+    ////////////
     case INIT_MEMBER_DATA:
       return {
         ...state,

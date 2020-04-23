@@ -164,10 +164,17 @@
     display: flex;
     flex-direction: column;
     min-height: 60px;
+    &.sortabling {
+      .network-container__list {
+        border: 1px dashed #fc5e82;
+        background-color: #ececec;
+      }
+    }
   }
   &__icon {
     cursor: pointer;
-    margin: 2px;
+    margin: 3px;
+    font-size: 13px;
   }
 }
 

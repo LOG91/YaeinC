@@ -1,11 +1,7 @@
 /*eslint-disable */
 import React, { useEffect, useState, useRef } from 'react';
 import { connect, useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Sortable from 'sortablejs';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, bar } from '@fortawesome/free-regular-svg-icons';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
 import './ChurchList.scss';
 
 import { changeCurrentInfo, sequenceChurch, removeChurch } from '../../store/modules/checker';
@@ -13,43 +9,18 @@ import { insertMemberData, initMemberData } from '../../store/modules/inserted';
 
 import { Modal, ConfirmModal } from '../Modal'
 import ChurchForm from '../AddForm/ChurchForm';
-
+import ChurchCardBox from './ChurchCardBox';
 import { CHURCH_FORM_NAME_EMPTY } from '../../store/modules/emptyCheck';
 
 
-const spreadChurchList = ({ churches, isAdmin, handleDeleteChurch }) => {
-
-  return (
-    <>
-      {churches.map(({ name, attached, _id }, idx) => {
-        return (
-          <div key={attached + idx} data-id={_id} className={`card card-box ${isAdmin && "card-box--admin"}`}>
-            <Link to={isAdmin ? `admin/${name}` : name}>
-              <div className="card-body">
-                <h5 className="card-title card-box__title">{name}</h5>
-                <h5 className="card-title card-box__subtitle">{attached}</h5>
-              </div>
-            </Link>
-            {isAdmin && <div className="icon-wrapper">
-              <div className="icon-wrapper__icon--move"><FontAwesomeIcon icon={faBars} /></div>
-              <div className="icon-wrapper__icon--delete" onClick={() => handleDeleteChurch({ id: _id, idx })}><FontAwesomeIcon icon={faTrashAlt} /></div>
-            </div>}
-          </div>
-        );
-      })}
-
-    </>
-  );
-};
 
 const ChurchList = (props) => {
-  const { match: { path }, modalOpend, church, attached, churches, changeCurrentInfo, sequenceChurch, removeChurch } = props;
+  const { match: { path }, modalOpend, churches, changeCurrentInfo, removeChurch } = props;
   const [isAdmin, setIsAdmin] = useState(false);
   const [isEmptyName, setIsEmptyName] = useState(false);
   const cardWrapper = useRef(null);
   const _isAdmin = path.match(/admin/);
 
-  // const chur = useSelector(state => state.checker.church);
   const dispatch = useDispatch('');
 
   useEffect(() => {
@@ -150,7 +121,7 @@ const ChurchList = (props) => {
     <>
       <h3 className="title"><a href={isAdmin ? '/admin' : '/'}>교회 목록</a></h3>
       <div className="card-wrapper" ref={cardWrapper}>
-        {spreadChurchList({ churches, isAdmin, handleDeleteChurch })}
+        <ChurchCardBox churches={churches} isAdmin={isAdmin} handleDeleteChurch={handleDeleteChurch} />
       </div>
       {isAdmin ? (
         <div
