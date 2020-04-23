@@ -150,8 +150,8 @@ export default function checker(state = initialState, action) {
             },
             ...state.currentSection[action.sectionIdx].leaders.slice(action.leaderIdx + 1, state.currentSection[action.sectionIdx].length)
             ],
-          ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
-        }
+        },
+        ...state.currentSection.slice(action.sectionIdx + 1, state.currentSection.length)
         ]
       };
     case CHECK_WORSHIP:

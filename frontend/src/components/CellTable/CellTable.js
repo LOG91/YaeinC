@@ -1,11 +1,21 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import './CellTable.scss';
-import { changeCurrentInfo, checkWorship, checkMemberWorship, countContent, sheets, changeLeaderName, changeMemberName, removeLeader, removeMember, modalOpend } from '../../store/modules/checker';
-// import {} from '../../store/modules/inserted';
+import {
+  changeCurrentInfo,
+  checkWorship,
+  checkMemberWorship,
+  countContent,
+  changeLeaderName,
+  changeMemberName,
+  removeLeader,
+  removeMember,
+  modalOpend
+}
+  from '../../store/modules/checker';
 import { connect, useSelector, useDispatch } from 'react-redux';
 
 import CellList from './CellList';
-import Modal from '../Modal/Modal';
+import { Modal, ConfirmModal } from '../Modal';
 import { AddNetworkForm } from '../AddForm';
 import AddMemberForm from '../AddForm/AddMemberForm';
 
@@ -79,12 +89,31 @@ const CellTable = (props) => {
     });
   });
 
+  const handleRemoveNetworkCell = ({ id, cellName }) => {
+    changeCurrentInfo('currentModal',
+      <Modal>
+        <ConfirmModal confirmAction={() => {
+          fetch(`/api/networkCell/${id}`, {
+            method: 'DELETE'
+          })
+            .then(res => res.json())
+            .then(res => {
+              console.log(res);
+              changeCurrentInfo('currentModal', null);
+              changeCurrentInfo('modalOpend', false);
+            });
+        }} message={`셀 ${cellName}를 삭제하시겠습니까?`} />
+      </Modal>
+    );
+    changeCurrentInfo('modalOpend', true);
+    console.log(id);
+  };
+
   const handleModifyName = ({ changedName, id, sectionIdx, leaderIdx, target, memberIdx }) => {
     console.log(currentSection, sectionIdx, id, leaderIdx, memberIdx);
     // const changedName = typeof memberIdx !== 'undefined' ?
     //   currentSection[sectionIdx].leaders[leaderIdx].members[memberIdx].name :
     //   currentSection[sectionIdx].leaders[leaderIdx].name;
-    console.log(changedName, id);
     fetch(`/api/change/${id}`, {
       method: 'POST',
       headers: {
@@ -275,7 +304,8 @@ const CellTable = (props) => {
           handleChangeName: handleChangeName,
           handleRemoveMember: handleRemoveMember,
           handleAddMember: handleAddMember,
-          handleModifyName
+          handleModifyName,
+          handleRemoveNetworkCell
         }} />
       </div>
       {isAdmin ? (

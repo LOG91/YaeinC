@@ -1,17 +1,15 @@
 import React, { useRef, useEffect } from 'react';
 
-import { Modal } from '../Modal';
-import { AddMemberForm } from '../AddForm';
 import { CheckBox } from '../CheckBox';
 import { CountDropDown } from '../DropDown';
 import NameInput from './NameInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserPlus, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faUserPlus, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Sortable from 'sortablejs';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-const CellBox = ({ len, isAdmin, network, index, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember }) => {
+const CellBox = ({ len, isAdmin, network, index, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember, handleRemoveNetworkCell }) => {
   if (!network) return <div></div>;
   const dispatch = useDispatch();
   const currentSection = useSelector(state => state.checker.currentSection);
@@ -161,10 +159,19 @@ const CellBox = ({ len, isAdmin, network, index, handleCheck, handleCount, handl
       <div className="network-wrapper__relative">
         <div className="network-wrapper__position">
           <div>{network.name}</div>
-          {isAdmin && <FontAwesomeIcon
-            className="network-wrapper__icon"
-            icon={faBars}
-          />}
+          {isAdmin && (
+            <div>
+              <FontAwesomeIcon
+                className="network-wrapper__icon"
+                icon={faTimes}
+                onClick={() => handleRemoveNetworkCell({ id: network._id, cellName: network.name })}
+              />
+              <FontAwesomeIcon
+                className="network-wrapper__icon"
+                icon={faBars}
+              />
+            </div>
+          )}
           {isAdmin && <div className="positioning--rel">
             <div className="button-box">
               <button

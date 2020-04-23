@@ -149,7 +149,6 @@ router.post('/networkCell', async (req, res) => {
 
 router.put('/networkCell/seq', async (req, res) => {
   const { seq, sheetId } = req.body;
-  console.log(seq, 8127391);
   const idList = JSON.parse(seq);
   idList.forEach((id, idx) => {
     NetworkCell.findOneAndUpdate({ _id: id }, { $set: { seq: idx } }, { new: true }, (err, resD) => {
@@ -159,6 +158,11 @@ router.put('/networkCell/seq', async (req, res) => {
 
   const networkCellList = await NetworkCell.find({ sheetId }).sort({ seq: 1 });
   res.send(networkCellList);
+});
+
+router.delete('/networkCell/:id', (req, res) => {
+  const { id } = req.params;
+  NetworkCell.deleteOne({ _id: id }).then(response => res.send(response));
 })
 
 router.post('/sheet', async (req, res) => {
@@ -264,6 +268,7 @@ router.get('/gender/:gender', (req, res) => {
       res.send(user);
     })
 })
+
 
 router.post('/member', async (req, res) => {
   const { name, age, gender, attached, cellName, cellNameKr, section, members, leader_id } = req.body;

@@ -1,28 +1,22 @@
-import React, { useCallback, useState } from 'react';
-import { changeCurrentInfo } from '../../store/modules/checker';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import CellBox from './CellBox';
-import update from 'immutability-helper';
 
 
 const CellList = (props) => {
   const currentSection = useSelector(state => state.checker.currentSection);
 
-  const { handleModifyName, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleChangeName, handleRemoveMember, isAdmin } = props.customProps;
-
-  // const handleModifyName = ({ id, sectionIdx, leaderIdx, target, memberIdx }) => {
-  //   const changedName = typeof memberIdx !== 'undefined' ?
-  //     currentSection[sectionIdx].leaders[leaderIdx].members[memberIdx].name :
-  //     currentSection[sectionIdx].leaders[leaderIdx].name;
-  //   fetch(`/api/change/${id}`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ changedName })
-  //   });
-  //   target.classList.remove('active');
-  // };
+  const { handleModifyName,
+    handleCheck,
+    handleCount,
+    handleCheckMember,
+    handleAddLeader,
+    handleAddMember,
+    handleChangeName,
+    handleRemoveMember,
+    handleRemoveNetworkCell,
+    isAdmin }
+    = props.customProps;
 
   return (currentSection ? currentSection.map((network, index) => {
     return (
@@ -40,6 +34,7 @@ const CellList = (props) => {
         handleModifyName={handleModifyName}
         handleChangeName={handleChangeName}
         handleRemoveMember={handleRemoveMember}
+        handleRemoveNetworkCell={handleRemoveNetworkCell}
       />
 
     );
