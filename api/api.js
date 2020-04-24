@@ -46,13 +46,13 @@ const addChurch = ({ seq, name, attached }) => {
   )
 };
 
-const addSheet = ({ seq, name, section, attached, cells = [] }) => {
+const addSheet = ({ seq, name, section, attachedId, cells = [] }) => {
   return (
     {
       seq,
       name,
       section,
-      attached,
+      attachedId,
       cells
     }
   )
@@ -176,18 +176,18 @@ router.delete('/networkCell/:id', (req, res) => {
 })
 
 router.post('/sheet', async (req, res) => {
-  const { name, section, attached } = req.body;
+  const { name, section, attachedId } = req.body;
   const { seq } = await Counters.findOneAndUpdate({ "_id": 'sheet' }, { $inc: { seq: 1 } }).then();
-  const sheet = new Sheet(addSheet({ seq, name, section, attached }));
+  const sheet = new Sheet(addSheet({ seq, name, section, attachedId }));
   sheet.save((err, sheet) => {
     if (err) console.error(err);
     res.send(sheet);
   })
 });
 
-router.get('/sheet/:attached', (req, res) => {
-  const attached = req.params.attached;
-  Sheet.find({ attached }).sort({ seq: 1 }).then(sheet => {
+router.get('/sheet/:attachedId', (req, res) => {
+  const attachedId = req.params.attachedId;
+  Sheet.find({ attachedId }).sort({ seq: 1 }).then(sheet => {
     res.send(sheet);
   });
 });

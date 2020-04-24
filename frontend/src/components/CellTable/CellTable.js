@@ -27,12 +27,11 @@ const CellTable = (props) => {
   const dispatch = useDispatch(null);
   const currentSection = useSelector(state => state.checker.currentSection);
   const sheets = useSelector(state => state.checker.sheets);
-  const currentSheetId = useSelector(state => state.checker.currentSheetId);
+  const currentSheetInfo = useSelector(state => state.checker.currentSheetInfo);
   const cellWrapperRef = useRef(null);
   const [checker, setChecker] = useState(null);
 
   let sortableForNetwork = null;
-
   useEffect(() => {
     const cellWrapperEl = document.querySelector('.cell-wrapper');
     if (isAdmin && cellWrapperEl) {
@@ -57,7 +56,7 @@ const CellTable = (props) => {
               },
               body: JSON.stringify({
                 seq: JSON.stringify(idList),
-                sheetId: currentSheetId
+                sheetId: currentSheetInfo._id
               })
             })
               .then(res => res.json())
@@ -106,11 +105,9 @@ const CellTable = (props) => {
       </Modal>
     );
     changeCurrentInfo('modalOpend', true);
-    console.log(id);
   };
 
   const handleModifyName = ({ changedName, id, sectionIdx, leaderIdx, target, memberIdx }) => {
-    console.log(currentSection, sectionIdx, id, leaderIdx, memberIdx);
     // const changedName = typeof memberIdx !== 'undefined' ?
     //   currentSection[sectionIdx].leaders[leaderIdx].members[memberIdx].name :
     //   currentSection[sectionIdx].leaders[leaderIdx].name;

@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 
 const AddForm = (props) => {
-  const { cellInfo, attached, insertMemberData, insertedMember, onToggleModal, currentSheetId, networkCells, changeCurrentInfo, insertNetworkCell } = props;
+  const { cellInfo, attached, insertMemberData, insertedMember, onToggleModal, networkCells, changeCurrentInfo, insertNetworkCell } = props;
   const emptyWarning = useSelector(state => state.inserted.emptyWarning);
   const dispatch = useDispatch(null);
 
@@ -90,7 +90,7 @@ const mapStateToProps = state => ({
   insertedMember: state.inserted.insertedMember,
   attached: state.checker.attached,
   section: state.checker.section,
-  currentSheetId: state.checker.currentSheetId,
+  currentSheetInfo: state.checker.currentSheetInfo,
   networkCells: state.checker.networkCells,
 })
 

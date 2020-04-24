@@ -29,7 +29,7 @@ class AddForm extends Component {
   
 
   addNetworkCell = async ({ isAddNetwork }) => {
-    const { insertedMember, onToggleModal, currentSheetId, networkCells, changeCurrentInfo, insertNetworkCell } = this.props;
+    const { insertedMember, onToggleModal, currentSheetInfo, networkCells, changeCurrentInfo, insertNetworkCell } = this.props;
     // await fetch('/api/leader', {
     //   method: 'POST',
     //   headers: {
@@ -51,7 +51,7 @@ class AddForm extends Component {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: insertedMember.cellNameKr, networkLeaderName: insertedMember.name, gender: insertedMember.gender, attached: insertedMember.attached, sheetId: currentSheetId })
+        body: JSON.stringify({ name: insertedMember.cellNameKr, networkLeaderName: insertedMember.name, gender: insertedMember.gender, attached: insertedMember.attached, sheetId: currentSheetInfo._id })
       }).then(res => res.json())
         .then(cell => {
           console.log(cell);
@@ -143,11 +143,11 @@ class AddForm extends Component {
             <div className="add-form__left">성별</div>
             {!isAddNetwork ?
               (<div className="add-form__right">{insertedMember.gender === 'male' ? '남' : '여'}</div>)
-              : (<div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-secondary select__btn--gender">
-                  <input onClick={e => this.handleChange(e.target.name, e.target.id)} type="radio" name="gender" id="male" autocomplete="off" />남</label>
-                <label class="btn btn-secondary select__btn--gender">
-                  <input onClick={e => this.handleChange(e.target.name, e.target.id)} type="radio" name="gender" id="female" autocomplete="off" /> 여</label>
+              : (<div className="btn-group btn-group-toggle" data-toggle="buttons">
+                <label className="btn btn-secondary select__btn--gender">
+                  <input onClick={e => this.handleChange(e.target.name, e.target.id)} type="radio" name="gender" id="male" autoComplete="off" />남</label>
+                <label className="btn btn-secondary select__btn--gender">
+                  <input onClick={e => this.handleChange(e.target.name, e.target.id)} type="radio" name="gender" id="female" autoComplete="off" /> 여</label>
               </div>)
             }
           </div>
@@ -176,7 +176,7 @@ const mapStateToProps = state => ({
   insertedMember: state.inserted.insertedMember,
   attached: state.checker.attached,
   section: state.checker.section,
-  currentSheetId: state.checker.currentSheetId,
+  currentSheetInfo: state.checker.currentSheetInfo,
   networkCells: state.checker.networkCells,
 })
 

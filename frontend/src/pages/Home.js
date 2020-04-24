@@ -15,15 +15,6 @@ import SheetForm from '../components/AddForm/SheetForm';
 
 import { printTargetNode } from '../fn/fn';
 
-const mapSectionByEnName = (enName) => {
-  const section =
-    enName.match(/이스라엘/g) ?
-      '이스라엘군' : enName.match(/아랍/g) ?
-        '아랍군' : enName.match(/아시아/g) ? '아시아군'
-          : null;
-
-  return section;
-};
 
 const Home = (props) => {
   const dispatch = useDispatch();
@@ -31,7 +22,7 @@ const Home = (props) => {
   const { name: current, attached } = match.params;
   const modalOpend = useSelector(state => state.checker.modalOpend);
   const networkCells = useSelector(state => state.checker.networkCells);
-  const currentSection = useSelector(state => state.checker.currentSection);
+  const currentSheetInfo = useSelector(state=> state.checker.currentSheetInfo);
   const sheets = useSelector(state => state.checker.sheets);
   const isAdmin = match.url.match(/admin/g);
 
@@ -39,38 +30,43 @@ const Home = (props) => {
     if (!current) {
       return;
     }
-    dispatch(changeCurrentInfo('idx', current));
-    console.log(9999);
-    dispatch(changeCurrentInfo('section', mapSectionByEnName(current)));
+    dispatch(changeCurrentInfo('section', currentSheetInfo && currentSheetInfo.section));
   }, [current]);
 
   useEffect(() => {
-    dispatch(changeCurrentInfo('attached', attached));
-    fetch(`/api/sheet/${attached}`).then(res => {
-      return res;
-    }).then(res => res.json())
-      .then(sheets => {
-        dispatch(changeCurrentInfo('sheets', sheets));
-        if (!current) {
-          return;
-        }
-        console.log(1231243);
-        dispatch(changeCurrentInfo('idx', current));
-        dispatch(changeCurrentInfo('section', mapSectionByEnName(current)));
-        const currentSheetId = sheets.length && sheets.find(v => v.name === current)._id;
-        dispatch(changeCurrentInfo('currentSheetId', currentSheetId));
-        fetch(`/api/networkCell/${currentSheetId}`)
-          .then(res => res.json())
-          .then(networkCells => {
-            dispatch(changeCurrentInfo('networkCells', networkCells));
-            fetch(`/api/cells?cells=${JSON.stringify(networkCells)}`)
+    fetch('/api/church/all')
+      .then(res => res.json())
+      .then(res => {
+        changeCurrentInfo('churches', res);
+        const attachedId = res.find(v => v.name === attached)._id;
+        dispatch(changeCurrentInfo('attachedId', attachedId));
+        fetch(`/api/sheet/${attachedId}`)
+          .then(res => {
+            return res;
+          }).then(res => res.json())
+          .then(sheets => {
+            dispatch(changeCurrentInfo('sheets', sheets));
+            if (!current) {
+              return;
+            }
+            const currentSheetInfo = sheets.length && sheets.find(v => v.name === current);
+            dispatch(changeCurrentInfo('section', currentSheetInfo.section));
+            dispatch(changeCurrentInfo('currentSheetInfo', currentSheetInfo));
+            fetch(`/api/networkCell/${currentSheetInfo._id}`)
               .then(res => res.json())
-              .then(cells => {
-                dispatch(changeCurrentInfo('currentSection', cells));
-              });
+              .then(networkCells => {
+                dispatch(changeCurrentInfo('networkCells', networkCells));
+                fetch(`/api/cells?cells=${JSON.stringify(networkCells)}`)
+                  .then(res => res.json())
+                  .then(cells => {
+                    dispatch(changeCurrentInfo('currentSection', cells));
+                  });
 
+              });
           });
       });
+    dispatch(changeCurrentInfo('attached', attached));
+
     return () => { dispatch(changeCurrentInfo('currentSection', null)); };
   }, []);
 
@@ -129,13 +125,15 @@ const Home = (props) => {
           </div>) : null}
         </div>
       ) : ''}
-      <Tab currentSheet={current} sheets={sheets} attached={attached} isAdmin={isAdmin ? true : null} />
+      <Tab sheets={sheets} attached={attached} isAdmin={isAdmin ? true : null} />
       {current ?
-        <div className="admin-table"><CellTable isAdmin={isAdmin} current={current} /></div> :
+        <div className="admin-table">
+          <CellTable isAdmin={isAdmin} current={current} />
+        </div> :
         <div>
           <div className="root__description">{attached} 출석체크 페이지 :)</div>
           <div className="root__description">🇮🇱🇰🇷🇪🇬🇸🇾🇹🇷🇵🇸🇰🇵🇯🇴🇷🇺</div>
-          {sheets.length === 0 ? (<div className="sheet-container" onClick={() => handleToggleModal({ inner: <Modal><SheetForm /></Modal> })}>
+          {isAdmin && sheets.length === 0 ? (<div className="sheet-container" onClick={() => handleToggleModal({ inner: <Modal><SheetForm /></Modal> })}>
             <div className="sheet-container__description">시트가 없습니다 추가해보세요</div>
             <div className="sheet-container__icon"><FontAwesomeIcon icon={faPlusCircle} /></div>
           </div>) : null}

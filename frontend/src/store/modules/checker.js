@@ -54,7 +54,7 @@ const initialState = {
   church: '',
   section: '',
   sheets: [],
-  currentSheetId: '',
+  currentSheetInfo: null,
   networkCells: [],
   churches: [],
   currentSection: [],

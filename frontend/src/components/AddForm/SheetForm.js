@@ -9,7 +9,7 @@ import { BasicDropDown } from '../DropDown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 
-const SheetForm = ({ onToggleModal, attached, insertedMember: { name, section }, insertMemberData, changeCurrentInfo, sheets, initMemberData }) => {
+const SheetForm = ({ onToggleModal, attached, attachedId, insertedMember: { name, section }, insertMemberData, changeCurrentInfo, sheets, initMemberData }) => {
 
   const insertedMember = useSelector(state => state.inserted.insertedMember);
 
@@ -27,7 +27,7 @@ const SheetForm = ({ onToggleModal, attached, insertedMember: { name, section },
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name, attached, section })
+        body: JSON.stringify({ name, attachedId, section })
       }).then(res => {
         onToggleModal({ action: 'addSheet' });
         return res.json();
@@ -77,9 +77,10 @@ const SheetForm = ({ onToggleModal, attached, insertedMember: { name, section },
 const mapStateToProps = state => ({
   insertedMember: state.inserted.insertedMember,
   attached: state.checker.attached,
+  attachedId: state.checker.attachedId,
   section: state.checker.section,
   sheets: state.checker.sheets
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),

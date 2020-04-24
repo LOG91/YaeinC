@@ -11,10 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const CellBox = ({ len, isAdmin, network, index, handleCheck, handleCount, handleCheckMember, handleAddLeader, handleAddMember, handleModifyName, handleChangeName, handleRemoveMember, handleRemoveNetworkCell }) => {
   if (!network) return <div></div>;
-  const dispatch = useDispatch();
   const currentSection = useSelector(state => state.checker.currentSection);
-  const currentSheetId = useSelector(state => state.checker.currentSheetId);
-  const ref = useRef(null);
   let sortableForLeader = null;
 
   useEffect(() => {

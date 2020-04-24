@@ -84,7 +84,7 @@ const Sheet = new Schema({
   section: {
     type: String,
   },
-  attached: {
+  attachedId: {
     type: String,
   },
   cells: [{
