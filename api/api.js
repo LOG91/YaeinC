@@ -131,7 +131,6 @@ router.delete('/church/:id', (req, res) => {
 
 router.put('/church', async (req, res) => {
   const { id, changedName } = req.body;
-  console.log(id, changedName)
   Church.findOneAndUpdate({ _id: id }, { $set: { name: changedName } }, { new: true }, (err, resD) => {
     console.log(resD);
   });
