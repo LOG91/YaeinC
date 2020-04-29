@@ -94,9 +94,24 @@ router.delete('/member/:id', (req, res) => {
   })
 });
 
+
+function addCounter({ name }) {
+  const counter = new Counters({ "_id": name, seq: 0 });
+  counter.save((err, count) => {
+    if (err) console.error(err);
+  })
+}
+
 router.post('/church', async (req, res) => {
   const { name, attached } = req.body;
-  const { seq } = await Counters.findOneAndUpdate({ "_id": 'churches' }, { $inc: { seq: 1 } }).then();
+  const seq = await Counters.findOneAndUpdate({ "_id": 'churches' }, { $inc: { seq: 1 } }).then((counter) => {
+    if (counter !== null) {
+      return counter.seq;
+    }
+    addCounter({ name: 'churches' });
+    return 0;
+  });
+
   const church = new Church(addChurch({ seq, name, attached }));
   church.save((err, church) => {
     if (err) console.error(err);
@@ -148,7 +163,11 @@ router.get('/networkCell/:sheetId', (req, res) => {
 
 router.post('/networkCell', async (req, res) => {
   const { name, networkLeaderName, gender, attached, sheetId } = req.body;
-  const { seq } = await Counters.findOneAndUpdate({ "_id": 'networkcell' }, { $inc: { seq: 1 } }).then();
+  const seq = await Counters.findOneAndUpdate({ "_id": 'networkcell' }, { $inc: { seq: 1 } }).then(counter => {
+    if (counter) return counter.seq;
+    addCounter({ name: 'networkCell' });
+    return 0;
+  });
   const networkCell = new NetworkCell(addNetworkCell({ seq, name, networkLeaderName, gender, attached, sheetId }));
   networkCell.save((err, networkCell) => {
     if (err) console.error(err);
@@ -176,7 +195,11 @@ router.delete('/networkCell/:id', (req, res) => {
 
 router.post('/sheet', async (req, res) => {
   const { name, section, attachedId } = req.body;
-  const { seq } = await Counters.findOneAndUpdate({ "_id": 'sheet' }, { $inc: { seq: 1 } }).then();
+  const seq = await Counters.findOneAndUpdate({ "_id": 'sheet' }, { $inc: { seq: 1 } }).then(counter => {
+    if (counter) return counter.seq;
+    addCounter({ name: 'sheet' });
+    return 0;
+  });
   const sheet = new Sheet(addSheet({ seq, name, section, attachedId }));
   sheet.save((err, sheet) => {
     if (err) console.error(err);
@@ -282,7 +305,11 @@ router.get('/gender/:gender', (req, res) => {
 router.post('/member', async (req, res) => {
   const { name, age, gender, attached, cellName, cellNameKr, section, members, leader_id } = req.body;
   const youth = new YouthAtt(addYouthAtt());
-  const { seq } = await Counters.findOneAndUpdate({ "_id": 'leader' }, { $inc: { seq: 1 } }).then();
+  const seq = await Counters.findOneAndUpdate({ "_id": 'leader' }, { $inc: { seq: 1 } }).then(counter => {
+    if (counter) return counter.seq;
+    addCounter({ name: 'leader' });
+    return 0;
+  });
 
   youth.save((err, y) => {
     if (err) return console.error(err);
@@ -297,7 +324,11 @@ router.post('/member', async (req, res) => {
 router.post('/leader', async (req, res, next) => {
   const { name, age, gender, attached, cellName, cellNameKr, section, members, cellId } = req.body;
   const youth = new YouthAtt(addYouthAtt());
-  const { seq } = await Counters.findOneAndUpdate({ "_id": 'leader' }, { $inc: { seq: 1 } }).then();
+  const seq = await Counters.findOneAndUpdate({ "_id": 'leader' }, { $inc: { seq: 1 } }).then(counter => {
+    if (counter) return counter.seq;
+    addCounter({ name: 'leader' });
+    return 0;
+  });
   youth.save((err, y) => {
     if (err) return console.error(err);
   })
