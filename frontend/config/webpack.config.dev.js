@@ -23,11 +23,6 @@ module.exports = {
         secure: false,
         changeOrigin: true
       },
-      // '/signin': {
-      //   target: 'http://localhost:7000',
-      //   secure: false,
-      //   changeOrigin: true
-      // },
       '/todos': {
         target: 'http://localhost:7000',
         secure: false,
@@ -91,4 +86,4 @@ module.exports = {
     }),
     new CleanWebpackPlugin()
   ]
-}
+};

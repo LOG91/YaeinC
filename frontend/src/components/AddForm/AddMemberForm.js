@@ -1,26 +1,25 @@
 import React, { useEffect } from 'react';
 import './AddForm.scss';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { changeCurrentInfo, insertNetworkCell } from '../../store/modules/checker';
-import { insertMemberData, insertCellMember, initMemberData, removeCellMember } from '../../store/modules/inserted';
+import { useDispatch, useSelector } from 'react-redux';
+import { insertMemberData, initMemberData } from '../../store/modules/inserted';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 
-const AddForm = (props) => {
-  const { cellInfo, attached, insertMemberData, insertedMember, onToggleModal, networkCells, changeCurrentInfo, insertNetworkCell } = props;
-  const emptyWarning = useSelector(state => state.inserted.emptyWarning);
+const AddMemberForm = ({ cellInfo, onToggleModal, confirmAction }) => {
+  const { emptyWarning, insertedMember } = useSelector(state => state.inserted);
+  const { attached, section } = useSelector(state => state.checker);
   const dispatch = useDispatch(null);
 
   useEffect(() => {
-    insertMemberData('attached', attached);
-    insertMemberData('leader_id', cellInfo._id);
-    insertMemberData('cellNameKr', cellInfo.name);
+    dispatch(insertMemberData('attached', attached));
+    dispatch(insertMemberData('leader_id', cellInfo._id));
+    dispatch(insertMemberData('cellNameKr', cellInfo.name));
 
     if (!cellInfo) return;
     initInsertedMember({ info: cellInfo, wish: ['cellName', 'section', 'gender'], fn: insertMemberData });
     return () => {
-      props.initMemberData();
+      dispatch(initMemberData());
       dispatch({ type: 'ALL_OUT_EMPTY' });
     };
   }, []);
@@ -34,19 +33,15 @@ const AddForm = (props) => {
 
   const initInsertedMember = ({ info, wish, fn }) => {
     wish.forEach(item => {
-      fn(item, info[item]);
+      dispatch(fn(item, info[item]));
     });
   };
 
   const onChangeData = ({ target }) => {
-    console.log(target);
     target.value !== '' ? dispatch({ type: 'OUT_EMPTY', target: target.name }) : null;
-    insertMemberData(target.name, target.value);
+    dispatch(insertMemberData(target.name, target.value));
   };
 
-
-
-  const { section, confirmAction } = props;
   return (
     <div className="add-form">
       <div className="add-form__icon"><FontAwesomeIcon icon={faAddressCard} /><h4>멤버추가</h4></div>
@@ -73,7 +68,7 @@ const AddForm = (props) => {
         </div>
         <div className="add-form__box">
           <div className="add-form__left">나이</div>
-          <input className={`add-form__right--input ${emptyWarning.age ? 'empty' : ''}`} name="age" onChange={({ target }) => insertMemberData(target.name, target.value)}></input>
+          <input className={`add-form__right--input ${emptyWarning.age ? 'empty' : ''}`} name="age" onChange={({ target }) => dispatch(insertMemberData(target.name, target.value))}></input>
         </div>
         <div className="add-form__bottom">
           <button className="btn btn-outline-dark add_member_btn add-form__btn--bottom" onClick={() => confirmAction({ insertedMember })}>등록</button>
@@ -83,24 +78,7 @@ const AddForm = (props) => {
       </div>
     </div >
   );
+};
 
-}
 
-const mapStateToProps = state => ({
-  insertedMember: state.inserted.insertedMember,
-  attached: state.checker.attached,
-  section: state.checker.section,
-  currentSheetInfo: state.checker.currentSheetInfo,
-  networkCells: state.checker.networkCells,
-})
-
-const mapDispatchToProps = dispatch => ({
-  insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),
-  insertCellMember: (left, right, idx) => dispatch(insertCellMember(left, right, idx)),
-  removeCellMember: (idx) => dispatch(removeCellMember(idx)),
-  initMemberData: () => dispatch(initMemberData()),
-  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
-  insertNetworkCell: addedNetworkCell => dispatch(insertNetworkCell(addedNetworkCell))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddForm);
+export default AddMemberForm;

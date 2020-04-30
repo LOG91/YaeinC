@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { connect, useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import './AddForm.scss';
-import { changeCurrentInfo } from '../../store/modules/checker';
-import { insertMemberData, insertCellMember, removeCellMember, initMemberData } from '../../store/modules/inserted';
-
-import { BasicDropDown } from '../DropDown';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
+import { BasicDropDown } from '../DropDown';
 
-const SheetForm = ({ onToggleModal, attached, attachedId, insertedMember: { name, section }, insertMemberData, changeCurrentInfo, sheets, initMemberData }) => {
+import { changeCurrentInfo } from '../../store/modules/checker';
+import { insertMemberData, initMemberData } from '../../store/modules/inserted';
 
-  const insertedMember = useSelector(state => state.inserted.insertedMember);
+
+const SheetForm = ({ onToggleModal }) => {
+  const { name, section } = useSelector(state => state.inserted.insertedMember);
+  const { attached, attachedId, sheets } = useSelector(state => state.checker);
+  const dispatch = useDispatch();
 
   const [isEmptyName, setIsEmptyName] = useState(false);
   useEffect(() => {
     initData();
-    return () => initMemberData();
+    return () => dispatch(initMemberData());
   }, []);
 
   const addSheet = () => {
-    if (insertedMember.name.trim() === '') setIsEmptyName(true);
+    if (name.trim() === '') setIsEmptyName(true);
     else {
       fetch('/api/sheet', {
         method: 'POST',
@@ -32,14 +33,14 @@ const SheetForm = ({ onToggleModal, attached, attachedId, insertedMember: { name
         onToggleModal({ action: 'addSheet' });
         return res.json();
       }).then(res => {
-        changeCurrentInfo('sheets', [...sheets, res]);
+        dispatch(changeCurrentInfo('sheets', [...sheets, res]));
       });
     }
   };
 
   const handleChange = (left, right) => {
-    if (insertedMember.name.trim() !== '') setIsEmptyName(false);
-    insertMemberData(left, right);
+    if (name.trim() !== '') setIsEmptyName(false);
+    dispatch(insertMemberData(left, right));
   };
 
   const initData = () => {
@@ -70,24 +71,7 @@ const SheetForm = ({ onToggleModal, attached, attachedId, insertedMember: { name
         <div className={`add-form__empty-alert ${isEmptyName && 'active'}`}>빨간색 네모 안을 입력하세요 :)</div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-
-const mapStateToProps = state => ({
-  insertedMember: state.inserted.insertedMember,
-  attached: state.checker.attached,
-  attachedId: state.checker.attachedId,
-  section: state.checker.section,
-  sheets: state.checker.sheets
-});
-
-const mapDispatchToProps = dispatch => ({
-  insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),
-  insertCellMember: (left, right, idx) => dispatch(insertCellMember(left, right, idx)),
-  removeCellMember: (idx) => dispatch(removeCellMember(idx)),
-  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
-  initMemberData: () => dispatch(initMemberData())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(SheetForm);
+export default SheetForm;

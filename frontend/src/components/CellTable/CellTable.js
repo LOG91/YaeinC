@@ -10,9 +10,8 @@ import {
   removeLeader,
   removeMember,
   modalOpend
-}
-  from '../../store/modules/checker';
-import { connect, useSelector, useDispatch } from 'react-redux';
+} from '../../store/modules/checker';
+import { useSelector, useDispatch } from 'react-redux';
 
 import CellList from './CellList';
 import { Modal, ConfirmModal } from '../Modal';
@@ -22,16 +21,15 @@ import AddMemberForm from '../AddForm/AddMemberForm';
 import Sortable from 'sortablejs';
 
 
-const CellTable = (props) => {
-  const { isAdmin, changeCurrentInfo } = props;
+const CellTable = ({ isAdmin }) => {
   const dispatch = useDispatch(null);
-  const currentSection = useSelector(state => state.checker.currentSection);
-  const sheets = useSelector(state => state.checker.sheets);
-  const currentSheetInfo = useSelector(state => state.checker.currentSheetInfo);
+  const { currentSection, sheets, currentSheetInfo } = useSelector(state => state.checker);
+
   const cellWrapperRef = useRef(null);
   const [checker, setChecker] = useState(null);
 
   let sortableForNetwork = null;
+
   useEffect(() => {
     const cellWrapperEl = document.querySelector('.cell-wrapper');
     if (isAdmin && cellWrapperEl) {
@@ -62,7 +60,7 @@ const CellTable = (props) => {
               .then(res => res.json())
               .then(() => {
                 const filtered = idList.map(v => currentSection.find(item => item._id === v));
-                changeCurrentInfo('currentSection', filtered);
+                dispatch(changeCurrentInfo('currentSection', filtered));
               });
           }
         });
@@ -83,34 +81,30 @@ const CellTable = (props) => {
       body: JSON.stringify({ id, kind })
     }).then(responsedData => {
       if (responsedData.status === 200) {
-        props.checkWorship(id, sectionIdx, kind);
+        dispatch(checkWorship(id, sectionIdx, kind));
       }
     });
   });
 
   const handleRemoveNetworkCell = ({ id, cellName }) => {
-    changeCurrentInfo('currentModal',
+    dispatch(changeCurrentInfo('currentModal',
       <Modal>
         <ConfirmModal confirmAction={() => {
           fetch(`/api/networkCell/${id}`, {
             method: 'DELETE'
           })
             .then(res => res.json())
-            .then(res => {
-              console.log(res);
-              changeCurrentInfo('currentModal', null);
-              changeCurrentInfo('modalOpend', false);
+            .then(() => {
+              dispatch(changeCurrentInfo('currentModal', null));
+              dispatch(changeCurrentInfo('modalOpend', false));
             });
         }} message={`셀 ${cellName}를 삭제하시겠습니까?`} />
       </Modal>
-    );
-    changeCurrentInfo('modalOpend', true);
+    ));
+    dispatch(changeCurrentInfo('modalOpend', true));
   };
 
-  const handleModifyName = ({ changedName, id, sectionIdx, leaderIdx, target, memberIdx }) => {
-    // const changedName = typeof memberIdx !== 'undefined' ?
-    //   currentSection[sectionIdx].leaders[leaderIdx].members[memberIdx].name :
-    //   currentSection[sectionIdx].leaders[leaderIdx].name;
+  const handleModifyName = ({ changedName, id }) => {
     fetch(`/api/change/${id}`, {
       method: 'POST',
       headers: {
@@ -122,13 +116,11 @@ const CellTable = (props) => {
 
 
   const handleChangeName = ({ id, sectionIdx, leaderIdx, changedName, nextNode, memberIdx }) => {
-    const { changeLeaderName, changeMemberName } = props;
-
     const changeMember = () => {
       if (typeof memberIdx !== 'undefined') {
-        changeMemberName(sectionIdx, leaderIdx, memberIdx, changedName);
+        dispatch(changeMemberName(sectionIdx, leaderIdx, memberIdx, changedName));
       } else {
-        changeLeaderName(sectionIdx, leaderIdx, changedName);
+        dispatch(changeLeaderName(sectionIdx, leaderIdx, changedName));
       }
     };
     changeMember();
@@ -148,16 +140,15 @@ const CellTable = (props) => {
   };
 
   const handleRemoveMember = useCallback(({ id, sectionIdx, leaderIdx, memberIdx }) => {
-    const { removeLeader, removeMember, changeCurrentInfo } = props;
     fetch(`/api/member/${id}`, {
       method: 'DELETE'
     }).then(res => res.json())
       .then(res => {
         if (res.ok) {
-          changeCurrentInfo('currentModal', null);
-          changeCurrentInfo('modalOpend', !modalOpend);
-          typeof memberIdx === 'undefined' ? removeLeader(sectionIdx, leaderIdx) :
-            removeMember(sectionIdx, leaderIdx, memberIdx);
+          dispatch(changeCurrentInfo('currentModal', null));
+          dispatch(changeCurrentInfo('modalOpend', !modalOpend));
+          typeof memberIdx === 'undefined' ? dispatch(removeLeader(sectionIdx, leaderIdx)) :
+            dispatch(removeMember(sectionIdx, leaderIdx, memberIdx));
         }
       });
   });
@@ -171,7 +162,7 @@ const CellTable = (props) => {
       body: JSON.stringify({ id, kind })
     });
     if (responsedData.status === 200) {
-      props.checkMemberWorship(leaderId, id, memberIdx, sectionIdx, kind);
+      dispatch(checkMemberWorship(leaderId, id, memberIdx, sectionIdx, kind));
     }
   });
 
@@ -184,22 +175,20 @@ const CellTable = (props) => {
       body: JSON.stringify({ id, kind, count: Number(count) })
     });
     if (responsedData.status === 200) {
-      props.countContent(id, sectionIdx, kind, Number(count));
+      dispatch(countContent(id, sectionIdx, kind, Number(count)));
     }
   });
 
   const handleAddLeader = useCallback((leader) => {
-    const { changeCurrentInfo } = props;
-
-    changeCurrentInfo('currentModal',
+    dispatch(changeCurrentInfo('currentModal',
       <Modal>
         <AddMemberForm
           isLeader={true}
           cellInfo={leader}
           confirmAction={addLeader}
         />
-      </Modal>);
-    changeCurrentInfo('modalOpend', !modalOpend);
+      </Modal>));
+    dispatch(changeCurrentInfo('modalOpend', !modalOpend));
 
     function addLeader({ insertedMember }) {
       if (insertedMember.name === '') {
@@ -227,15 +216,13 @@ const CellTable = (props) => {
   });
 
   const handleAddNetwork = useCallback(({ inner }) => {
-    const { changeCurrentInfo } = props;
-    changeCurrentInfo('currentModal', !modalOpend ? inner : null);
-    changeCurrentInfo('modalOpend', !modalOpend);
+    dispatch(changeCurrentInfo('currentModal', !modalOpend ? inner : null));
+    dispatch(changeCurrentInfo('modalOpend', !modalOpend));
   });
 
   const handleAddMember = useCallback((leader) => {
-    const { changeCurrentInfo } = props;
-    changeCurrentInfo('currentModal', <Modal><AddMemberForm cellInfo={leader} confirmAction={addMember} /></Modal>)
-    changeCurrentInfo('modalOpend', true);
+    dispatch(changeCurrentInfo('currentModal', <Modal><AddMemberForm cellInfo={leader} confirmAction={addMember} /></Modal>));
+    dispatch(changeCurrentInfo('modalOpend', true));
 
     function addMember({ insertedMember }) {
       fetch('/api/member', {
@@ -252,7 +239,6 @@ const CellTable = (props) => {
       });
     }
   });
-
 
   return (
     <div className={isAdmin ? "print-area cell-container" : "cell-container"} border="1" cellPadding="10">
@@ -315,20 +301,7 @@ const CellTable = (props) => {
         </div>) : null}
     </div>
   );
-
 };
 
 
-
-const mapDispatchToProps = dispatch => ({
-  checkWorship: (name, sectionIdx, left) => dispatch(checkWorship(name, sectionIdx, left)),
-  checkMemberWorship: (leaderId, id, sec, sectionIdx, left) => dispatch(checkMemberWorship(leaderId, id, sec, sectionIdx, left)),
-  countContent: (name, sectionIdx, left, count) => dispatch(countContent(name, sectionIdx, left, count)),
-  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
-  changeLeaderName: (sectionIdx, leaderIdx, changedName) => dispatch(changeLeaderName(sectionIdx, leaderIdx, changedName)),
-  changeMemberName: (sectionIdx, leaderIdx, memberIdx, changedName) => dispatch(changeMemberName(sectionIdx, leaderIdx, memberIdx, changedName)),
-  removeLeader: (sectionIdx, leaderIdx) => dispatch(removeLeader(sectionIdx, leaderIdx)),
-  removeMember: (sectionIdx, leaderIdx, memberIdx) => dispatch(removeMember(sectionIdx, leaderIdx, memberIdx)),
-});
-
-export default connect(null, mapDispatchToProps)(CellTable);
+export default CellTable;
