@@ -1,24 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { insertMemberData, insertCellMember, removeCellMember, initMemberData, changeCurrentInfo } from '../../store/modules/checker';
-import { CHURCH_FORM_NAME_EMPTY } from '../../store/modules/emptyCheck';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { initMemberData } from '../../store/modules/checker';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import { BasicDropDown } from '../DropDown';
 
-const ChurchForm = ({ church, churches, attached, onToggleModal, handleChange, confirmAction }) => {
+
+const ChurchForm = ({ onToggleModal, handleChange, confirmAction }) => {
   const ATTACHED_LIST = ['청년', '장년', '오이코스'];
+  const dispatch = useDispatch();
+  const { attached, church, churches } = useSelector(state => state.checker);
+
+  useEffect(() => {
+    initData();
+    return () => dispatch(initMemberData());
+  }, []);
+  const isEmptyName = useSelector(state => state.emptyCheck.churchForm.isEmptyName);
 
   const initData = () => {
     handleChange('attached', ATTACHED_LIST[0]);
   };
-  
-  useEffect(() => {
-    initData();
-    return () => initMemberData();
-  }, []);
-  const isEmptyName = useSelector(state => state.emptyCheck.churchForm.isEmptyName);
 
   return (
     <div className="add-form">
@@ -43,20 +45,4 @@ const ChurchForm = ({ church, churches, attached, onToggleModal, handleChange, c
 };
 
 
-const mapStateToProps = state => ({
-  insertedMember: state.inserted.insertedMember,
-  attached: state.checker.attached,
-  section: state.checker.section,
-  church: state.checker.church,
-  churches: state.checker.churches
-});
-
-const mapDispatchToProps = dispatch => ({
-  insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),
-  insertCellMember: (left, right, idx) => dispatch(insertCellMember(left, right, idx)),
-  removeCellMember: (idx) => dispatch(removeCellMember(idx)),
-  initMemberData: () => dispatch(initMemberData()),
-  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ChurchForm);
+export default ChurchForm;
