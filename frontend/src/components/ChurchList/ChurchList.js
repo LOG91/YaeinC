@@ -4,8 +4,7 @@ import { connect, useSelector, useDispatch } from 'react-redux';
 import Sortable from 'sortablejs';
 import './ChurchList.scss';
 
-import { changeCurrentInfo, sequenceChurch, removeChurch } from '../../store/modules/checker';
-import { insertMemberData, initMemberData } from '../../store/modules/inserted';
+import { removeChurch } from '../../store/modules/checker';
 
 import { Modal, ConfirmModal } from '../Modal'
 import ChurchForm from '../AddForm/ChurchForm';
@@ -13,24 +12,24 @@ import ChurchCardBox from './ChurchCardBox';
 import { CHURCH_FORM_NAME_EMPTY } from '../../store/modules/emptyCheck';
 
 
-
 const ChurchList = (props) => {
-  const { match: { path }, modalOpend, churches, changeCurrentInfo, removeChurch } = props;
+  const { match: { path } } = props;
+  const dispatch = useDispatch();
+  const { churches, modalOpend } = useSelector(state => state.checker);
+
   const [isAdmin, setIsAdmin] = useState(false);
   const [isEmptyName, setIsEmptyName] = useState(false);
   const cardWrapper = useRef(null);
   const _isAdmin = path.match(/admin/);
 
-  const dispatch = useDispatch('');
-
   useEffect(() => {
     setIsAdmin(_isAdmin);
-    changeCurrentInfo('attached', null);
-    changeCurrentInfo('section', null);
+    dispatch(changeCurrentInfo('attached', null));
+    dispatch(changeCurrentInfo('section', null));
     fetch('/api/church/all')
       .then(res => res.json())
       .then(res => {
-        changeCurrentInfo('churches', res);
+        dispatch(changeCurrentInfo('churches', res));
       });
   }, []);
 
@@ -79,7 +78,7 @@ const ChurchList = (props) => {
                 method: 'DELETE',
               }).then(res => res.json())
                 .then(res => {
-                  removeChurch(idx);
+                  dispatch(removeChurch(idx));
                   res.ok && handleToggleModal({});
                 });
             }
@@ -90,12 +89,12 @@ const ChurchList = (props) => {
 
   const handleChange = (key, value) => {
     if (value.trim() !== '') dispatch({ type: CHURCH_FORM_NAME_EMPTY, right: false });
-    changeCurrentInfo(key, value);
+    dispatch(changeCurrentInfo(key, value));
   }
 
   const handleToggleModal = ({ inner }) => {
-    changeCurrentInfo('currentModal', !modalOpend ? inner : null);
-    changeCurrentInfo('modalOpend', !modalOpend);
+    dispatch(changeCurrentInfo('currentModal', !modalOpend ? inner : null));
+    dispatch(changeCurrentInfo('modalOpend', !modalOpend));
   }
 
   const addChurch = ({ church, attached, churches }) => {
@@ -113,7 +112,7 @@ const ChurchList = (props) => {
       handleToggleModal({});
       return res.json()
     }).then(res => {
-      changeCurrentInfo('churches', [...churches, res]);
+      dispatch(changeCurrentInfo('churches', [...churches, res]));
     });
   };
 
@@ -141,20 +140,5 @@ const ChurchList = (props) => {
   );
 };
 
-const mapStateToProps = state => ({
-  insertedMember: state.inserted.insertedMember,
-  churches: state.checker.churches,
-  modalOpend: state.checker.modalOpend,
-  attached: state.checker.attached,
-});
 
-const mapDispatchToProps = dispatch => ({
-  insertMemberData: (left, value) => dispatch(insertMemberData(left, value)),
-  initMemberData: () => initMemberData(),
-  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right)),
-  sequenceChurch: (idx, seq) => dispatch(sequenceChurch(idx, seq)),
-  removeChurch: (idx) => dispatch(removeChurch(idx))
-});
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(ChurchList);
+export default ChurchList;

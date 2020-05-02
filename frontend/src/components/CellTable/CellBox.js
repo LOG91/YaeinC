@@ -165,7 +165,7 @@ const CellBox = ({ len, isAdmin, network, index, handleCheck, handleCount, handl
               <FontAwesomeIcon
                 className="network-wrapper__icon"
                 icon={faTimes}
-                onClick={() => handleRemoveNetworkCell({ id: network._id, cellName: network.name })}
+                onClick={() => handleRemoveNetworkCell({ idx: index, id: network._id, cellName: network.name })}
               />
               <FontAwesomeIcon
                 className="network-wrapper__icon"

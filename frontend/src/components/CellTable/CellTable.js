@@ -86,7 +86,7 @@ const CellTable = ({ isAdmin }) => {
     });
   });
 
-  const handleRemoveNetworkCell = ({ id, cellName }) => {
+  const handleRemoveNetworkCell = ({ idx, id, cellName }) => {
     dispatch(changeCurrentInfo('currentModal',
       <Modal>
         <ConfirmModal confirmAction={() => {
@@ -97,6 +97,7 @@ const CellTable = ({ isAdmin }) => {
             .then(() => {
               dispatch(changeCurrentInfo('currentModal', null));
               dispatch(changeCurrentInfo('modalOpend', false));
+              dispatch(changeCurrentInfo('currentSection', [...currentSection.slice(0, idx), ...currentSection.slice(idx + 1, currentSection.length)]));
             });
         }} message={`셀 ${cellName}를 삭제하시겠습니까?`} />
       </Modal>

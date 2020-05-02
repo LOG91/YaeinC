@@ -22,7 +22,7 @@ const AdminHeader = (props) => {
         <a><FontAwesomeIcon className="logo-box__logo--user" icon={faUserCircle} /></a>
       </div>
     </nav>
-  )
-}
+  );
+};
 
 export default AdminHeader;

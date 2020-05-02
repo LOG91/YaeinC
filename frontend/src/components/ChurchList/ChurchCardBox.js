@@ -8,7 +8,6 @@ import './ChurchList.scss';
 
 import { CHANGE_CHURCH_NAME } from '../../store/modules/checker';
 
-
 const ChurchCardBox = ({ churches, isAdmin, handleDeleteChurch }) => {
   const dispatch = useDispatch();
   const [checker, setChecker] = useState(null);

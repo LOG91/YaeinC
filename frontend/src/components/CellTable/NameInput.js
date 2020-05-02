@@ -1,19 +1,20 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faTimes, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faBars } from '@fortawesome/free-solid-svg-icons';
 import { Modal, ConfirmModal } from '../Modal';
 
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { changeCurrentInfo } from '../../store/modules/checker'
 
 const NameInput = (props) => {
+  const { modalOpend, handleRemoveMember, value, handleChangeName, buttonClassName, inputClassName } = props;
+  const dispatch = useDispatch();
+
   const handleToggleModal = ({ inner }) => {
-    const { changeCurrentInfo, modalOpend } = props;
-    changeCurrentInfo('currentModal', !modalOpend ? inner : null);
-    changeCurrentInfo('modalOpend', !modalOpend);
+    dispatch(changeCurrentInfo('currentModal', !modalOpend ? inner : null));
+    dispatch(changeCurrentInfo('modalOpend', !modalOpend));
   };
 
-  const { handleRemoveMember, value, handleChangeName, buttonClassName, inputClassName } = props;
   return (
     <>
       <input className={inputClassName} name="name" onChange={handleChangeName} value={value} />
@@ -30,10 +31,5 @@ const NameInput = (props) => {
   );
 };
 
-const mapStateToProps = state => ({});
 
-const mapDispatchToProps = dispatch => ({
-  changeCurrentInfo: (left, right) => dispatch(changeCurrentInfo(left, right))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(NameInput);
+export default NameInput;
