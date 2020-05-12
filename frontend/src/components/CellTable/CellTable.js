@@ -9,7 +9,6 @@ import {
   changeMemberName,
   removeLeader,
   removeMember,
-  modalOpend
 } from '../../store/modules/checker';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -23,7 +22,7 @@ import Sortable from 'sortablejs';
 
 const CellTable = ({ isAdmin }) => {
   const dispatch = useDispatch(null);
-  const { currentSection, sheets, currentSheetInfo } = useSelector(state => state.checker);
+  const { currentSection, sheets, currentSheetInfo, modalOpend } = useSelector(state => state.checker);
 
   const cellWrapperRef = useRef(null);
   const [checker, setChecker] = useState(null);

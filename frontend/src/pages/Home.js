@@ -118,7 +118,7 @@ const Home = (props) => {
           </div>
           {networkCells.length !== 0 ? (<div className="button-box">
             <button
-              className="btn btn-outline-dark button-box__button"
+              className="btn btn-outline-dark button-box__button--print"
               onClick={handlePrint}>
               프린트
                 </button>

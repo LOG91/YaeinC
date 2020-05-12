@@ -61,8 +61,8 @@
   .button-box {
     margin: 0;
     width: 60px;
-    &__button.btn {
-      font-size: 11px;
+    &__button--add.btn.btn-outline-dark {
+      font-size: 9px;
       width: 50px;
     }
   }
@@ -284,6 +284,12 @@
       width: 12px;
     }
   }
+  .network-wrapper {
+    grid-template-columns: 6fr;
+  }
+  .network-wrapper__relative {
+    display: none;
+  }
   .cell-header {
     padding: 0;
     &__item:first-child {
@@ -296,9 +302,6 @@
   .network-container {
     &__list {
       grid-template-columns: 1fr 3fr 1fr 2fr;
-    }
-    &__item:first-child {
-      display: none;
     }
   }
   .networkName-box {
@@ -323,6 +326,14 @@ div.selectBox__option {
   }
 }
 @include media(mobile) {
+  .member-container {
+    &__input {
+      width: 45px;
+    }
+    &__button {
+      font-size: 9px;
+    }
+  }
   button.selectBox {
     font-size: 0.5rem;
     padding: 0 0.2rem;

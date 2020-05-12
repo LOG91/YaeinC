@@ -4,7 +4,7 @@ import { connect, useSelector, useDispatch } from 'react-redux';
 import Sortable from 'sortablejs';
 import './ChurchList.scss';
 
-import { removeChurch } from '../../store/modules/checker';
+import { removeChurch, changeCurrentInfo } from '../../store/modules/checker';
 
 import { Modal, ConfirmModal } from '../Modal'
 import ChurchForm from '../AddForm/ChurchForm';

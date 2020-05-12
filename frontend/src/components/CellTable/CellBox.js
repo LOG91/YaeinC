@@ -162,15 +162,17 @@ const CellBox = ({ len, isAdmin, network, index, handleCheck, handleCount, handl
           <div>{network.name}</div>
           {isAdmin && (
             <div>
-              <FontAwesomeIcon
-                className="network-wrapper__icon"
-                icon={faTimes}
-                onClick={() => handleRemoveNetworkCell({ idx: index, id: network._id, cellName: network.name })}
-              />
-              <FontAwesomeIcon
-                className="network-wrapper__icon"
-                icon={faBars}
-              />
+              <div>
+                <FontAwesomeIcon
+                  className="network-wrapper__icon"
+                  icon={faTimes}
+                  onClick={() => handleRemoveNetworkCell({ idx: index, id: network._id, cellName: network.name })}
+                />
+                <FontAwesomeIcon
+                  className="network-wrapper__icon"
+                  icon={faBars}
+                />
+              </div>
             </div>
           )}
           {isAdmin && <div className="positioning--rel">

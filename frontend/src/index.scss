@@ -67,6 +67,13 @@
       width: 60px;
       padding: 0;
     }
+    &__button--print {
+      margin: 0.2rem;
+      cursor: pointer;
+      font-size: 13px;
+      width: 60px;
+      padding: 0;
+    }
     &__button--add-notify {
       position: absolute;
       font-size: 11px;
@@ -90,6 +97,12 @@
     max-width: none;
     padding: 0;
     margin: 0;
+  }
+  .edit-box {
+    margin-right: 10px;
+    .button-box:last-child {
+      display: none;
+    }
   }
 }
 
