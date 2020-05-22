@@ -54,7 +54,7 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          { loader: 'style-loader' },
+          MiniCssExtractPlugin.loader,
           { loader: 'css-loader' },
           {
             loader: 'postcss-loader', // Run postcss actions
