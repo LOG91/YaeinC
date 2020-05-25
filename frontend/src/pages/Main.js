@@ -5,11 +5,12 @@ import { Layout } from '../pages/Layout';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { Home } from '../pages';
-import { ChurchList } from '../components/ChurchList';
+// import { ChurchList } from '../components/ChurchList';
+const { ChurchList } = React.lazy(() => import('../components/ChurchList'));
 
 
 const Main = () => {
-  
+
   return (
     <>
       <BrowserRouter>
